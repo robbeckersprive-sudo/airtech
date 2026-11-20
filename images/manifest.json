@@ -1,0 +1,941 @@
+{
+  "01-hero-pijpleiding": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "02-pijpleiding-contact": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "03-blower-vrijstaand": {
+    "w": 1265,
+    "h": 990,
+    "widths": [
+      480,
+      800,
+      1200,
+      1265
+    ],
+    "alpha": true
+  },
+  "04-cycloon-vrijstaand": {
+    "w": 826,
+    "h": 1473,
+    "widths": [
+      480,
+      800,
+      826
+    ],
+    "alpha": true
+  },
+  "05-filter-vrijstaand": {
+    "w": 718,
+    "h": 1430,
+    "widths": [
+      480,
+      718
+    ],
+    "alpha": true
+  },
+  "06-doseersluis-vrijstaand": {
+    "w": 1439,
+    "h": 984,
+    "widths": [
+      480,
+      800,
+      1200,
+      1439
+    ],
+    "alpha": true
+  },
+  "07-leidingwerk-vrijstaand": {
+    "w": 1479,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1479
+    ],
+    "alpha": true
+  },
+  "08-bigbag-vrijstaand": {
+    "w": 920,
+    "h": 1477,
+    "widths": [
+      480,
+      800,
+      920
+    ],
+    "alpha": true
+  },
+  "09-afsluiter-vrijstaand": {
+    "w": 1453,
+    "h": 883,
+    "widths": [
+      480,
+      800,
+      1200,
+      1453
+    ],
+    "alpha": true
+  },
+  "10-zeef-vrijstaand": {
+    "w": 1134,
+    "h": 1001,
+    "widths": [
+      480,
+      800,
+      1134
+    ],
+    "alpha": true
+  },
+  "11-cycloon-zijaanzicht": {
+    "w": 793,
+    "h": 1474,
+    "widths": [
+      480,
+      793
+    ],
+    "alpha": true
+  },
+  "12-cycloon-bovenaanzicht": {
+    "w": 827,
+    "h": 1533,
+    "widths": [
+      480,
+      800,
+      827
+    ],
+    "alpha": true
+  },
+  "13-cycloon-doorsnede": {
+    "w": 833,
+    "h": 1536,
+    "widths": [
+      480,
+      800,
+      833
+    ],
+    "alpha": true
+  },
+  "14-blower-doorsnede": {
+    "w": 1329,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1329
+    ],
+    "alpha": true
+  },
+  "15-doseersluis-doorsnede": {
+    "w": 1443,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1443
+    ],
+    "alpha": true
+  },
+  "16-cycloon-detail-inlaat": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "16-cycloon-maatwerk-vrijstaand": {
+    "w": 691,
+    "h": 1001,
+    "widths": [
+      480,
+      691
+    ],
+    "alpha": true
+  },
+  "17-filter-macro": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "18-blower-macro": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "19-granulaat-macro": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "20-project-recycling": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "21-project-food": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "22-proces-analyse": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "23-proces-engineering": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "24-proces-realisatie": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "25-proces-inbedrijfstelling": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "26-multicycloon": {
+    "w": 1137,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1137
+    ],
+    "alpha": true
+  },
+  "27-cycloon-maatwerk": {
+    "w": 1672,
+    "h": 941,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "alpha": false
+  },
+  "28-transportafscheider": {
+    "w": 839,
+    "h": 1536,
+    "widths": [
+      480,
+      800,
+      839
+    ],
+    "alpha": true
+  },
+  "01-hero-pijpleiding-leeg": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "29-hero-productiehal": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "30-hero-filter": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "31-hero-wissel": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "32-hero-cycloon": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "33-hero-doseersluis": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "05-filter-doorsnede": {
+    "w": 800,
+    "h": 1593,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "07-leidingwerk-doorsnede": {
+    "w": 800,
+    "h": 553,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "08-bigbag-doorsnede": {
+    "w": 800,
+    "h": 1285,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "09-afsluiter-doorsnede": {
+    "w": 800,
+    "h": 487,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "10-zeef-doorsnede": {
+    "w": 800,
+    "h": 707,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-patroonfilter": {
+    "w": 1199,
+    "h": 1312,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-draaizuigerblower": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-zakkenfilter": {
+    "w": 1024,
+    "h": 1536,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-zijkanaalblower": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-ontluchtingsfilter": {
+    "w": 1312,
+    "h": 1199,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-ventilator-unit": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-doorblaassluis": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-sluis-maatwerk": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-uitneembare-sluis": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-leidingbocht": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-buiskoppeling": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-leidingwissel": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-bigbag-vullen": {
+    "w": 1199,
+    "h": 1312,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-bigbag-losframe": {
+    "w": 1024,
+    "h": 1536,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-bigbag-doseer": {
+    "w": 1312,
+    "h": 1199,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-vlinderklep": {
+    "w": 1199,
+    "h": 1312,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-manchetafsluiter": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-schuifafsluiter": {
+    "w": 1774,
+    "h": 887,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-controlezeef": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-trommelzeef": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-meerdekszeef": {
+    "w": 1312,
+    "h": 1199,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "cat-hero-bigbag": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "alpha": false
+  },
+  "cat-hero-zeven": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "alpha": false
+  },
+  "detail-cycloon-op-maat-doorsnede": {
+    "w": 1041,
+    "h": 1510,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-doorblaassluis-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-draaizuigerblower-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-multicycloon-doorsnede": {
+    "w": 1322,
+    "h": 1190,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-ontluchtingsfilter-doorsnede": {
+    "w": 1312,
+    "h": 1199,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-patroonfilter-doorsnede": {
+    "w": 1199,
+    "h": 1312,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-transportafscheider-doorsnede": {
+    "w": 927,
+    "h": 1697,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-ventilatorunit-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-zakkenfilter-doorsnede": {
+    "w": 1024,
+    "h": 1536,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-zijkanaalblower-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-buiskoppeling-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-doseersluis-op-maat-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-doseersluis-uitneembare-rotor-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-transportbocht-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-bigbag-doseerstation-doorsnede": {
+    "w": 1310,
+    "h": 1201,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-bigbag-losframe-doorsnede": {
+    "w": 1024,
+    "h": 1536,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-bigbag-vulstation-doorsnede": {
+    "w": 1199,
+    "h": 1312,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-controlezeef-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-leidingwissel-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-schuifafsluiter-doorsnede": {
+    "w": 1774,
+    "h": 887,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-vlinderklep-doorsnede": {
+    "w": 1199,
+    "h": 1312,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-manchetafsluiter-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-meerdekszeef-doorsnede": {
+    "w": 1312,
+    "h": 1199,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "detail-trommelzeef-doorsnede": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800
+    ],
+    "alpha": true
+  },
+  "solution-stofafzuiging": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "alpha": false
+  },
+  "solution-hoogvacuum": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "alpha": false
+  },
+  "about-installatie": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "about-materiaal": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "project-pet": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "project-eggshell": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "project-vacuum": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "project-feed": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  },
+  "project-food": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      480,
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
+  }
+}

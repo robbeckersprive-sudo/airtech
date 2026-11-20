@@ -1,0 +1,80 @@
+/* The About page uses the site's Staal & Signaal type, colours and controls. */
+.about-hero { padding: 24px 0 0; }
+.about-page main .btn { padding:16px 24px; }
+.about-hero__heading { display:grid; grid-template-columns:1.45fr 1fr; gap:64px; align-items:end; padding:36px 0 48px; }
+.about-hero h1 { font-size:clamp(44px,5.2vw,80px); line-height:1.04; letter-spacing:-.035em; margin:0; }
+.about-hero h1 em { display:inline-block; font-size:.91em; }
+.about-hero__intro p { font-size:var(--fs-lead); max-width:38ch; margin:0 0 24px; }
+.about-hero__figure { margin:0; position:relative; overflow:hidden; border-radius:3px; background:var(--mist); }
+.about-hero__figure picture { display:block; }
+.about-hero__figure img { width:100%; height:clamp(320px,39vw,590px); object-fit:cover; object-position:center 58%; }
+.about-hero__figure figcaption { position:absolute; bottom:24px; left:24px; padding:22px 28px; background:var(--steel-900); color:var(--white); border-left:3px solid var(--red); max-width:calc(100% - 48px); }
+.about-hero__figure strong { display:block; font-size:24px; line-height:1.2; margin-bottom:6px; }
+.about-hero__figure figcaption span { font-size:15px; color:var(--white-80); }
+.about-hero__foot { display:flex; justify-content:space-between; gap:16px; padding:18px 0; border-bottom:1px solid var(--line); font-size:13px; color:var(--muted); }
+.about-section { padding:96px 0; }
+.about-two { display:grid; grid-template-columns:1fr 1fr; gap:clamp(40px,7vw,112px); }
+.about-two > * { min-width:0; }
+.about-section .h2 { margin:0 0 24px; }
+.about-section p { color:var(--muted); max-width:60ch; }
+.about-intro .about-lead { color:var(--steel-900); font-size:24px; line-height:1.45; margin-top:0; }
+.about-expertise { background:var(--mist); }
+.about-section-head { align-items:center; margin-bottom:40px; }
+.about-experts { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px; }
+.about-expert { background:var(--paper); border:1px solid var(--line); display:flex; flex-direction:column; }
+.about-expert__image { aspect-ratio:1.2; overflow:hidden; background:var(--product-backdrop); }
+.about-expert__image picture { display:block; height:100%; }
+.about-expert__image img { width:100%; height:100%; object-fit:contain; padding:25px; filter:var(--product-shadow); transition:transform .3s ease; }
+.about-expert:hover .about-expert__image img { transform:scale(1.04); }
+.about-expert__copy { padding:24px; display:flex; flex:1; flex-direction:column; align-items:flex-start; }
+.about-expert .sym { width:28px; height:28px; color:var(--red-text); margin-bottom:18px; }
+.about-expert h3 { font-size:24px; line-height:1.12; margin:0 0 16px; overflow-wrap:normal; }
+.about-expert .about-expert__claim { color:var(--steel-900); font-weight:600; margin:0 0 10px; }
+.about-expert p { font-size:16px; }
+.about-expert a { display:flex; align-items:center; min-height:44px; margin-top:auto; padding-top:18px; color:var(--steel-900); text-decoration:underline; text-underline-offset:5px; font-size:14px; font-weight:600; }
+.about-expert a:hover, .about-textlink:hover { color:var(--red-text); }
+.about-why__story > p { font-size:var(--fs-lead); }
+.about-why figure { margin:36px 0 0; }
+.about-why figure img { width:100%; aspect-ratio:1.3; object-fit:cover; border-radius:3px; }
+.about-why figcaption { font-size:14px; padding:12px 0; color:var(--muted); }
+.about-reasons { list-style:none; margin:0; padding:0; }
+.about-reasons li { display:flex; gap:18px; padding:25px 0; border-top:1px solid var(--line); }
+.about-reasons .i { flex-shrink:0; color:var(--red-text); width:22px; margin-top:4px; }
+.about-reasons h3 { font-size:22px; margin:0 0 8px; }
+.about-reasons p { margin:0; }
+.about-partner { background:var(--paper); border-top:1px solid var(--line); }
+.about-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; list-style:none; margin:0 0 30px; padding:0; counter-reset:steps; }
+.about-steps li { border-top:2px solid var(--steel-900); padding-top:24px; }
+.about-steps h3 { font-size:26px; margin:0 0 12px; }
+.about-textlink { display:inline-flex; align-items:center; min-height:44px; font-weight:600; text-underline-offset:5px; }
+.about-contact { background:var(--steel-900); color:var(--white); scroll-margin-top:100px; }
+.about-contact h2 { color:var(--white); font-size:clamp(36px,4.1vw,60px); line-height:1.06; margin:0 0 24px; }
+.about-contact h2 em { color:var(--sky); }
+.about-contact p { color:var(--white-80); }
+.about-contact .btn { margin-top:16px; }
+.about-contact__direct { padding:12px 0 0 48px; border-left:1px solid var(--white-20); }
+.about-contact__direct h3 { color:var(--white); font-size:22px; margin:0 0 20px; }
+.about-contact__direct a { color:var(--white); display:block; width:fit-content; min-height:44px; font-size:clamp(16px,1.7vw,22px); text-underline-offset:5px; overflow-wrap:anywhere; }
+.about-contact__direct address { font-style:normal; color:var(--white-80); margin:20px 0; }
+.about-contact__direct p { font-size:14px; max-width:42ch; }
+.about-image-note { color:var(--muted); font-size:13px; padding-block:20px; margin-block:0; }
+.about-page a:focus-visible { outline:3px solid var(--red); outline-offset:5px; }
+@media(max-width:1050px) { .about-experts { grid-template-columns:repeat(2,minmax(0,1fr)); } .about-hero__heading { gap:32px; } }
+@media(max-width:760px) {
+ .about-hero__heading,.about-two { grid-template-columns:1fr; gap:24px; }
+ .about-hero__heading { padding:20px 0 32px; }
+ .about-hero h1 { font-size:clamp(38px,8vw,56px); }
+ .about-hero__intro p { max-width:100%; }
+ .about-hero__figure img { height:360px; object-position:66% center; }
+ .about-hero__figure figcaption { bottom:16px; left:16px; padding:18px; max-width:calc(100% - 32px); }
+ .about-hero__figure strong { font-size:21px; }
+ .about-hero__foot { flex-direction:column; gap:6px; }
+ .about-section { padding:60px 0; }
+ .about-section-head { margin-bottom:28px; }
+ .about-section .h2 { margin-bottom:8px; }
+ .about-expert__copy { padding:20px; }
+ .about-contact__direct { padding:30px 0 0; border-left:0; border-top:1px solid var(--white-20); }
+ .about-steps { grid-template-columns:1fr; gap:20px; }
+}
+@media(max-width:480px) { .about-experts { grid-template-columns:1fr; } .about-expert__image { aspect-ratio:1.65; } .about-expert h3 { font-size:26px; } }
+@media(prefers-reduced-motion:reduce) { .about-expert__image img { transition:none; } .about-expert:hover .about-expert__image img { transform:none; } }

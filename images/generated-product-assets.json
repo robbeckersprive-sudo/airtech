@@ -1,0 +1,146 @@
+[
+  {
+    "slug": "bigbag-doseerstation",
+    "asset": "detail-bigbag-doseerstation-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Los- en doseerstation. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front quarter of hopper and longitudinal strip of inclined screw tube to reveal the continuous helical screw flights inside. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "bigbag-losframe",
+    "asset": "detail-bigbag-losframe-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Losframe met aansluiting. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front quadrant of bag and lower stainless receiving hopper, revealing contents and a continuous passage through bag spout into hopper. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "bigbag-vulstation",
+    "asset": "detail-bigbag-vulstation-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Vulstation. Create a technically plausible explanatory cutaway of THIS SAME equipment. make front quadrant of white bag a clean cutaway revealing granular contents and filling spout reaching bag, preserve blue frame and platform. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "buiskoppeling",
+    "asset": "detail-buiskoppeling-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Buiskoppeling. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front longitudinal half of outer sleeve showing black sealing gasket around two abutting pipe ends. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "controlezeef",
+    "asset": "detail-controlezeef-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Controlezeef. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front quarter of round casing to reveal one flat horizontal fine mesh sieve deck above lower collection pan. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "cycloon-op-maat",
+    "asset": "detail-cycloon-op-maat-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Cycloon op maat. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away a front quarter of cylinder and cone to reveal central outlet tube and open annular separation chamber. No mechanical rotor. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "doorblaassluis",
+    "asset": "detail-doorblaassluis-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Doorblaassluis. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front body quadrant revealing a radial pocket rotor and horizontal air conveying channel underneath. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "doseersluis-op-maat",
+    "asset": "detail-doseersluis-op-maat-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Sluis op maat. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front body quadrant to reveal radial pocket rotor between top inlet and bottom discharge. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "doseersluis-uitneembare-rotor",
+    "asset": "detail-doseersluis-uitneembare-rotor-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Uitneembare rotor. Create a technically plausible explanatory cutaway of THIS SAME equipment. retain pulled-out rotor and support rails; cut away small front quadrant of housing to show remaining bore and chamber clearances. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "draaizuigerblower",
+    "asset": "detail-draaizuigerblower-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Draaizuigerblower. Create a technically plausible explanatory cutaway of THIS SAME equipment. remove front casing quadrant to reveal two intermeshing three-lobed rotors side by side in the working chamber, no turbine blades. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "leidingwissel",
+    "asset": "detail-leidingwissel-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Leidingwissel. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front panel of Y body to reveal the single pivoting diverter flap between inlet and two outlet branches. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "manchetafsluiter",
+    "asset": "detail-manchetafsluiter-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Manchetafsluiter. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front longitudinal half of outer shell revealing black rubber sleeve with a gently pinched narrowed middle and annular compressed air chamber. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "meerdekszeef",
+    "asset": "detail-meerdekszeef-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Meerdekszeef. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front quarter of circular housing to reveal three separate horizontal mesh screen decks aligned with their respective side outlets. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "multicycloon",
+    "asset": "detail-multicycloon-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Multicycloon. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away the front half of two of the cyclone chambers, show their central clean-air outlet tubes, empty separation chambers and conical collection paths; keep four chambers and manifolds. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "ontluchtingsfilter",
+    "asset": "detail-ontluchtingsfilter-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Ontluchtingsfilter. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front quarter of cylinder to reveal vertical filter cartridges, keep top pulse jet manifold and bottom flange. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "patroonfilter",
+    "asset": "detail-patroonfilter-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Patroonfilter. Create a technically plausible explanatory cutaway of THIS SAME equipment. remove a front housing panel as a cutaway to reveal three vertical pleated filter cartridges above the hopper. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "schuifafsluiter",
+    "asset": "detail-schuifafsluiter-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Schuifafsluiter. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away a small front quarter of housing to expose flat sliding gate blade and guide rails; preserve long actuator. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "transportafscheider",
+    "asset": "detail-transportafscheider-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Transportafscheider. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front quarter of receiving vessel and filter section, revealing upper filter cartridges and clear lower material collection hopper. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "transportbocht",
+    "asset": "detail-transportbocht-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Transportbocht. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front longitudinal quarter of curved tube revealing continuous empty curved interior and wall thickness. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "trommelzeef",
+    "asset": "detail-trommelzeef-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Trommelzeef. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away narrow longitudinal front segment of perforated drum showing hollow interior and granular material, retain bearings and collection tray. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "ventilatorunit",
+    "asset": "detail-ventilatorunit-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Ventilatorunit. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away a quadrant of scroll housing to reveal centrifugal impeller while preserving motor and base. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "vlinderklep",
+    "asset": "detail-vlinderklep-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Vlinderklep. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away lower left quarter of round valve body to expose disc edge, shaft and surrounding black elastomer seat. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "zakkenfilter",
+    "asset": "detail-zakkenfilter-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Zakkenfilter. Create a technically plausible explanatory cutaway of THIS SAME equipment. cut away front casing panel to reveal rows of long vertical fabric filter bags above hopper. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  },
+  {
+    "slug": "zijkanaalblower",
+    "asset": "detail-zijkanaalblower-doorsnede",
+    "tool": "built-in image_gen",
+    "prompt": "Edit target: attached product render of Zijkanaalblower. Create a technically plausible explanatory cutaway of THIS SAME equipment. remove front casing quadrant to reveal a radial-bladed impeller and surrounding annular side channel. Preserve silhouette, orientation, proportions, connections, dark steel-blue components and brushed stainless steel finish. Keep the entire product visible with a small transparent margin. Clean precise engineering illustration with realistic materials, soft studio lighting. The only change is opening the relevant casing to expose the working principle. No labels, numbers, text, arrows, grids, background, floor, or decorative particles outside the equipment. True transparent background including gaps and openings. This is an illustrative operating principle, not a dimensioned manufacturing drawing."
+  }
+]

@@ -1,0 +1,154 @@
+/* =================================================================
+   BLOCK 3 VARIANTS (review build, see tools/comp_concepts.py)
+   Same vocabulary as hero, header and block 2: framed plates, registration marks, dash-dot centre lines,
+   mono captions, process-flow symbols. One quiet moment per variant, finished state under reduced motion.
+   ================================================================= */
+.cx { position: relative; }
+.cx .h2 { font-size: var(--fs-h2); }
+.cx-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 40px; margin-bottom: 48px; }
+.cx-reg { position: absolute; width: 14px; height: 14px; border: 0 solid var(--green-900); opacity: .55; pointer-events: none; }
+.cx-reg--tl { top: -9px; left: -9px; border-top-width: 1px; border-left-width: 1px; }
+.cx-reg--tr { top: -9px; right: -9px; border-top-width: 1px; border-right-width: 1px; }
+.cx-reg--bl { bottom: -9px; left: -9px; border-bottom-width: 1px; border-left-width: 1px; }
+.cx-reg--br { bottom: -9px; right: -9px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* ---------- A  PROCESLIJN ---------- */
+.cxA-entry { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; display: none; }
+.cxA-entry path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.cxA-entry__base { stroke: var(--line-strong); stroke-width: 1.25; stroke-dasharray: 14 4 2 4; }
+.cxA-entry__flow { stroke: var(--orange); stroke-width: 2; }
+.cxA-track { padding-top: 34px !important; }
+.cxA-st { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 22px; }
+.cxA-st::before, .cxA-st::after { /* the rail: one segment per station, continuous across the gap */
+  content: ""; position: absolute; top: 28px; left: 0; right: calc(var(--s-4) * -1); height: 2px; pointer-events: none;
+}
+.cxA-st::before { background: repeating-linear-gradient(90deg, var(--line-strong) 0 14px, transparent 14px 18px, var(--line-strong) 18px 20px, transparent 20px 24px); }
+.cxA-st::after { background: var(--orange); transform-origin: 0 50%; transform: scaleX(var(--f, 0)); transition: transform .9s var(--ease-expo); }
+.cxA-st:last-child::before, .cxA-st:last-child::after { right: 50%; }
+.cxA-st__node {
+  position: relative; z-index: 1; justify-self: center; width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--paper); border: 1px solid var(--line-strong); box-shadow: 0 0 0 6px var(--sage);
+  transition: border-color .5s ease, box-shadow .6s var(--ease-expo);
+}
+.cxA-st.is-on .cxA-st__node { border-color: var(--orange); box-shadow: 0 0 0 6px var(--sage), 0 0 0 7px rgba(194, 78, 20, .25); }
+.cxA-st.is-on .cxA-st__node .sym { color: var(--orange-text); }
+.cxA-st__node::after { /* drop from the rail into the card */
+  content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 22px; background: var(--line-strong);
+}
+.cxA-st__card {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; gap: 0; text-decoration: none; color: var(--green-900); border-radius: 22px;
+  background: radial-gradient(90% 80% at 50% 40%, #fff, var(--cream-2)); box-shadow: inset 0 0 0 1px rgba(16, 59, 41, .06);
+  transition: box-shadow .5s ease, transform .7s var(--ease-expo);
+}
+.cxA-st__card:hover, .cxA-st__card:focus-visible { box-shadow: inset 0 0 0 1px rgba(194, 78, 20, .5), var(--shadow-2); transform: translateY(-4px); }
+.cxA-st__img { position: relative; display: block; aspect-ratio: 5 / 4; }
+.cxA-st__img picture { position: absolute; inset: 12% 14%; display: block; }
+.cxA-st__img img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 18px 16px rgba(16, 59, 41, .16)); transition: transform .9s var(--ease-expo); }
+.cxA-st__card:hover img { transform: translateY(-4px) scale(1.04); }
+.cxA-st__label {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 20px 20px;
+  font-family: var(--font-head); font-stretch: 92%; font-size: 18px; font-weight: 600; letter-spacing: -0.02em;
+}
+.cxA-st__label .i { width: 16px; height: 16px; stroke-width: 1.8; opacity: .35; transition: opacity .25s ease, transform .6s var(--ease-expo); }
+.cxA-st__card:hover .cxA-st__label .i { opacity: 1; transform: translate(2px, -2px); color: var(--orange); }
+.cxA-rail .carousel__btn { top: calc(50% + 40px); }
+@media (min-width: 960px) { .cxA-entry { display: block; } }
+
+/* ---------- B  CATALOGUSBLADEN ---------- */
+.cxB-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 24px; }
+@media (min-width: 960px) { .cxB-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 48px 32px; } }
+.cxB-card { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; text-decoration: none; color: var(--green-900); }
+.cxB-plate {
+  position: relative; display: block; aspect-ratio: 1; border-radius: 20px;
+  background: radial-gradient(90% 80% at 50% 42%, #fff, var(--cream-2)); box-shadow: inset 0 0 0 1px rgba(16, 59, 41, .06);
+  transition: box-shadow .5s ease;
+}
+.cxB-plate picture { position: absolute; inset: 16%; display: block; }
+.cxB-plate img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 18px 16px rgba(16, 59, 41, .16)); transition: transform .9s var(--ease-expo); }
+.cxB-card:hover .cxB-plate, .cxB-card:focus-visible .cxB-plate { box-shadow: inset 0 0 0 1px rgba(194, 78, 20, .45), var(--shadow-2); }
+.cxB-card:hover img { transform: translateY(-3px); }
+/* registration marks open out from the centre as the sheet arrives */
+.cxB-plate .cx-reg { transition: top .9s var(--ease-expo), left .9s var(--ease-expo), right .9s var(--ease-expo), bottom .9s var(--ease-expo), opacity .5s ease; transition-delay: calc(var(--i) * 70ms); }
+.js .cxB-cell:not(.is-in) .cx-reg { opacity: 0; }
+.js .cxB-cell:not(.is-in) .cx-reg--tl { top: calc(50% - 7px); left: calc(50% - 7px); }
+.js .cxB-cell:not(.is-in) .cx-reg--tr { top: calc(50% - 7px); right: calc(50% - 7px); }
+.js .cxB-cell:not(.is-in) .cx-reg--bl { bottom: calc(50% - 7px); left: calc(50% - 7px); }
+.js .cxB-cell:not(.is-in) .cx-reg--br { bottom: calc(50% - 7px); right: calc(50% - 7px); }
+/* dimension lines (no numbers: the drawing gesture, not invented specs) */
+.cxB-dim { position: absolute; pointer-events: none; opacity: 0; transition: opacity .3s ease, transform .7s var(--ease-expo); }
+.cxB-dim--x { left: 16%; right: 16%; bottom: 8%; height: 9px; border-left: 1px solid var(--green-700); border-right: 1px solid var(--green-700);
+  background: linear-gradient(var(--green-700), var(--green-700)) 0 50% / 100% 1px no-repeat; transform: scaleX(.2); }
+.cxB-dim--y { top: 16%; bottom: 16%; right: 8%; width: 9px; border-top: 1px solid var(--green-700); border-bottom: 1px solid var(--green-700);
+  background: linear-gradient(var(--green-700), var(--green-700)) 50% 0 / 1px 100% no-repeat; transform: scaleY(.2); }
+.cxB-card:hover .cxB-dim, .cxB-card:focus-visible .cxB-dim { opacity: .55; transform: none; }
+.cxB-label {
+  display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-head); font-stretch: 92%; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2;
+}
+.cxB-label .i { margin-left: auto; flex: none; width: 16px; height: 16px; stroke-width: 1.8; opacity: .35; transition: opacity .25s ease, transform .6s var(--ease-expo); }
+.cxB-card:hover .cxB-label, .cxB-card:focus-visible .cxB-label { color: var(--orange-text); }
+.cxB-card:hover .cxB-label .sym { color: var(--orange); }
+.cxB-card:hover .cxB-label .i { opacity: 1; transform: translate(2px, -2px); }
+@media (max-width: 599px) { .cxB-label { font-size: 15px; gap: 8px; } .cxB-label .sym { width: 18px; height: 18px; } }
+
+/* ---------- C  DOORSNEDE A-A ---------- */
+.cxC { display: grid; gap: 48px; }
+.cxC-plate { position: relative; margin: 0; aspect-ratio: 4 / 3; border-radius: 22px; background: radial-gradient(90% 80% at 50% 42%, #fff, var(--cream-2)); box-shadow: inset 0 0 0 1px rgba(16, 59, 41, .06); --cut: 50%; }
+.cxC-layer { position: absolute; inset: 0; opacity: 0; transition: opacity .45s ease; }
+.cxC-layer.is-on { opacity: 1; }
+.cxC-ext, .cxC-sec { position: absolute; inset: 0; display: block; }
+.cxC-ext picture, .cxC-sec picture { position: absolute; inset: 8% 12% 16%; display: block; }
+.cxC-ext img, .cxC-sec img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 22px 20px rgba(16, 59, 41, .18)); }
+.cxC-ext--flip img { transform: scaleX(-1); }
+.cxC-sec { clip-path: inset(0 calc(100% - var(--cut)) 0 0); }
+.cxC-layer.has-sec .cxC-ext { clip-path: inset(0 0 0 var(--cut)); }
+.cxC-cut { /* section line A-A: dash-dot, with its labels */
+  position: absolute; top: -18px; bottom: -18px; left: var(--cut); width: 1px; margin-left: -.5px; pointer-events: none;
+  background: repeating-linear-gradient(180deg, var(--green-900) 0 16px, transparent 16px 20px, var(--green-900) 20px 22px, transparent 22px 26px);
+  opacity: .7; transition: opacity .35s ease;
+}
+.cxC-cut b {
+  position: absolute; left: 8px; font: 600 12px/1 var(--font-mono); color: var(--green-900); letter-spacing: .06em;
+}
+.cxC-cut b::before { /* viewing direction arrow */
+  content: ""; position: absolute; right: calc(100% + 2px); top: 50%; width: 14px; height: 1.5px; margin-top: -1px; background: var(--green-900);
+}
+.cxC-cut b:first-child { top: -4px; } .cxC-cut b:last-child { bottom: -4px; }
+.cxC-plate:not(.has-sec) .cxC-cut { opacity: 0; }
+.cxC-plate figcaption {
+  position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; justify-content: space-between; gap: 12px;
+  padding: 8px 12px; border-radius: 10px; background: rgba(10, 42, 29, .62); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  font: 500 11.5px/1.2 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--white);
+}
+.cxC-side .cx-head { margin-bottom: 28px; }
+.cxC-picks { list-style: none; margin: 0; padding: 0; display: grid; }
+.cxC-pick {
+  width: 100%; display: flex; align-items: center; gap: 14px; padding: 12px 0; border: 0; border-bottom: 1px solid var(--line-strong); background: none; cursor: pointer; text-align: left;
+  font-family: var(--font-head); font-stretch: 92%; font-size: 19px; font-weight: 600; letter-spacing: -0.02em; color: var(--green-900);
+  transition: color .25s ease, padding .6s var(--ease-expo);
+}
+.cxC-pick:hover, .cxC-pick.is-on { color: var(--orange-text); padding-left: 8px; }
+.cxC-pick.is-on .sym, .cxC-pick:hover .sym { color: var(--orange); }
+.cxC-tag { margin-left: auto; font: 500 12px/1 var(--font-mono); letter-spacing: .08em; color: var(--muted); padding: 4px 6px; border: 1px solid var(--line-strong); border-radius: 4px; }
+.cxC-actions { display: flex; flex-wrap: wrap; gap: 14px 28px; margin-top: 28px; }
+@media (min-width: 960px) {
+  .cxC { grid-template-columns: 7fr 5fr; gap: 64px; align-items: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cx *, .cx *::before, .cx *::after { transition-duration: 1ms !important; transition-delay: 0s !important; }
+}
+
+/* ---------- review switcher (not part of the design) ---------- */
+.hx-review {
+  position: fixed; left: 14px; bottom: 14px; z-index: 300; display: flex; align-items: center; gap: 2px; padding: 5px;
+  border-radius: 999px; background: rgba(10, 42, 29, .9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); font-size: 12.5px; font-weight: 500;
+}
+.hx-review__t { padding: 0 10px 0 8px; color: var(--white-60); }
+.hx-review a { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; color: var(--white-80); text-decoration: none; }
+.hx-review a:hover { color: var(--white); background: var(--white-10); }
+.hx-review a[aria-current] { background: var(--white); color: var(--green-950); }
+.hx-review b { font: 600 11px/1 var(--font-mono); opacity: .7; }
+.hx-review__sep { width: 1px; height: 18px; margin: 0 4px; background: var(--white-20); }
+@media (max-width: 700px) { .hx-review a span, .hx-review__t { display: none; } }

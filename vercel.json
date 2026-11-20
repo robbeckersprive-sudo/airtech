@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": false,
+  "functions": {
+    "api/contact.py": {
+      "includeFiles": "src/**",
+      "excludeFiles": "{images/**,images-flow-groen/**,images-review/**,assets/**,dist/**,tools/**}",
+      "maxDuration": 60
+    }
+  }
+}

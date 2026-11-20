@@ -1,0 +1,270 @@
+{
+  "tool": "built-in image_gen",
+  "purpose": "Illustrative category imagery, not supplier-specific product photography",
+  "card_prompt_template": "Use case: product-mockup. Create one isolated technical product visualization of {subject}. Premium realistic industrial catalogue render for Airtechnic Solutions. Brushed silver stainless steel, restrained dark steel-blue RAL 5009 painted components, believable joints and fasteners. Three-quarter view, entire equipment centered with generous transparent margin, soft neutral studio light from upper left. True transparent background including holes, no floor, no scenery, no grid, no cast background shadow, no text, no logo, no watermark. Match a coherent engineering equipment catalogue. Illustrative product configuration, clean and precise, not futuristic.",
+  "cards": [
+    {
+      "asset": "cat-draaizuigerblower",
+      "subject": "a rotary lobe positive displacement blower package with a compact cast steel twin-lobe housing, dark blue motor, belt guard and blue skid",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-zijkanaalblower",
+      "subject": "a side channel regenerative blower, round finned aluminium toroidal casing, two pipe ports, dark blue electric motor",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-ventilator-unit",
+      "subject": "an industrial centrifugal fan assembly with stainless scroll casing, blue motor, flexible round inlet connection and silencer on a blue base",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-patroonfilter",
+      "subject": "a compact industrial stainless cartridge dust collector on four blue legs with a conical hopper, pulse jet header and side clean air outlet",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-zakkenfilter",
+      "subject": "a tall rectangular industrial baghouse dust collector with grey steel enclosure, inspection doors, blue support legs and conical hopper",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-ontluchtingsfilter",
+      "subject": "a compact cylindrical stainless silo vent filter, short vertical housing, bolted top lid, pulse jet valves and bottom mounting flange, no legs",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-doorblaassluis",
+      "subject": "a stainless rotary airlock blow-through valve, square top inlet, horizontal round transport tube beneath rotor, blue geared motor",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-uitneembare-sluis",
+      "subject": "a stainless rotary airlock valve with square top inlet, blue gear motor, rotor partly pulled sideways on support rails for cleaning, no exploded floating parts",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-sluis-maatwerk",
+      "subject": "a heavy industrial rotary airlock valve with rectangular inlet and outlet flanges, blue gear motor, robust grey cast body on short mounting feet",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-leidingbocht",
+      "subject": "a single large radius 90 degree brushed stainless pneumatic conveying pipe elbow, rolled joining lips, three quarter perspective",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-buiskoppeling",
+      "subject": "a stainless split sleeve pipe coupling with two longitudinal clamping bolts, rubber inner seal visible, short straight tube ends",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-leidingwissel",
+      "subject": "a stainless two-way Y diverter for bulk solids with round inlet and two outlet flanges and dark blue pneumatic actuator",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-bigbag-vullen",
+      "subject": "an industrial bulk bag filling station, blue steel four post frame, suspended plain white bulk bag, stainless telescopic filling head and low weighing platform",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-bigbag-losframe",
+      "subject": "an industrial bulk bag unloading frame with blue steel posts, white bulk bag on top lifting cross, stainless bottom funnel and bag spout clamp",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-bigbag-doseer",
+      "subject": "a blue framed bulk bag unloading station with white bulk bag and stainless hopper feeding a short inclined screw conveyor with blue motor",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-vlinderklep",
+      "subject": "an industrial stainless butterfly valve with circular flange body and visible central rotating disc, dark blue pneumatic actuator on top",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-manchetafsluiter",
+      "subject": "an industrial pneumatic pinch valve, short grey cylindrical housing, round bolted end flanges, black rubber sleeve visible inside and small air fitting",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-schuifafsluiter",
+      "subject": "an industrial stainless slide gate valve for dry bulk solids, rectangular flat housing with round through-opening and long blue pneumatic cylinder actuator",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-controlezeef",
+      "subject": "an industrial compact circular stainless vibratory sieve with one round sieve deck, feed lid, side discharge outlet, blue short base and motor",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-trommelzeef",
+      "subject": "a compact industrial rotary drum screen, horizontal stainless perforated cylindrical drum in a blue rectangular support frame, feed inlet and discharge chute",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    },
+    {
+      "asset": "cat-meerdekszeef",
+      "subject": "an industrial circular stainless vibratory separator with three stacked round sieve decks, three side discharge spouts and blue base",
+      "formats": [
+        "avif",
+        "webp"
+      ],
+      "widths": [
+        480,
+        800
+      ]
+    }
+  ],
+  "heroes": [
+    {
+      "asset": "cat-hero-bigbag",
+      "subject": "Complete bulk bag unloading station with white bag in blue frame and stainless product discharge"
+    },
+    {
+      "asset": "cat-hero-zeven",
+      "subject": "Two-deck circular stainless vibratory screen connected to inlet pipe and discharge chutes"
+    }
+  ],
+  "hero_style": "Landscape realistic industrial installation. Pale blue-grey factory wall panels and concrete floor. Brushed stainless steel and dark steel-blue frames. Soft daylight, full equipment visible. No people, brand, text or annotations."
+}

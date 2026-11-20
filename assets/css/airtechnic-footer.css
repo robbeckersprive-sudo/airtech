@@ -1,0 +1,29 @@
+.af { --rule:var(--line); color:var(--steel-900); background:var(--paper); padding-top:clamp(36px,5vw,76px); }
+.af--steel { --rule:#374d64; background:var(--steel-950); color:var(--paper); border-top:1px solid var(--rule); }
+.af-layout { display:grid; gap:clamp(24px,3vw,48px); }
+.af .logo { color:inherit; min-height:44px; }
+.af-brand { display:flex; align-items:center; justify-content:space-between; gap:24px; padding-bottom:28px; border-bottom:1px solid var(--rule); }
+.af-motto { margin:0; font:740 clamp(32px,4.7vw,74px)/1 var(--font-head); font-variation-settings:"wdth" 81; letter-spacing:-.05em; }
+.af-motto em { color:var(--steel-700); font-weight:320; font-variation-settings:"wdth" 106; }
+.af-cols { display:grid; grid-template-columns:1.15fr 1fr 1.1fr; gap:32px; }
+.af-col { display:flex; flex-direction:column; align-items:flex-start; }
+.af-col h2 { margin:0 0 9px; font:650 17px/1.4 var(--font-body); }
+.af-col a,.af-base a { display:inline-flex; align-items:center; min-height:44px; color:inherit; text-decoration:none; }
+.af-col a { font-size:16px; }
+.af-col a:hover,.af-base a:hover { text-decoration:underline; text-underline-offset:4px; }
+.af a:focus-visible { outline:3px solid currentColor; outline-offset:2px; }
+.af address { font:normal 15px/1.55 var(--font-body); }
+.af-base { margin-top:36px; border-top:1px solid var(--rule); position:relative; display:flex; align-items:center; flex-wrap:wrap; gap:4px 24px; padding:12px 0; font-size:14px; }
+.af-base::before { content:""; position:absolute; top:-2px; width:48px; height:3px; background:var(--red); }
+.af-base span { margin-right:auto; }
+.af-base a { gap:5px; }
+.af-base .i { width:15px; height:15px; }
+.af--steel .af-layout { grid-template-columns:minmax(190px,.9fr) minmax(0,2fr); }
+.af--steel .af-brand { align-items:flex-start; flex-direction:column; justify-content:flex-start; border:0; gap:30px; }
+.af--steel .af-motto { font-size:clamp(36px,3.4vw,54px); }
+.af--steel .af-motto em { display:block; color:var(--sky); }
+.af--steel .af-cols { gap:24px; grid-template-columns:1fr .95fr 1.2fr; }
+.af--steel .af-col h2 { color:var(--sky); }
+@media(max-width:1050px) { .af--steel .af-layout { grid-template-columns:1fr; } .af--steel .af-brand { flex-direction:row; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule); } .af--steel .af-motto em { display:inline; } }
+@media(max-width:720px) { .af .af-cols { grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px 16px; } .af .af-brand { align-items:flex-start; flex-direction:column; gap:22px; } .af-col:last-child { grid-column:1/-1; } .af-base span { flex-basis:100%; } }
+@media(max-width:370px) { .af .af-cols { grid-template-columns:1fr; } }

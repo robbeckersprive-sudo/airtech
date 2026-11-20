@@ -1,0 +1,96 @@
+/* Site signature (review concepts, Nov 20) — see assets/js/signature.js.
+   Shared: the hero/next-section seam, the quieter discipline nodes, the overlay. Then A "Hartlijn" and B "Stroomlijn". */
+
+/* ---------- hero → first section: one sheet, no band ----------
+   After the fold the tab bar loses its glass (the tabs sit on the drawing itself), the hero's grid is anchored to its
+   bottom edge and carries on into the next section with the same pitch, fading out downwards. The ruler above that
+   section and the old orange process line go: the signature line takes over the coupling. */
+@media (min-width: 720px) and (min-aspect-ratio: 6/5) {
+  html[data-sig] .hero-track .hero__bar {
+    background-color: rgba(251, 250, 247, calc(.55 * (1 - var(--qe, 0))));
+    -webkit-backdrop-filter: blur(calc(18px * (1 - var(--qe, 0)))) saturate(1.4); backdrop-filter: blur(calc(18px * (1 - var(--qe, 0)))) saturate(1.4);
+    border-top-color: rgba(255, 255, 255, calc(.5 - var(--qe, 0) * .5));
+  }
+  html[data-sig] .hero-track .hero::before { background-position: 0 100%, 0 100%; }
+  html[data-sig] .hero-track ~ section:first-of-type::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: min(52vh, 520px); pointer-events: none; z-index: -1;
+    background:
+      linear-gradient(rgba(14, 42, 71, .06) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, rgba(14, 42, 71, .06) 1px, transparent 1px) 0 0 / 48px 48px;
+    -webkit-mask-image: linear-gradient(90deg, #000 25%, transparent 72%), linear-gradient(#000, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, #000 25%, transparent 72%), linear-gradient(#000, transparent);
+    mask-composite: intersect;
+  }
+  html[data-sig] .hero-track ~ section:first-of-type { isolation: isolate; }
+}
+html[data-sig] .pr-line { display: none !important; }
+
+/* discipline nodes: one hairline ring, no halo; they light when the signature's tip passes */
+html[data-sig] .pr-node { width: 46px; height: 46px; border-color: var(--line); box-shadow: none; background: transparent; }
+html[data-sig] .pr-node .sym { width: 22px; height: 22px; color: var(--green-700); transition: color .5s ease; }
+html[data-sig] .pr-node.is-on { border-color: rgba(210, 31, 38, .55); box-shadow: none; }
+html[data-sig] .pr-node.is-on .sym { color: var(--orange-text); }
+html[data-sig] .pr-disc__top { align-items: center; }
+html[data-sig] .pr-disc__top .h3 { margin-top: 0; }
+
+/* ---------- the overlay ---------- */
+.sig { position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; overflow: visible; }
+.sig path, .sig line { fill: none; vector-effect: non-scaling-stroke; }
+.sig__base { stroke: rgba(14, 42, 71, .2); stroke-width: 1; }
+.sig__base--inv { stroke: rgba(255, 255, 255, .22); }
+.sig__done { stroke: var(--orange); stroke-width: 1; stroke-dasharray: 0 1e6; }
+.sig-st text { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .14em; fill: rgba(14, 42, 71, .5); transition: fill .5s ease; }
+.sig-st.is-inv text { fill: rgba(255, 255, 255, .5); }
+.sig-st.is-on text { fill: var(--green-900); }
+.sig-st.is-on.is-inv text { fill: var(--white); }
+
+/* ---------- A  Hartlijn: drawn centre axis, datum points, leaders, vertical labels ---------- */
+.sig--a .sig__base { stroke-dasharray: 14 4 2 4; }
+.sig--a .sig-st__cross { stroke: rgba(14, 42, 71, .32); stroke-width: 1; }
+.sig--a .sig-st__leader { stroke: rgba(14, 42, 71, .2); stroke-width: 1; stroke-dasharray: 2 3; transition: stroke .5s ease; }
+.sig--a .sig-st__dot { fill: var(--cream); stroke: rgba(14, 42, 71, .45); stroke-width: 1; transition: fill .4s ease, stroke .4s ease, r .5s var(--ease-spring); }
+.sig--a .is-inv .sig-st__cross { stroke: rgba(255, 255, 255, .35); }
+.sig--a .is-inv .sig-st__leader { stroke: rgba(255, 255, 255, .25); }
+.sig--a .is-inv .sig-st__dot { fill: var(--green-900); stroke: rgba(255, 255, 255, .5); }
+.sig--a .is-on .sig-st__dot { fill: var(--orange); stroke: var(--orange); }
+.sig--a .is-on .sig-st__leader { stroke: rgba(210, 31, 38, .55); }
+.sig--a .is-on .sig-st__cross { stroke: rgba(210, 31, 38, .45); }
+
+/* ---------- B  Stroomlijn: one streamline, a granule on the tip, a short fading tail ---------- */
+.sig--b .sig__base { stroke: rgba(14, 42, 71, .14); }
+.sig--b .sig__done { stroke: rgba(210, 31, 38, .32); }
+.sig__head { stroke: var(--orange); stroke-linecap: round; transition: opacity .3s ease; }
+.sig__head--0 { stroke-width: 1; opacity: .35; }
+.sig__head--1 { stroke-width: 1.25; opacity: .6; }
+.sig__head--2 { stroke-width: 1.75; }
+.sig__granule { fill: var(--granulate); stroke: var(--paper); stroke-width: 1.5; transition: opacity .3s ease; }
+.sig--b .sig-st__ring { fill: var(--cream); stroke: rgba(14, 42, 71, .4); stroke-width: 1; transition: fill .4s ease, stroke .4s ease; }
+.sig--b .is-inv .sig-st__ring { fill: var(--green-900); stroke: rgba(255, 255, 255, .45); }
+.sig--b .is-on .sig-st__ring { fill: var(--orange); stroke: var(--orange); }
+.sig--b .sig-st__no { letter-spacing: .08em; }
+
+/* ---------- review switcher (concept pages only) ---------- */
+.sig-switch {
+  position: fixed; left: 50%; bottom: 16px; z-index: 90; translate: -50% 0; display: flex; align-items: center; gap: 4px; padding: 5px;
+  border-radius: 999px; background: rgba(8, 24, 42, .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  font: 500 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; box-shadow: var(--shadow-3);
+}
+.sig-switch span { padding: 0 8px 0 10px; color: rgba(255, 255, 255, .55); }
+.sig-switch a { display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 999px; color: var(--white); text-decoration: none; }
+.sig-switch a:hover { background: rgba(255, 255, 255, .12); }
+.sig-switch a[aria-current] { background: var(--white); color: var(--green-900); }
+.sig-switch i { width: 1px; height: 18px; margin: 0 4px; background: rgba(255, 255, 255, .2); }
+@media (max-width: 760px) { .sig-switch span { display: none; } }
+
+/* ---------- start concepts (review, html[data-sig-start]) ---------- */
+.sig-st__datum { fill: var(--cream); stroke: rgba(14, 42, 71, .55); stroke-width: 1; transition: stroke .4s ease; }
+.sig-st__quad { fill: rgba(14, 42, 71, .55); transition: fill .4s ease; }
+.sig-st--origin.is-on .sig-st__datum { stroke: var(--orange); }
+.sig-st--origin.is-on .sig-st__quad { fill: var(--orange); }
+.sig-st__arrow { fill: rgba(14, 42, 71, .45); transition: fill .4s ease; }
+.sig-st--origin.is-on .sig-st__arrow { fill: var(--orange); }
+.sig-st__src { fill: var(--orange); }
+.sig-st__ping { fill: none; stroke: var(--orange); stroke-width: 1; transform-box: fill-box; transform-origin: center; animation: sig-ping 2.6s var(--ease-out) infinite; }
+@keyframes sig-ping { from { transform: scale(1); opacity: .8; } to { transform: scale(3.2); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .sig-st__ping { animation: none; opacity: 0; } }
