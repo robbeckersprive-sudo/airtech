@@ -7,6 +7,7 @@
    Scroll draws the line to ~62% of the viewport (the same tip as the hero/process motion). Reduced motion: fully drawn. */
 (function () {
   'use strict';
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
   var root = document.documentElement, V = root.getAttribute('data-sig');
   if (!V || !document.querySelector('main')) return;
   var NS = 'http://www.w3.org/2000/svg';
@@ -65,14 +66,14 @@
     if (dsO && dsO.offsetParent) {
       var orr = dsO.getBoundingClientRect(), oy = docY(orr) + orr.height / 2;
       var S0 = root.getAttribute('data-sig-start');
-      return { x: orr.left + orr.width / 2, y: oy, bottom: oy - (S0 === 'source' ? 8 : 48), label: 'Proceslijn', tabs: true };
+      return { x: orr.left + orr.width / 2, y: oy, bottom: oy - (S0 === 'source' ? 8 : 48), label: L('processLine', 'Proceslijn'), tabs: true };
     }
     var track = document.querySelector('[data-hero-track]'), tab = document.querySelector('.hero-tab');
     if (track && tab && tab.offsetParent) {
       var hero = track.querySelector('.hero');
       var heroTop = docY(track.getBoundingClientRect()) + track.offsetHeight - hero.offsetHeight;   // where the hero lands after the pin
       var tr = tab.getBoundingClientRect(), hr = hero.getBoundingClientRect();
-      return { x: tr.left, y: heroTop + (tr.top - hr.top), bottom: heroTop + hero.offsetHeight, label: 'Proceslijn', tabs: true };
+      return { x: tr.left, y: heroTop + (tr.top - hr.top), bottom: heroTop + hero.offsetHeight, label: L('processLine', 'Proceslijn'), tabs: true };
     }
     // other templates: start under the page hero (the h1's block, plus a following media block without its own h2)
     var h1 = document.querySelector('main h1'), blk = h1 || document.querySelector('main > *');
@@ -159,7 +160,10 @@
     heads.forEach(function (h) { h.p.setAttribute('d', d); });
     total = done.getTotalLength();
     table = [];
-    for (var L = 0; L <= total; L += 6) table.push([done.getPointAtLength(L).y, L]);
+    // The production signature is a vertical line: its arc length is its y distance.
+    // Avoid thousands of synchronous SVG geometry queries on every layout.
+    if (V === 'a' && S && S !== 'inlet') table.push([startY, 0]);
+    else for (var L = 0; L <= total; L += 6) table.push([done.getPointAtLength(L).y, L]);
     table.push([endY, total]);
 
     gLine.removeAttribute('mask');
@@ -237,6 +241,7 @@
 
   function lengthAt(y) {
     if (y <= table[0][0]) return 0;
+    if (V === 'a' && root.getAttribute('data-sig-start') === 'origin') return Math.min(total, y - startY);
     var lo = 0, hi = table.length - 1;
     while (hi - lo > 1) { var m = (lo + hi) >> 1; if (table[m][0] < y) lo = m; else hi = m; }
     // the first rows share one y (the run along the tab rule): take the last of them

@@ -9,6 +9,7 @@
      focus lands in it. Close by: a short smooth scroll. Reduced motion: an instant jump. */
 (function () {
   'use strict';
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
   var section = document.getElementById('contact');
   if (!section) return;
   var form = section.querySelector('[data-form]'), select = section.querySelector('[data-contact-topic]');
@@ -21,7 +22,7 @@
   function mode() {
     var cb = !!select && select.value === 'terugbellen';
     section.classList.toggle('is-callback', cb);
-    if (telLabel) telLabel.textContent = cb ? 'Telefoon, wij bellen u' : telText;
+    if (telLabel) telLabel.textContent = cb ? L('callback', 'Telefoon, wij bellen u') : telText;
   }
   function syncChips() {
     chips.forEach(function (c) {
@@ -89,7 +90,7 @@
     if (veil) return veil;
     veil = document.createElement('div');
     veil.className = 'ct-veil'; veil.setAttribute('aria-hidden', 'true');
-    veil.innerHTML = '<span class="ct-veil__label"><i></i>Naar het contactformulier</span>';
+    veil.innerHTML = '<span class="ct-veil__label"><i></i>' + L('toForm', 'Naar het contactformulier') + '</span>';
     document.body.appendChild(veil);
     return veil;
   }

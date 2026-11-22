@@ -48,14 +48,14 @@ def dossier_block():
         off = '' if on else ' aria-hidden="true" inert'
         imgs.append(f'<div class="pd-img{" is-on" if on else ""}" data-pd-img>{pic(p["image"], "", "(min-width: 900px) 64vw, 100vw", eager=False)}</div>')
         facts = ''.join(f'<div class="pd-fact"><dt>{label}</dt><dd{_count_attrs(val)}>{_value(val)}</dd></div>' for val, label in p['facts'][:4])
-        copies.append(f'''<article class="pd-copy{" is-on" if on else ""}" id="pd-{slug}" role="tabpanel" aria-labelledby="pd-tab-{i}" data-pd-copy{off}>
+        copies.append(f'''<div class="pd-copy{" is-on" if on else ""}" id="pd-{slug}" role="tabpanel" aria-labelledby="pd-tab-{i}" data-pd-copy{off}>
           <p class="pd-sector"><span>{p["sector"]}</span>{p["category"]}</p>
           <h3 class="pd-title">{split_lines(p["title"])}</h3>
           <p class="pd-lead">{p["lead"]}</p>
           <dl class="pd-facts" style="--n:{len(p["facts"][:4])}">{facts}</dl>
           <dl class="pd-meta"><div><dt>Opdrachtgever</dt><dd>{p["client"]}</dd></div><div><dt>Materiaal</dt><dd>{p["material"]}</dd></div><div><dt>Scope</dt><dd>{p["scope"]}</dd></div></dl>
           <div class="pd-actions">{link("Bekijk het project", f"project-{slug}.html", "ur", "pd-link pd-link--main")}{link("Alle projecten", "projecten.html", "ur", "pd-link")}</div>
-        </article>''')
+        </div>''')
         tabs.append(f'<button class="pd-tab" type="button" role="tab" id="pd-tab-{i}" aria-controls="pd-{slug}" aria-selected="{str(on).lower()}" tabindex="{0 if on else -1}" data-pd-tab="{i}">'
                     f'<span class="pd-tab__img" aria-hidden="true"><img src="images/{p["image"]}-480.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></span>'
                     f'<span class="pd-tab__txt"><span class="pd-tab__no">{i + 1:02d} · {p["sector"]}</span><span class="pd-tab__name">{p["short"]}</span></span>'

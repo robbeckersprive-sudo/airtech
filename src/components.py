@@ -3,17 +3,21 @@
 Every function returns an HTML string. Pages (see pages.py) only compose these.
 """
 import json
+import hashlib
 import os
 import random
 import re
+from functools import lru_cache
 from html import escape
 
 from contact_delivery import CONTACT_PATH, CONTACT_TOPICS, FIELD_LIMITS, RECIPIENT as EMAIL
+import i18n
+from i18n import t, tr
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFEST = json.load(open(os.path.join(ROOT, 'images', 'manifest.json'), encoding='utf-8'))
 
-SITE = 'https://www.airtechnicsolutions.nl'  # [TBD] confirm production domain
+SITE = os.environ.get('SITE_URL', 'https://airtechnology.vercel.app').rstrip('/')
 ORG = 'Airtechnic Solutions'
 PHONE_DISPLAY = '+31 (0)85 0660 243'
 PHONE_TEL = '+31850660243'
@@ -66,9 +70,9 @@ LOGO_MARK = ('<svg viewBox="0 0 30 34" aria-hidden="true" focusable="false">'
 
 
 def logo(href='index.html'):
-    return (f'<a class="logo logo--airtechnic" href="{href}" aria-label="{ORG}, naar de homepage">'
+    return (f'<a class="logo logo--airtechnic" href="{href}" aria-label="{t("logo.home")}">'
             '<span class="logo__art" aria-hidden="true">'
-            '<img src="assets/img/airtechnic-logo-transparent.png" width="2176" height="722" alt="" fetchpriority="high">'
+            '<img src="assets/img/airtechnic-logo-320.webp" srcset="assets/img/airtechnic-logo-320.webp 320w, assets/img/airtechnic-logo-640.webp 640w" sizes="(max-width: 719px) 180px, 240px" width="2176" height="722" alt="" decoding="async">'
             '</span><svg class="logo__flow" viewBox="0 0 180 8" fill="none" aria-hidden="true" focusable="false">'
             '<path pathLength="100" d="M1 6H110C133 6 146 2 179 2"/>'
             '</svg></a>')
@@ -249,20 +253,20 @@ def _header_sheet(current=None):
     comp_names = {t for t, _h, _i in COMPONENTEN}
     cur_attr = lambda on: ' aria-current="page"' if on else ''
     opl = ''.join(
-        f'<div class="mnav__group"><p class="mnav__group-t">{group}</p><ul>'
+        f'<div class="mnav__group"><p class="mnav__group-t">{tr(group)}</p><ul>'
         + ''.join(f'<li><a class="mnav__row" href="{href}"><span class="mnav__thumb">{pic(SOL_IMG[label], "", "64px")}</span>'
-                  f'<span>{label}</span>{icon("ur")}</a></li>' for label, href in items)
+                  f'<span>{tr(label)}</span>{icon("ur")}</a></li>' for label, href in items)
         + '</ul></div>' for group, items in OPLOSSINGEN)
-    tiles = ''.join(f'<li style="--i:{i}"><a class="mnav__tile" href="{h}"{cur_attr(t == current)}>'
-                    f'<span class="mnav__tile-img">{pic(img, "", "45vw")}</span><span class="mnav__tile-t">{t}</span></a></li>'
-                    for i, (t, h, img) in enumerate(COMPONENTEN))
+    tiles = ''.join(f'<li style="--i:{i}"><a class="mnav__tile" href="{h}"{cur_attr(c == current)}>'
+                    f'<span class="mnav__tile-img">{pic(img, "", "45vw")}</span><span class="mnav__tile-t">{tr(c)}</span></a></li>'
+                    for i, (c, h, img) in enumerate(COMPONENTEN))
     root = [
-        ('button', 'opl', 'Oplossingen', False),
-        ('button', 'comp', 'Componenten', current in comp_names),
-        ('projecten.html', None, 'Projecten', current == 'Projecten'),
-        ('index.html#steps-title', None, 'Werkwijze', False),
-        ('over-ons.html', None, 'Over ons', current == 'Over ons'),
-        ('kennisbank.html', None, 'Kennisbank', current == 'Kennisbank'),
+        ('button', 'opl', t('nav.solutions'), False),
+        ('button', 'comp', t('nav.components'), current in comp_names),
+        ('projecten.html', None, t('nav.projects'), current == 'Projecten'),
+        ('index.html#steps-title', None, t('nav.approach'), False),
+        ('over-ons.html', None, t('nav.about'), current == 'Over ons'),
+        ('kennisbank.html', None, t('nav.knowledge'), current == 'Kennisbank'),
     ]
     items = []
     for i, (kind, key, label, on) in enumerate(root):
@@ -274,33 +278,34 @@ def _header_sheet(current=None):
                          f'aria-expanded="false" aria-controls="mnav-{key}">{inner}</button></li>')
         else:
             items.append(f'<li style="--i:{i}"><a class="mnav__item{dot}" href="{kind}"{cur_attr(on)}>{inner}</a></li>')
-    back = f'<button class="mnav__back" type="button" data-mnav-back>{icon("left")}<span>Menu</span></button>'
-    return f'''<div class="mnav" id="hx-sheet" data-hx-sheet data-theme="steel" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+    back = f'<button class="mnav__back" type="button" data-mnav-back>{icon("left")}<span>{t("nav.menu")}</span></button>'
+    return f'''<div class="mnav" id="hx-sheet" data-hx-sheet data-theme="steel" role="dialog" aria-modal="true" aria-label="{t("nav.menu")}" hidden>
     <i class="mnav__scan" aria-hidden="true"></i>
     <div class="mnav__body">
-      <nav class="mnav__panes" aria-label="Mobiele navigatie">
+      <nav class="mnav__panes" aria-label="{t("nav.mobile")}">
         <div class="mnav__pane mnav__pane--root" data-mnav-pane="root">
           <ol class="mnav__list">{"".join(items)}</ol>
         </div>
         <div class="mnav__pane mnav__pane--sub" id="mnav-opl" data-mnav-pane="opl" hidden>
-          {back}<p class="mnav__kicker"><span>01</span>Oplossingen</p>
+          {back}<p class="mnav__kicker"><span>01</span>{t("nav.solutions")}</p>
           {opl}
-          <a class="mnav__all" href="{SOLUTIONS_HREF}">Verken onze oplossingen{icon("ur")}</a>
+          <a class="mnav__all" href="{SOLUTIONS_HREF}">{t("nav.explore")}{icon("ur")}</a>
         </div>
         <div class="mnav__pane mnav__pane--sub" id="mnav-comp" data-mnav-pane="comp" hidden>
-          {back}<p class="mnav__kicker"><span>02</span>Componenten</p>
+          {back}<p class="mnav__kicker"><span>02</span>{t("nav.components")}</p>
           <ul class="mnav__tiles">{tiles}</ul>
-          <a class="mnav__all" href="componenten.html">Alle componenten{icon("ur")}</a>
+          <a class="mnav__all" href="componenten.html">{t("nav.all_components")}{icon("ur")}</a>
         </div>
       </nav>
     </div>
     <div class="mnav__foot">
-      <a class="btn btn--block mnav__cta" href="index.html#contact"><span class="btn__label">Bespreek uw vraagstuk</span>{btn_icon()}</a>
+      <a class="btn btn--block mnav__cta" href="index.html#contact"><span class="btn__label">{t("nav.cta")}</span>{btn_icon()}</a>
       <div class="mnav__quick">
-        <a href="tel:{PHONE_TEL}">{icon("phone")}<span>Bel ons</span></a>
-        <a href="mailto:{EMAIL}">{icon("mail")}<span>Mail ons</span></a>
+        <a href="tel:{PHONE_TEL}">{icon("phone")}<span>{t("nav.call")}</span></a>
+        <a href="mailto:{EMAIL}">{icon("mail")}<span>{t("nav.mail")}</span></a>
       </div>
-      <a class="mnav__location" href="https://www.google.com/maps/dir/?api=1&amp;destination=Scherpenbeemd%203%2C%20Beek%20en%20Donk%2C%20Nederland" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic, Scherpenbeemd 3, Beek en Donk in Google Maps">{icon("pin")}<span class="mnav__location-address">{ADDRESS[0]}<span>{ADDRESS[1]}</span></span><span class="mnav__location-action">Route{icon("ur")}</span></a>
+      <a class="mnav__location" href="https://www.google.com/maps/dir/?api=1&amp;destination=Scherpenbeemd%203%2C%20Beek%20en%20Donk%2C%20Nederland" target="_blank" rel="noopener noreferrer" aria-label="{t('route.menu_aria', address=ADDRESS[0] + ', ' + ADDRESS[1])}">{icon("pin")}<span class="mnav__location-address">{ADDRESS[0]}<span>{ADDRESS[1]}</span></span><span class="mnav__location-action">{t("nav.route")}{icon("ur")}</span></a>
+      {lang_switch('sheet')}
     </div>
   </div>'''
 
@@ -309,66 +314,67 @@ def header(overlay=False, current=None):
     """current: label of the active component group (e.g. 'Cyclonen') to mark in the Componenten drawer."""
     first = OPLOSSINGEN[0][1][0][0]
     groups = ''.join(
-        f'<div class="hxb-group"><p class="hxb-group__t">{t}</p><ul>'
-        + ''.join(f'<li><a href="{h}" data-fig="{_slug(n)}"><span>{n}</span>{icon("ur")}</a></li>' for n, h in items)
-        + '</ul></div>' for t, items in OPLOSSINGEN)
-    figs = ''.join(f'<div class="hxb-fig__img hxb-fig__img--cut{" is-on" if n == first else ""}" data-fig-img="{_slug(n)}" data-cap="{n}" data-grp="{g}">'
+        f'<div class="hxb-group"><p class="hxb-group__t">{tr(g)}</p><ul>'
+        + ''.join(f'<li><a href="{h}" data-fig="{_slug(n)}"><span>{tr(n)}</span>{icon("ur")}</a></li>' for n, h in items)
+        + '</ul></div>' for g, items in OPLOSSINGEN)
+    figs = ''.join(f'<div class="hxb-fig__img hxb-fig__img--cut{" is-on" if n == first else ""}" data-fig-img="{_slug(n)}" data-cap="{tr(n)}" data-grp="{tr(g)}">'
                    f'{pic(SOL_IMG[n], "", "(min-width: 1040px) 40vw, 1px")}</div>'
                    for g, items in OPLOSSINGEN for n, _h in items)
     marks = ''.join(f'<i class="hxb-reg hxb-reg--{c}"></i>' for c in ('tl', 'tr', 'bl', 'br'))
-    clist = ''.join(f'<li><a href="{h}" data-fig="{_slug(t)}"{" aria-current=page" if t == current else ""}>'
-                    f'<span class="hxb-thumb">{pic(img, "", "56px")}</span><span>{t}</span>{icon("ur")}</a></li>'
-                    for t, h, img in COMPONENTEN)
-    cfigs = ''.join(f'<div class="hxb-fig__img hxb-fig__img--cut{" is-on" if i == 0 else ""}" data-fig-img="{_slug(t)}" '
-                    f'data-cap="{t}" data-grp="Componenten">{pic(img, "", "(min-width: 1040px) 30vw, 1px")}</div>'
-                    for i, (t, _h, img) in enumerate(COMPONENTEN))
+    clist = ''.join(f'<li><a href="{h}" data-fig="{_slug(c)}"{" aria-current=page" if c == current else ""}>'
+                    f'<span class="hxb-thumb">{pic(img, "", "56px")}</span><span>{tr(c)}</span>{icon("ur")}</a></li>'
+                    for c, h, img in COMPONENTEN)
+    cfigs = ''.join(f'<div class="hxb-fig__img hxb-fig__img--cut{" is-on" if i == 0 else ""}" data-fig-img="{_slug(c)}" '
+                    f'data-cap="{tr(c)}" data-grp="{t("nav.components")}">{pic(img, "", "(min-width: 1040px) 30vw, 1px")}</div>'
+                    for i, (c, _h, img) in enumerate(COMPONENTEN))
     comp_on = ' is-current' if current in {item[0] for item in COMPONENTEN} else ''
     ov = ' hx--overlay' if overlay else ''
     return f'''<header class="hx hx--b{ov}" data-site-header>
   <div class="hxb-rail">
     <div class="container hxb-rail__in">
-      <nav class="hxb-rail__links" aria-label="Service"><a href="kennisbank.html">Kennisbank</a><a href="index.html#contact">Contact</a></nav>
+      <nav class="hxb-rail__links" aria-label="{t("nav.service")}"><a href="kennisbank.html">{t("nav.knowledge")}</a><a href="index.html#contact">{t("nav.contact")}</a></nav>
       <ul>
-        <li><a href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span></a></li>
+        <li><a href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="{t('route.aria', address=ADDRESS[0] + ', ' + ADDRESS[1])}">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span></a></li>
         <li><a href="tel:{PHONE_TEL}">{icon("phone")}<span>{PHONE_DISPLAY}</span></a></li>
         <li><a href="mailto:{EMAIL}">{icon("mail")}<span>{EMAIL}</span></a></li>
       </ul>
+      {lang_switch('rail')}
     </div>
   </div>
   <div class="hxb-bar">
     <div class="container hxb-bar__in">
       {logo()}
-      <nav class="hxb-nav" aria-label="Hoofdnavigatie">
+      <nav class="hxb-nav" aria-label="{t("nav.main")}">
         <ul>
-          <li><button class="hxb-link" type="button" data-hx-tab="opl" aria-expanded="false" aria-controls="hxb-opl">Oplossingen{icon("chev-down")}</button></li>
-          <li><button class="hxb-link{comp_on}" type="button" data-hx-tab="comp" aria-expanded="false" aria-controls="hxb-comp">Componenten{icon("chev-down")}</button></li>
-          <li><a class="hxb-link{' is-current' if current == 'Projecten' else ''}" href="projecten.html"{' aria-current="true"' if current == 'Projecten' else ''}>Projecten</a></li>
-          <li><a class="hxb-link" href="index.html#steps-title">Werkwijze</a></li>
-          <li><a class="hxb-link{' is-current' if current == 'Over ons' else ''}" href="over-ons.html"{' aria-current="page"' if current == 'Over ons' else ''}>Over ons</a></li>
+          <li><button class="hxb-link" type="button" data-hx-tab="opl" aria-expanded="false" aria-controls="hxb-opl">{t("nav.solutions")}{icon("chev-down")}</button></li>
+          <li><button class="hxb-link{comp_on}" type="button" data-hx-tab="comp" aria-expanded="false" aria-controls="hxb-comp">{t("nav.components")}{icon("chev-down")}</button></li>
+          <li><a class="hxb-link{' is-current' if current == 'Projecten' else ''}" href="projecten.html"{' aria-current="true"' if current == 'Projecten' else ''}>{t("nav.projects")}</a></li>
+          <li><a class="hxb-link" href="index.html#steps-title">{t("nav.approach")}</a></li>
+          <li><a class="hxb-link{' is-current' if current == 'Over ons' else ''}" href="over-ons.html"{' aria-current="page"' if current == 'Over ons' else ''}>{t("nav.about")}</a></li>
         </ul>
       </nav>
-      <a class="btn btn--sm hxb-cta" href="index.html#contact" data-magnetic><span class="btn__label">Bespreek uw vraagstuk</span>{btn_icon()}</a>
-      <button class="hx-burger" type="button" data-hx-burger aria-expanded="false" aria-controls="hx-sheet" aria-label="Menu openen"><span></span><span></span></button>
+      <a class="btn btn--sm hxb-cta" href="index.html#contact" data-magnetic><span class="btn__label">{t("nav.cta")}</span>{btn_icon()}</a>
+      <button class="hx-burger" type="button" data-hx-burger aria-expanded="false" aria-controls="hx-sheet" aria-label="{t("nav.menu_open")}"><span></span><span></span></button>
     </div>
     <div class="hxb-ruler" aria-hidden="true"><span class="hxb-ruler__progress" data-scroll-progress></span><span class="hxb-ruler__marker"></span></div>
   </div>
-  <div class="hxb-drawer" id="hxb-opl" data-hx-panel="opl" role="region" aria-label="Oplossingen" inert>
+  <div class="hxb-drawer" id="hxb-opl" data-hx-panel="opl" role="region" aria-label="{t("nav.solutions")}" inert>
     <div class="container hxb-drawer__in">
       <div class="hxb-drawer__nav">{groups}
-        <a class="link hxb-drawer__all" href="{SOLUTIONS_HREF}">Verken onze oplossingen{icon("ur")}</a>
+        <a class="link hxb-drawer__all" href="{SOLUTIONS_HREF}">{t("nav.explore")}{icon("ur")}</a>
       </div>
       <figure class="hxb-fig hxb-fig--cut" data-fig-frame>{figs}{marks}
-        <figcaption><span data-fig-cap>{first}</span><span data-fig-grp>{OPLOSSINGEN[0][0]}</span></figcaption>
+        <figcaption><span data-fig-cap>{tr(first)}</span><span data-fig-grp>{tr(OPLOSSINGEN[0][0])}</span></figcaption>
       </figure>
     </div>
   </div>
-  <div class="hxb-drawer" id="hxb-comp" data-hx-panel="comp" role="region" aria-label="Componenten" inert>
+  <div class="hxb-drawer" id="hxb-comp" data-hx-panel="comp" role="region" aria-label="{t("nav.components")}" inert>
     <div class="container hxb-drawer__in hxb-drawer__in--comp">
       <div class="hxb-drawer__nav"><ul class="hxb-clist">{clist}</ul>
-        <a class="link hxb-drawer__all" href="componenten.html">Alle componenten{icon("ur")}</a>
+        <a class="link hxb-drawer__all" href="componenten.html">{t("nav.all_components")}{icon("ur")}</a>
       </div>
       <figure class="hxb-fig hxb-fig--cut" data-fig-frame>{cfigs}{marks}
-        <figcaption><span data-fig-cap>{COMPONENTEN[0][0]}</span><span data-fig-grp>Componenten</span></figcaption>
+        <figcaption><span data-fig-cap>{tr(COMPONENTEN[0][0])}</span><span data-fig-grp>{t("nav.components")}</span></figcaption>
       </figure>
     </div>
   </div>
@@ -469,73 +475,76 @@ def contact(title, intro, deco=False, topic='algemeen', topics=()):
     The real form logic stays in site.js: it needs #contact, .contact__lines a[href^=mailto], [data-contact-topic]
     (the <select>, still the source of truth) and the [data-validate] fields. The topic chips only drive the select;
     the progress line (Vraag, Naam, E-mail) shows which required field is still open."""
-    naam = _field('naam', 'Naam', required=True, autocomplete='name')
-    mail = _field('email', 'E-mailadres', 'email', True, 'email')
-    bedrijf = _field('bedrijf', 'Bedrijf (optioneel)', autocomplete='organization')
-    telefoon = _field('telefoon', 'Telefoon (optioneel)', 'tel', autocomplete='tel')
-    vraag = _field('vraagstuk', 'Uw bericht', required=True, textarea=True, hint=CONTACT_TOPICS[topic][1])
+    title, intro = i18n.localize_html(title), i18n.localize_html(intro)
+    topic_label = lambda key: i18n.tr_plain(CONTACT_TOPICS[key][0])
+    topic_hint = lambda key: i18n.tr_plain(CONTACT_TOPICS[key][1])
+    naam = _field('naam', t('ct.f.name'), required=True, autocomplete='name')
+    mail = _field('email', t('ct.f.email'), 'email', True, 'email')
+    bedrijf = _field('bedrijf', t('ct.f.company'), autocomplete='organization')
+    telefoon = _field('telefoon', t('ct.f.phone'), 'tel', autocomplete='tel')
+    vraag = _field('vraagstuk', t('ct.f.message'), required=True, textarea=True, hint=topic_hint(topic))
     # at most two page-specific topics, then the same four intent shortcuts on every page, 'Algemene vraag' last
     intents = ('installatieontwerp', 'bestaande-installatie', 'onderdelen', 'terugbellen')
     own = [k for k in dict.fromkeys((topic, *topics)) if k != 'algemeen'][:2]
     keys = list(dict.fromkeys((*own, *intents))) + ['algemeen']
     options = ''.join(
-        f'<option value="{key}" data-hint="{escape(CONTACT_TOPICS[key][1])}"'
-        f'{" selected" if key == topic else ""}>{escape(CONTACT_TOPICS[key][0])}</option>' for key in keys)
+        f'<option value="{key}" data-hint="{escape(topic_hint(key))}"'
+        f'{" selected" if key == topic else ""}>{escape(topic_label(key))}</option>' for key in keys)
     chips = ''.join(
         f'<button type="button" class="ct-chip" role="radio" aria-checked="{str(key == topic).lower()}" tabindex="{0 if key == topic else -1}" '
-        f'data-ct-topic="{key}">{escape(CONTACT_TOPICS[key][0].split(" · ")[-1])}</button>' for key in keys)
+        f'data-ct-topic="{key}">{escape(topic_label(key).split(" · ")[-1])}</button>' for key in keys)
     deco_html = (f'<div class="contact__deco" aria-hidden="true">{pic("02-pijpleiding-contact", "", "45vw")}</div>' if deco else '')
-    tips = ('Welk product u verwerkt', 'De gewenste capaciteit', 'Afstand en hoogteverschil van het transport',
-            'Foto&rsquo;s of tekeningen van de huidige situatie')
-    helpers = ''.join(f'<button type="button" class="ct-helper" data-ct-add="{t}: ">+ {t}</button>'
-                      for t in ('Product', 'Capaciteit', 'Afstand', 'Huidige situatie'))
-    tip_items = ''.join(f'<li>{icon("check")}<span>{t}</span></li>' for t in tips)
-    steps = ''.join(f'<li data-ct-step="{k}"><i></i><span>{t}</span></li>' for k, t in (('vraagstuk', 'Vraag'), ('naam', 'Naam'), ('email', 'E-mail')))
+    tips = (t('ct.tip.product'), t('ct.tip.capacity'), t('ct.tip.distance'), t('ct.tip.photos'))
+    helpers = ''.join(f'<button type="button" class="ct-helper" data-ct-add="{h}: ">+ {h}</button>'
+                      for h in (t('ct.add.product'), t('ct.add.capacity'), t('ct.add.distance'), t('ct.add.situation')))
+    tip_items = ''.join(f'<li>{icon("check")}<span>{tip}</span></li>' for tip in tips)
+    steps = ''.join(f'<li data-ct-step="{k}"><i></i><span>{label}</span></li>'
+                    for k, label in (('vraagstuk', t('ct.step.question')), ('naam', t('ct.step.name')), ('email', t('ct.step.email'))))
     deco_cls = ' contact--deco' if deco else ''
-    return f'''<section data-theme="forest" class="contact ct{deco_cls}" id="contact" aria-labelledby="contact-title" data-reveal>
+    return i18n.skip(f'''<section data-theme="forest" class="contact ct{deco_cls}" id="contact" aria-labelledby="contact-title" data-reveal>
   <div class="ct-grid-bg" aria-hidden="true"></div>
   {deco_html}
   <div class="container ct-in">
     <div class="ct-intro">
-      <p class="ct-kicker"><span class="ct-kicker__dot" aria-hidden="true"></span>Contact</p>
+      <p class="ct-kicker"><span class="ct-kicker__dot" aria-hidden="true"></span>{t("ct.kicker")}</p>
       <h2 id="contact-title" class="h2" data-split>{split_lines(title)}</h2>
       <p class="ct-lead">{intro}</p>
-      <div class="ct-tips"><p class="ct-tips__t">Handig om te noemen</p><ul>{tip_items}</ul></div>
+      <div class="ct-tips"><p class="ct-tips__t">{t("ct.tips")}</p><ul>{tip_items}</ul></div>
       <ul class="contact__lines ct-lines">
-        <li><a href="tel:{PHONE_TEL}"><span class="ct-lines__ico">{icon("phone")}</span><span class="ct-lines__txt"><small>Bellen</small>{PHONE_DISPLAY}</span>{icon("ur")}</a></li>
-        <li><a href="mailto:{EMAIL}"><span class="ct-lines__ico">{icon("mail")}</span><span class="ct-lines__txt"><small>Mailen</small>{EMAIL}</span>{icon("ur")}</a></li>
+        <li><a href="tel:{PHONE_TEL}"><span class="ct-lines__ico">{icon("phone")}</span><span class="ct-lines__txt"><small>{t("ct.call")}</small>{PHONE_DISPLAY}</span>{icon("ur")}</a></li>
+        <li><a href="mailto:{EMAIL}"><span class="ct-lines__ico">{icon("mail")}</span><span class="ct-lines__txt"><small>{t("ct.mail")}</small><span class="ct-lines__value">{escape(EMAIL).replace('@', '@<wbr>')}</span></span>{icon("ur")}</a></li>
       </ul>
-      <a class="ct-addr address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span>{icon("ur")}</a>
+      <a class="ct-addr address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="{t('route.aria', address=ADDRESS[0] + ', ' + ADDRESS[1])}">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span>{icon("ur")}</a>
     </div>
     <div class="ct-card-wrap">
       <div class="contact__card ct-card" data-theme="light">
         <ol class="ct-progress" aria-hidden="true" data-ct-progress><span class="ct-progress__line"><b data-ct-fill></b></span>{steps}</ol>
         <form class="form" action="{CONTACT_PATH}" method="post" novalidate data-form aria-labelledby="contact-form-title">
           <div class="form__heading">
-            <h3 class="h3" id="contact-form-title" tabindex="-1">Stel uw vraag</h3>
-            <p class="form__note">Velden met * zijn verplicht.</p>
+            <h3 class="h3" id="contact-form-title" tabindex="-1">{t("ct.form_title")}</h3>
+            <p class="form__note">{t("ct.required")}</p>
           </div>
           <div class="field ct-topic">
-            <label for="f-onderwerp" id="f-onderwerp-label">Onderwerp</label>
+            <label for="f-onderwerp" id="f-onderwerp-label">{t("ct.topic")}</label>
             <div class="ct-chips" role="radiogroup" aria-labelledby="f-onderwerp-label" data-ct-chips hidden>{chips}</div>
             <select id="f-onderwerp" name="onderwerp" data-contact-topic>{options}</select>
           </div>
           {vraag}
-          <div class="ct-helpers" data-ct-helpers hidden><span class="ct-helpers__t">Snel aanvullen</span>{helpers}</div>
+          <div class="ct-helpers" data-ct-helpers hidden><span class="ct-helpers__t">{t("ct.quick")}</span>{helpers}</div>
           <div class="form__row form__row--2">{naam}{mail}</div>
           <div class="form__row form__row--2">{bedrijf}{telefoon}</div>
           <div class="form__actions ct-actions">
-            <button class="btn btn--lg" type="submit" disabled><span class="btn__label">Verstuur uw aanvraag</span>{btn_icon()}</button>
-            <p class="form__privacy"><span class="ct-reassure">{icon("check")}Vrijblijvend</span><a href="{PRIVACY_URL}">Privacyverklaring</a></p>
+            <button class="btn btn--lg" type="submit" disabled><span class="btn__label">{t("ct.submit")}</span>{btn_icon()}</button>
+            <p class="form__privacy"><span class="ct-reassure">{icon("check")}{t("ct.no_obligation")}</span><a href="{PRIVACY_URL}">{t("privacy")}{t("privacy.note")}</a></p>
           </div>
           <p class="form__feedback" role="status" tabindex="-1" data-contact-feedback></p>
-          <noscript><p class="form__note">Mail rechtstreeks naar <a href="mailto:{EMAIL}">{EMAIL}</a> of bel ons.</p></noscript>
+          <noscript><p class="form__note">{t("ct.noscript", email=f'<a href="mailto:{EMAIL}">{EMAIL}</a>')}</p></noscript>
         </form>
       </div>
     </div>
   </div>
 </section>
-<script src="{_v("assets/js/contact-plus.js")}" defer></script>'''
+<script src="{_v("assets/js/contact-plus.js")}" defer></script>''')
 
 
 # ---------------------------------------------------------------- footer
@@ -549,29 +558,30 @@ def footer(variant="stone", sheet=''):
     """Footer "Titelblok" (Nov 21, styles in top.css "FOOTER"): the site's drawing sheet ends in a title block, a
     framed grid of cells (brand, motto, links, contact) with the current page as "Blad". `variant` kept for callers."""
     sheet = sheet or 'Airtechnic Solutions'
-    tech = ('<nav aria-label="Techniek"><h2 class="ft-h">Techniek</h2>'
-            '<a href="index.html#specialisaties">Onze specialisaties</a><a href="componenten.html">Componenten</a>'
-            f'<a href="{PAGES["categorie"]}">Cyclonen &amp; afscheiders</a><a href="kennisbank.html">Kennisbank</a></nav>')
+    tech = (f'<nav aria-label="{t("ft.tech")}"><h2 class="ft-h">{t("ft.tech")}</h2>'
+            f'<a href="index.html#specialisaties">{t("ft.specialisms")}</a><a href="componenten.html">{t("nav.components")}</a>'
+            f'<a href="{PAGES["categorie"]}">{t("ft.cyclones")}</a><a href="kennisbank.html">{t("nav.knowledge")}</a></nav>')
     org = ('<nav aria-label="Airtechnic"><h2 class="ft-h">Airtechnic</h2>'
-           '<a href="over-ons.html">Over ons</a><a href="index.html#steps-title">Onze werkwijze</a>'
-           '<a href="projecten.html">Projecten</a><a href="index.html#contact">Stel uw vraag</a></nav>')
-    direct = (f'<div><h2 class="ft-h">Direct contact</h2><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>'
-              f'<a href="mailto:{EMAIL}">{EMAIL}</a><address><a class="address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps"><span>{ADDRESS[0]}<br>5741 TX {ADDRESS[1]}</span>{icon("ur")}</a></address></div>')
+           f'<a href="over-ons.html">{t("nav.about")}</a><a href="index.html#steps-title">{t("ft.approach")}</a>'
+           f'<a href="projecten.html">{t("nav.projects")}</a><a href="index.html#contact">{t("ft.ask")}</a></nav>')
+    country = f'<br>{t("addr.country")}' if t('addr.country') else ''
+    direct = (f'<div><h2 class="ft-h">{t("ft.direct")}</h2><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>'
+              f'<a href="mailto:{EMAIL}">{EMAIL}</a><address><a class="address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="{t("route.aria", address=ADDRESS[0] + ", 5741 TX " + ADDRESS[1])}"><span>{ADDRESS[0]}<br>5741 TX {ADDRESS[1]}{country}</span>{icon("ur")}</a></address></div>')
     return f'''<footer class="af ft af--{variant}" id="footer">
   <div class="container">
     <div class="ft-block">
-      <div class="ft-cell ft-cell--brand">{logo()}<p class="ft-k ft-k--mute">Industriële luchttechniek &amp; solids processing</p></div>
-      <div class="ft-cell ft-cell--motto"><p class="ft-motto">Grip op <em>elke stroom.</em></p></div>
+      <div class="ft-cell ft-cell--brand">{logo()}<p class="ft-k ft-k--mute">{t("ft.discipline")}</p></div>
+      <div class="ft-cell ft-cell--motto"><p class="ft-motto">{t("ft.motto")}</p></div>
       <div class="ft-cell"><p class="ft-k">01</p>{tech}</div>
       <div class="ft-cell"><p class="ft-k">02</p>{org}</div>
       <div class="ft-cell ft-cell--contact"><p class="ft-k">03</p>{direct}</div>
       <div class="ft-cell ft-cell--sheet">
-        <dl class="ft-meta"><div><dt>Blad</dt><dd>{sheet}</dd></div><div><dt>Schaal</dt><dd>1 : 1</dd></div><div><dt>Rev.</dt><dd>2026</dd></div></dl>
-        <a class="ft-top" href="#main">{icon("ur")}<span>Naar boven</span></a>
+        <dl class="ft-meta"><div><dt>{t("ft.sheet")}</dt><dd>{sheet}</dd></div><div><dt>{t("ft.scale")}</dt><dd>1 : 1</dd></div><div><dt>{t("ft.rev")}</dt><dd>2026</dd></div></dl>
+        <a class="ft-top" href="#main">{icon("ur")}<span>{t("ft.top")}</span></a>
       </div>
     </div>
     <div class="ft-base"><span>&copy; Airtechnic Solutions BV</span>
-      <span class="ft-base__links"><a href="{PRIVACY_URL}">Privacyverklaring</a><a href="https://nl.linkedin.com/company/airtechnic-solutions">LinkedIn {icon("ur")}</a></span>
+      <span class="ft-base__links"><a href="{PRIVACY_URL}">{t("privacy")}{t("privacy.note")}</a><a href="https://nl.linkedin.com/company/airtechnic-solutions">LinkedIn {icon("ur")}</a><a href="/beheer.html" rel="nofollow">Beheer</a></span>
     </div>
   </div>
 </footer>'''
@@ -579,14 +589,12 @@ def footer(variant="stone", sheet=''):
 
 # ---------------------------------------------------------------- page shell
 FAVICON = 'assets/img/favicon.svg'
-# [TBD] self-host these for production (privacy): download the woff2 files and replace with @font-face in tokens.css.
-FONTS = ('https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900'
-         '&family=IBM+Plex+Mono:wght@400;500&display=swap')
-
-
+@lru_cache(maxsize=None)
 def _v(rel):
-    """Cache-busting version string from the asset's mtime."""
-    return f'{rel}?v={int(os.path.getmtime(os.path.join(ROOT, rel)))}'
+    """Stable content version: builds do not depend on checkout timestamps."""
+    with open(os.path.join(ROOT, rel), 'rb') as asset:
+        version = hashlib.sha256(asset.read()).hexdigest()[:12]
+    return f'{rel}?v={version}'
 
 
 # Site signature "Hartlijn" (signature.js): short station labels per section heading id
@@ -599,32 +607,62 @@ SIG_LABELS = {
 
 
 def sig_labels(body):
-    for k, lab in SIG_LABELS.items():
-        body = body.replace(f'aria-labelledby="{k}"', f'aria-labelledby="{k}" data-sig-label="{lab}"', 1)
+    for k in SIG_LABELS:
+        body = body.replace(f'aria-labelledby="{k}"', f'aria-labelledby="{k}" data-sig-label="{t("sig." + k)}"', 1)
     return body
 
 
+def lang_switch(variant='rail'):
+    """Language switcher (header rail + mobile sheet): links to the same page in nl / en / de (i18n.SLUGS).
+    The link for the active language is the Dutch file name; rewrite_urls() turns it into the translated one."""
+    page_file = i18n.current_page() or PAGES['home']
+    items = []
+    for code, name, href, on in i18n.switcher_items(page_file):
+        if on:
+            href = page_file if i18n.localized(page_file) else PAGES['home']
+        cur = ' aria-current="true"' if on else ''
+        items.append(f'<li><a href="{href}" hreflang="{code}" lang="{code}"{cur}>'
+                     f'<abbr title="{name}">{code.upper()}</abbr><span class="visually-hidden"> {name}</span></a></li>')
+    return f'<nav class="lsw lsw--{variant}" aria-label="{t("lang.label")}"><ul>{"".join(items)}</ul></nav>'
+
+
 def page(filename, title, description, og_image, body, jsonld=(), overlay=False, preload_img=None, html_cls='', footer_variant="stone", nav_current=None, preview=False, stylesheet=None):
-    url = SITE + '/' + ('' if filename == 'index.html' else filename)
+    code = i18n.lang()
+    i18n.set_page(filename)
+    if code != i18n.DEFAULT:
+        # content: Dutch source rendered, translated segment by segment (src/locales/<code>.json)
+        body = i18n.localize_html(body)
+        title = i18n.tr_title(title)
+        description = i18n.tr_plain(description)
+        jsonld = [i18n.localize_jsonld(d, SITE) for d in jsonld if d]
+    url = SITE + '/' + i18n.path(filename)
+    alternates = i18n.alternates(filename, SITE)
+    og_alt = ''.join(f'<meta property="og:locale:alternate" content="{i18n.LOCALE[c]}">\n'
+                     for c in i18n.LANGS if c != code and i18n.localized(filename))
+    strings = json.dumps(i18n.js_strings(), ensure_ascii=False).replace('</', '<\\/')
     ld = ''.join(f'<script type="application/ld+json">{json.dumps(d, ensure_ascii=False)}</script>\n' for d in jsonld if d)
     hc = f' class="{html_cls}"' if html_cls else ''
     pre = preload(*preload_img) if preload_img else ''
     robots = '<meta name="robots" content="noindex">\n' if preview else ''
     extra_style = f'<link rel="stylesheet" href="{_v(stylesheet)}">\n' if stylesheet else ''
-    body = re.sub(r"<h([1-6])\b[^>]*>.*?</h\1>", heading_breaks, sig_labels(body), flags=re.S)
-    return f'''<!doctype html>
-<html lang="nl" data-sig="a" data-sig-start="origin"{hc}>
+    body = i18n.unmark(body)
+    breaks = heading_breaks if code == i18n.DEFAULT else i18n.heading_breaks
+    body = re.sub(r"<h([1-6])\b[^>]*>.*?</h\1>", breaks, sig_labels(body), flags=re.S)
+    doc = f'''<!doctype html>
+<html lang="{i18n.HTML_LANG[code]}" data-sig="a" data-sig-start="origin"{hc}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');window.ATI18N={strings}</script>
 <title>{title}</title>
 <meta name="description" content="{escape(description)}">
 {robots}<link rel="canonical" href="{url}">
+{alternates}
 <meta name="theme-color" content="#F3F1EC">
 <meta property="og:type" content="{'article' if filename.startswith('kennis-') else 'website'}">
 <meta property="og:site_name" content="{ORG}">
-<meta property="og:locale" content="nl_NL">
+<meta property="og:locale" content="{i18n.LOCALE[code]}">
+{og_alt}
 <meta property="og:title" content="{escape(title)}">
 <meta property="og:description" content="{escape(description)}">
 <meta property="og:url" content="{url}">
@@ -633,9 +671,12 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{FAVICON}" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{FONTS}">
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-normal-site.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-italic-300-112-site.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-italic-300-100-site.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/ibm-plex-mono-normal-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/ibm-plex-mono-normal-500-latin.woff2" crossorigin>
+<link rel="stylesheet" href="{_v('assets/css/fonts.css')}">
 {pre}
 <link rel="stylesheet" href="{_v('assets/css/tokens.css')}">
 <link rel="stylesheet" href="{_v('assets/css/site.css')}">
@@ -644,15 +685,15 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 <link rel="stylesheet" href="{_v('assets/css/top.css')}">
 {extra_style}<link rel="stylesheet" href="{_v('assets/css/mobile.css')}">
 <link rel="stylesheet" href="{_v('assets/css/brand.css')}">
+<link rel="stylesheet" href="{_v('assets/css/lang.css')}">
 <script src="{_v('assets/js/page-transitions.js')}"></script>
-<link rel="expect" href="#main" blocking="render">
 <script src="{_v('assets/js/site.js')}" defer></script>
 <script src="{_v('assets/js/signature.js')}" defer></script>
 <script src="{_v('assets/js/mobile.js')}" defer></script>
 <script src="{_v('assets/js/equalize.js')}" defer></script>
 {ld}</head>
 <body>
-<a class="skip-link" href="#main">Direct naar de inhoud</a>
+<a class="skip-link" href="#main">{t("skip")}</a>
 {header(overlay, nav_current)}
 <main id="main" tabindex="-1">
 {body}
@@ -661,6 +702,7 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 </body>
 </html>
 '''
+    return doc if code == i18n.DEFAULT else i18n.rewrite_urls(doc)
 
 
 def org_jsonld():

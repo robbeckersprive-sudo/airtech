@@ -1,0 +1,169 @@
+/* Productfolder: A4 print sheets rendered to PDF by tools/render_folders.py.
+   Uses tokens.css colours and the self-hosted fonts; brand values arrive as --brand-* on <body>. */
+
+/* Static Archivo instances from src/folder_page.py (@font-face inlined in the page). */
+body { --f-text: 'Archivo Folder', Arial, sans-serif; --f-head: 'Archivo Folder Head', Arial, sans-serif;
+  --f-display: 'Archivo Folder Display', Arial, sans-serif; --f-wide: 'Archivo Folder Wide', Arial, sans-serif; }
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0; background: #8a949f; color: var(--ink);
+  font: 400 9.4pt/1.45 var(--f-text);
+  --pad: 14mm;
+  --hair: .25mm solid var(--line);
+}
+@media screen { main { display: grid; gap: 8mm; justify-content: center; padding: 8mm 0; } .sheet { box-shadow: 0 4mm 12mm rgba(0,0,0,.25); } }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, p, dl, dd, ol, ul, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+em { font-family: var(--f-wide); font-style: italic; font-weight: 300; color: var(--steel-700); }
+
+.mono { font: 500 7pt/1.35 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--steel-700); }
+
+.sheet {
+  width: 210mm; height: 297mm; overflow: hidden; position: relative;
+  background: var(--paper); padding: var(--pad) var(--pad) 0;
+  display: flex; flex-direction: column; gap: 7mm;
+  break-after: page; page-break-after: always;
+}
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+
+h2 {
+  font: 800 21pt/1.02 var(--f-head); letter-spacing: -.01em;
+  color: var(--brand-ink);
+}
+h2 em { font-size: .96em; }
+h3 { font: 700 10pt/1.25 var(--f-text); color: var(--brand-ink); }
+
+/* ---------- Title block (every sheet): the drawing's cartouche, as on the site footer ---------- */
+.tb {
+  margin: auto calc(-1 * var(--pad)) 0; display: grid;
+  grid-template-columns: 34mm 1.5fr 1fr 1.7fr 16mm;
+  border-top: .35mm solid var(--brand-ink); background: var(--paper);
+  font: 400 7pt/1.3 var(--font-mono); color: var(--ink);
+}
+.tb > div { padding: 2.6mm 3mm 3mm; border-left: var(--hair); min-height: 13mm; }
+.tb > div:first-child { border-left: 0; padding-left: var(--pad); display: flex; align-items: center; }
+.tb small { display: block; font-size: 5.6pt; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .8mm; }
+.tb__brand img { height: 6mm; width: auto; }
+.tb__sheet { font-weight: 500; color: var(--brand-ink); }
+.tb a { color: var(--steel-700); }
+
+/* ---------- Sheet 1: cover ---------- */
+.cv { gap: 0; }
+.cv__top { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 8mm; }
+.cv__logo { height: 10mm; width: auto; }
+.cv__top .mono { text-align: right; color: var(--muted); }
+.cv__top .mono span { color: var(--brand-ink); }
+.cv__band {
+  position: relative; flex: 1; margin: 0 calc(-1 * var(--pad)) 0;
+  background: var(--product-backdrop); color: var(--white);
+  display: grid; grid-template-columns: 1fr 112mm; overflow: hidden;
+}
+.cv__copy { padding: 14mm 0 12mm var(--pad); display: flex; flex-direction: column; position: relative; z-index: 1; }
+.cv__eyebrow { color: var(--sky); margin-bottom: 5mm; }
+.cv h1 {
+  font: 850 40pt/.92 var(--f-display); letter-spacing: -.015em;
+  margin-right: -60mm; /* the name may run over the plate, like the site's hero */
+}
+.cv__lead { margin-top: 8mm; font-size: 12pt; line-height: 1.42; color: var(--white-80); max-width: 88mm; }
+.cv__facts { margin-top: auto; border-top: .25mm solid var(--white-20); max-width: 92mm; }
+.cv__facts div { display: grid; grid-template-columns: 26mm 1fr; padding: 2.6mm 0; border-bottom: .25mm solid var(--white-20); }
+.cv__facts dt { font: 500 6.6pt/1.5 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--sky); }
+.cv__facts dd { font-size: 9.6pt; }
+.cv__for { margin-top: 6mm; padding: 3mm 4mm; border-left: .8mm solid var(--brand-accent); background: var(--white-10); font-size: 11pt; font-weight: 700; }
+.cv__for small { display: block; font: 500 6.4pt var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--sky); }
+.cv__for span { display: block; font-weight: 400; font-size: 9pt; color: var(--white-80); }
+.cv__plate { position: relative; display: flex; align-items: flex-end; justify-content: center; padding: 30mm 10mm 8mm 0; }
+.cv__plate img { max-height: 100%; width: auto; } /* no CSS filter: Chromium would rasterise it at screen size */
+/* Hartlijn: the site signature's dash-dot centre line */
+.cv__axis {
+  position: absolute; top: 0; bottom: 0; right: 56mm; width: 0;
+  border-left: .3mm dashed rgba(157, 184, 214, .35);
+}
+.cv__band::after { /* single red datum mark, like the site's Nulpunt */
+  content: ""; position: absolute; left: var(--pad); top: 0; width: 18mm; height: 1.2mm; background: var(--brand-accent);
+}
+
+/* ---------- Section heads ---------- */
+.sh { display: grid; grid-template-columns: 1fr; gap: 3mm; padding-top: 2mm; }
+.sh .mono { padding-bottom: 2mm; border-bottom: var(--hair); }
+.sh > p:last-child { max-width: 140mm; font-size: 10.5pt; color: var(--muted); }
+
+/* ---------- Sheet 2: working principle ---------- */
+.wk { display: grid; grid-template-columns: 96mm 1fr; gap: 9mm; align-items: start; }
+.wk__plate { background: var(--mist); padding: 6mm 6mm 4mm; }
+.wk__img { position: relative; }
+.wk__img img { width: 100%; height: auto; }
+.hs {
+  position: absolute; transform: translate(-50%, -50%);
+  width: 6.4mm; height: 6.4mm; border-radius: 50%;
+  background: var(--brand-accent); color: var(--white); border: .5mm solid var(--white);
+  font: 500 7.6pt/5.6mm var(--font-mono); text-align: center;
+  box-shadow: 0 .6mm 1.6mm rgba(8, 24, 42, .35);
+}
+.wk__plate figcaption { margin-top: 3mm; font: 400 6.6pt/1.4 var(--font-mono); color: var(--muted); }
+.wk__steps > h3 { margin-bottom: 4mm; }
+.wk__steps ol { border-top: .35mm solid var(--brand-ink); }
+.wk__steps li { display: grid; grid-template-columns: 12mm 1fr; padding: 4.5mm 0; border-bottom: var(--hair); }
+.wk__steps .n { font: 500 11pt/1.1 var(--font-mono); color: var(--brand-accent); }
+.wk__steps li p { margin-top: 1.4mm; color: var(--muted); }
+.note { margin-top: 6mm; padding-left: 4mm; border-left: .6mm solid var(--steel-400); font-size: 8.4pt; color: var(--muted); }
+
+/* ---------- Sheet 3: applications + selection ---------- */
+.uses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: .35mm solid var(--brand-ink); }
+.uses div { padding: 4mm 5mm 4mm 0; }
+.uses div + div { padding-left: 5mm; border-left: var(--hair); }
+.uses dt { font: 700 10.4pt/1.25 var(--f-text); color: var(--brand-ink); margin-bottom: 1.6mm; }
+.uses dd { color: var(--muted); }
+.sectors { background: var(--mist); padding: 3mm 4mm; }
+.sectors strong { margin-right: 3mm; }
+.sel { display: grid; grid-template-columns: 70mm 1fr; gap: 9mm; padding-top: 3mm; border-top: var(--hair); }
+.sel__copy .mono { margin-bottom: 3mm; }
+.sel__copy h2 { margin-bottom: 4mm; }
+.sel__copy > p { color: var(--muted); }
+.sel__views { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin-top: 7mm; }
+.sel__views figure { background: var(--product-backdrop); padding: 4mm 3mm 2mm; }
+.sel__views img { height: 70mm; width: auto; margin: 0 auto; }
+.sel__views figcaption { margin-top: 2mm; font: 500 6.2pt var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--sky); }
+.specs { width: 100%; border-collapse: collapse; }
+.specs th, .specs td { text-align: left; vertical-align: top; padding: 3.2mm 0; border-bottom: var(--hair); }
+.specs thead th { font: 500 6.6pt var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); border-bottom: .35mm solid var(--brand-ink); padding-top: 0; }
+.specs tbody th { width: 31mm; padding-right: 4mm; font: 700 9.2pt/1.3 var(--f-text); color: var(--brand-ink); hyphens: manual; }
+.specs td { color: var(--ink); }
+
+/* ---------- Sheet 4: practice, related, contact ---------- */
+.pr { display: grid; grid-template-columns: 82mm 1fr; gap: 8mm; }
+.pr figure img { width: 100%; height: 56mm; object-fit: cover; }
+.pr figcaption { margin-top: 1.6mm; font: 400 6.4pt/1.4 var(--font-mono); color: var(--muted); }
+.pr h2 { font-size: 15pt; margin: 2.4mm 0 2.4mm; }
+.pr p { color: var(--muted); }
+.pr__facts { display: flex; gap: 6mm; margin: 3.4mm 0; padding: 2.6mm 0; border-block: var(--hair); }
+.pr__facts dt { font: 500 14pt/1 var(--font-mono); color: var(--brand-ink); }
+.pr__facts dd { font: 400 6.6pt/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-top: 1mm; }
+.pr a, .rel a { display: inline-block; margin-top: 2.4mm; font: 500 7pt var(--font-mono); color: var(--red-text); }
+.rel .mono { padding-bottom: 2mm; border-bottom: .35mm solid var(--brand-ink); }
+.rel ul { display: grid; grid-template-columns: repeat(3, 1fr); }
+.rel li { display: grid; grid-template-columns: 22mm 1fr; gap: 3mm; padding: 4mm 3mm 0 0; }
+.rel li + li { padding-left: 3mm; border-left: var(--hair); }
+.rel img { width: 22mm; height: 30mm; object-fit: contain; background: var(--product-backdrop); padding: 1mm; }
+.rel h3 { font-size: 9pt; }
+.rel p { font-size: 7.6pt; line-height: 1.38; color: var(--muted); margin-top: 1mm;
+}
+.rel a { margin-top: 1.6mm; font-size: 6.6pt; }
+.ct {
+  margin: auto calc(-1 * var(--pad)) 0; padding: 8mm var(--pad); display: grid; grid-template-columns: 1fr 70mm; gap: 9mm;
+  background: var(--brand-band); color: var(--white);
+}
+.ct { margin-bottom: -7mm; } /* cancel the sheet gap: band sits on the title block */
+.ct + .tb { margin-top: 0; }
+.ct h2 { color: var(--white); font-size: 18pt; }
+.ct p { margin-top: 3mm; color: var(--white-80); }
+.ct__ask { font-size: 8.4pt; padding-top: 3mm; border-top: .25mm solid var(--white-20); }
+.ct__ask strong { color: var(--white); }
+.ct__lines li { padding: 2.2mm 0; border-bottom: .25mm solid var(--white-20); font-size: 8pt; text-transform: none; letter-spacing: 0; color: var(--white); }
+.ct__lines small { display: block; font-size: 5.8pt; letter-spacing: .1em; text-transform: uppercase; color: var(--sky); }
+.ct__cta { border-bottom: 0 !important; padding-top: 4mm !important; }
+.ct__cta a { display: block; background: var(--brand-accent); color: var(--white); padding: 3mm 4mm; font-weight: 500; letter-spacing: .04em; }

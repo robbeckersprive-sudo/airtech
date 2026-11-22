@@ -2,6 +2,7 @@
    Every module is opt-in through data attributes, so pages only pay for what they use. */
 (function () {
   'use strict';
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
   var doc = document.documentElement;
   doc.classList.add('js');
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -136,7 +137,7 @@
     btn.addEventListener('click', function () {
       var paused = scope.classList.toggle('is-paused');
       btn.setAttribute('aria-pressed', String(paused));
-      btn.querySelector('[data-label]').textContent = paused ? 'Animatie afspelen' : 'Animatie pauzeren';
+      btn.querySelector('[data-label]').textContent = paused ? L('play', 'Animatie afspelen') : L('pause', 'Animatie pauzeren');
       btn.querySelector('[data-icon-pause]').hidden = paused;
       btn.querySelector('[data-icon-play]').hidden = !paused;
       scope.dispatchEvent(new Event('hero-motion-change'));
@@ -518,7 +519,7 @@
       var data = { title: document.title, url: location.href };
       if (navigator.share) { navigator.share(data).catch(function () {}); return; }
       var done = function (msg) { if (status) { status.textContent = msg; setTimeout(function () { status.textContent = ''; }, 3000); } };
-      if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(function () { done('Link gekopieerd.'); }, function () { done('Kopiëren niet gelukt.'); });
+      if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(function () { done(L('copied', 'Link gekopieerd.')); }, function () { done(L('copyFailed', 'Kopiëren niet gelukt.')); });
       else done(location.href);
     });
   });
@@ -572,7 +573,7 @@
     var renderLightbox = function () {
       stage.innerHTML = tmpl(index);
       var img = $('img', stage); if (img) { img.loading = 'eager'; img.sizes = '94vw'; $$('source', stage).forEach(function (s) { s.sizes = '94vw'; }); }
-      counter.textContent = 'Afbeelding ' + (index + 1) + ' van ' + thumbs.length;
+      counter.textContent = L('imageOf', 'Afbeelding {n} van {total}', { n: index + 1, total: thumbs.length });
     };
     thumbs.forEach(function (t, i) { t.addEventListener('click', function () { show(i); }); });
     if (dialog) {
@@ -608,10 +609,10 @@
 
   /* ---------- Contact: page context, validation and submission ---------- */
   var MSG = {
-    naam: 'Vul uw naam in.',
-    email: 'Vul uw e-mailadres in.',
-    emailFormat: 'Vul een geldig e-mailadres in, bijvoorbeeld naam@bedrijf.nl.',
-    vraagstuk: 'Schrijf een kort bericht.'
+    naam: L('errName', 'Vul uw naam in.'),
+    email: L('errEmail', 'Vul uw e-mailadres in.'),
+    emailFormat: L('errEmailFormat', 'Vul een geldig e-mailadres in, bijvoorbeeld naam@bedrijf.nl.'),
+    vraagstuk: L('errMessage', 'Schrijf een kort bericht.')
   };
   $$('[data-form]').forEach(function (form) {
     var section = form.closest('#contact');
@@ -625,11 +626,11 @@
     var feedback = $('[data-contact-feedback]', form);
     var legacyTopic = form.elements.product ? 'cycloonafscheider' : 'algemeen';
     var label = $('.btn__label', submit);
-    var idleLabel = 'Verstuur uw aanvraag';
+    var idleLabel = label.textContent || 'Verstuur uw aanvraag';
     var feedbackMessages = {
-      rate_limited: 'Er zijn te veel aanvragen verstuurd. Probeer het over enkele minuten opnieuw.',
-      invalid: 'Controleer uw gegevens en probeer het opnieuw.',
-      unavailable: 'Versturen lukt op dit moment niet. Probeer het opnieuw of neem rechtstreeks contact met ons op.'
+      rate_limited: L('rateLimited', 'Er zijn te veel aanvragen verstuurd. Probeer het over enkele minuten opnieuw.'),
+      invalid: L('invalid', 'Controleer uw gegevens en probeer het opnieuw.'),
+      unavailable: L('unavailable', 'Versturen lukt op dit moment niet. Probeer het opnieuw of neem rechtstreeks contact met ons op.')
     };
     var fields = $$('[data-validate]', form);
 
@@ -705,10 +706,10 @@
       var data = Object.fromEntries(new FormData(form));
       var submitted = JSON.stringify(data);
       data.onderwerp = topic ? topic.value : legacyTopic;
-      var endpoint = topic ? form.action : new URL('api/contact', location.href);
+      var endpoint = topic ? form.action : new URL('/api/contact', location.href);
       submit.disabled = true;
       form.setAttribute('aria-busy', 'true');
-      label.textContent = 'Bezig met versturen…';
+      label.textContent = L('sending', 'Bezig met versturen…');
       var message;
       try {
         var response = await fetch(endpoint, {
@@ -722,7 +723,7 @@
             form.reset();
             if (topic) { topic.value = data.onderwerp; syncHint(); }
           }
-          message = 'Bedankt. Uw aanvraag is verstuurd.';
+          message = L('sent', 'Bedankt. Uw aanvraag is verstuurd.');
         } else {
           message = feedbackMessages[result.code] || feedbackMessages.unavailable;
         }

@@ -47,7 +47,7 @@ input, textarea { caret-color: var(--orange); }
 
 /* The accent voice: the same family in wide Light Italic for the single "flow" word in a heading */
 h1 em, h2 em, h3 em, .display em, .footer-mark em {
-  font-family: var(--font-accent); font-style: italic; font-weight: 300; font-variation-settings: "wdth" 112; font-synthesis: none;
+  font-family: "Archivo Headline Italic", var(--font-accent); font-style: italic; font-weight: 300; font-variation-settings: "wdth" 112; font-synthesis: none;
   letter-spacing: -0.02em; line-height: .94; color: var(--accent-word); padding-right: .04em;
 }
 

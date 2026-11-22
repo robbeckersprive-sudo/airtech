@@ -1,0 +1,30 @@
+/* =====================================================================================================================
+   Language switcher (Meertaligheid, Nov 22): components.lang_switch(), in the header rail ("Doorsnede") and in the
+   mobile "Tekenblad" menu. Three mono codes on a dimension line; the active one carries the red tick.
+   ===================================================================================================================== */
+.lsw ul { display: flex; align-items: center; gap: 0; margin: 0; padding: 0; list-style: none; }
+.lsw li { position: relative; }
+.lsw a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.lsw abbr { text-decoration: none; font: 500 11px/1 var(--font-mono); letter-spacing: .08em; }
+.lsw a[aria-current] abbr { font-weight: 600; }
+
+/* rail: after the contact data, separated by the rail's own hairline */
+.hxb-rail .lsw { position: relative; margin-left: 28px; }
+.hxb-rail .lsw::before { content: ""; position: absolute; left: -14px; top: 50%; width: 1px; height: 12px; margin-top: -6px; background: rgba(14, 42, 71, .14); }
+.hxb-rail .lsw li + li::before { content: none; }
+.hxb-rail .lsw a { min-width: 30px; min-height: 28px; padding: 0 6px; color: var(--steel-800); border-radius: 6px; }
+.hxb-rail .lsw a:hover { color: var(--red-text); background: rgba(14, 42, 71, .06); }
+.hxb-rail .lsw a[aria-current] { color: var(--heading, var(--steel-900)); }
+.hxb-rail .lsw a[aria-current]::after { content: ""; position: absolute; left: 50%; bottom: 1px; width: 12px; height: 2px; margin-left: -6px; background: var(--red); }
+.hxb-rail .lsw a:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
+.hxb-rail__in { align-items: center; }
+
+/* mobile sheet: a full-width segmented row under the route line */
+.mnav__foot .lsw ul { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid rgba(255, 255, 255, .22); border-radius: var(--r-control, 8px); overflow: hidden; }
+.mnav__foot .lsw li + li { border-left: 1px solid rgba(255, 255, 255, .16); }
+.mnav__foot .lsw a { min-height: 44px; color: var(--sky); -webkit-tap-highlight-color: transparent; }
+.mnav__foot .lsw abbr { font-size: 13px; }
+.mnav__foot .lsw a[aria-current] { color: var(--white); background: rgba(255, 255, 255, .08); box-shadow: inset 0 -2px 0 var(--red-on-dark, var(--red)); }
+.mnav__foot .lsw a:active { background: rgba(255, 255, 255, .12); }
+.mnav__foot .lsw a:focus-visible { outline: 2px solid var(--sky); outline-offset: -3px; }
+@media (max-height: 640px) { .mnav__foot .lsw a { min-height: 40px; } }

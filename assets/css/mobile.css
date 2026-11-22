@@ -456,12 +456,10 @@ html:active-view-transition-type(from-menu)::view-transition-new(root) { animati
   .knowledge-plate__media, .category-plate__photo { aspect-ratio: 5 / 4; }
 }
 @media (max-width: 959px) and (prefers-reduced-motion: no-preference) {
-  .js :is(.knowledge-plate__media, .category-plate__photo, .detail-plate__image, .about-hero__figure) {
-    animation: plot-in 1.15s var(--plot-ease) .3s both;
-  }
+  /* Keep the drawing scan, but show the actual photograph immediately. */
   .js :is(.knowledge-plate__media, .category-plate__photo, .detail-plate__image, .about-hero__figure)::before {
-    content: ""; position: absolute; left: 0; right: 0; top: 0; z-index: 4; height: 2px; pointer-events: none;
-    background: var(--red); box-shadow: 0 0 16px 2px rgba(210, 31, 38, .45);
+    content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+    background: linear-gradient(var(--red) 0 2px, transparent 2px);
     animation: plot-scan 1.15s var(--plot-ease) .3s both;
   }
   .js :is(.knowledge-plate, .category-plate) figcaption { animation: rise .8s var(--ease-expo) 1.1s both; }
@@ -478,7 +476,7 @@ html:active-view-transition-type(from-menu)::view-transition-new(root) { animati
 }
 .about-hero__figure { isolation: isolate; }
 @keyframes plot-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
-@keyframes plot-scan { 0% { top: 0; opacity: 1; } 86% { opacity: 1; } 100% { top: calc(100% - 2px); opacity: 0; } }
+@keyframes plot-scan { 0% { transform: translateY(0); opacity: 1; } 86% { opacity: 1; } 100% { transform: translateY(100%); opacity: 0; } }
 
 
 /* =================================================================

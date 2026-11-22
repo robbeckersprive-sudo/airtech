@@ -1,4 +1,6 @@
 (() => {
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
+  var LANG = document.documentElement.lang || 'nl';
   const controls = document.querySelector('.kb-controls');
   const search = document.querySelector('#kb-search');
   const topic = document.querySelector('#kb-topic');
@@ -6,7 +8,7 @@
   const count = document.querySelector('#kb-count');
 
   function normalize(text) {
-    return text.toLocaleLowerCase('nl').normalize('NFD')
+    return text.toLocaleLowerCase(LANG).normalize('NFD')
       .replace(/\p{M}|\u00ad/gu, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
   }
 
@@ -39,7 +41,7 @@
     const offsets = [];
     for (let index = 0; index < source.length;) {
       const character = String.fromCodePoint(source.codePointAt(index));
-      const normalized = character.toLocaleLowerCase('nl').normalize('NFD').replace(/\p{M}/gu, '')
+      const normalized = character.toLocaleLowerCase(LANG).normalize('NFD').replace(/\p{M}/gu, '')
         .replace(/[^\p{L}\p{N}]/gu, ' ');
       for (const part of normalized) {
         folded += part;
@@ -96,8 +98,8 @@
       group.section.hidden = visible === 0;
       matches += visible;
     }
-    count.textContent = matches ? (matches === 1 ? '1 artikel' : matches + ' artikelen')
-      : 'Geen artikelen gevonden. Probeer een andere zoekterm of kies een ander onderwerp.';
+    count.textContent = matches ? (matches === 1 ? L('articleOne', '1 artikel') : L('articleMany', '{n} artikelen', { n: matches }))
+      : L('articleNone', 'Geen artikelen gevonden. Probeer een andere zoekterm of kies een ander onderwerp.');
     reset.hidden = !search.value && !topic.value;
   }
 

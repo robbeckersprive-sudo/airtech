@@ -557,3 +557,139 @@ Shared files were only touched surgically: `components._header_sheet()` (new men
   the hero intro but never defined) and a `.sr-only` alias now exist in `mobile.css`.
 - Verified headless (Chromium, 390x844 / 768x1024 / 1440x900): no console errors, no horizontal overflow, menu focus
   + inert + Escape, VT types (`forward`, `back`, `from-menu`, `morph`), desktop unchanged.
+
+## Productfolder (POC, Nov 22)
+
+A 4-page A4 PDF per product, from the same data as the product page (`PRODUCTS`) and the same tokens.
+POC covers `cycloonafscheider` only (`FOLDER_SLUGS` in `src/folder_page.py`); the template works for any slug.
+
+- `src/folder_page.py`: print HTML (cover · werking with numbered cutaway · toepassing + selectie ·
+  praktijkcase + gerelateerd + contact), drawing title block on every sheet. `BRANDS` holds the brand
+  (name, logo, `--brand-*` tokens); a second brand or dealer co-brand is one more entry.
+  `folder_html(slug, recipient={...})` prints "Opgesteld voor" on the cover (hook for personalised folders).
+  `PRACTICE` maps a product to a verified case in `project_data.py`.
+- `assets/css/folder-print.css`: print layout (mm units, `@page A4`).
+- `tools/render_folders.py`: writes `folders/<slug>.print.html`, renders `folders/<slug>.pdf` with headless
+  Chromium (Python Playwright; uses the newest installed `ms-playwright/chromium-*`, or `FOLDER_CHROMIUM`),
+  then checks it: 4 A4 pages, every font embedded, real text, no broken images, < 2 MB. Exits 1 on a failure.
+- Product page: "Download productfolder (PDF · n KB)" appears in the Technische documentatie card only when
+  the PDF exists. `tools/build-vercel.mjs` publishes `folders/*.pdf` only.
+
+Run after content changes: `python tools/render_folders.py`, then `python src/build.py` (or the product page).
+
+Gotchas: Chromium writes variable fonts as Type3 glyphs, so the folder uses static Archivo instances cut by
+fontTools into `folders/fonts/` (built on demand). CSS `filter` on an image makes Chromium rasterise it at
+screen size: no drop-shadow in print. Transparent images become lossless PNG in the PDF, so cut-outs get
+print-sized copies in `folders/img/` (256-colour palette on gradients, JPEG on a flat matte). No font has `≈`;
+the folder prints "ca.". Links in the PDF use `SITE` (set `SITE_URL` to the production domain before rendering).
+Result 2026-11-22: 951 KB, 7 embedded fonts, render 2.4 s.
+
+## Beurs Kiosk Modus + Beheer (Nov 22)
+
+Opleverfunctie voor de eigenaar: via **Beheer** (`/beheer.html`, discrete link "Beheer" in de footer) logt de
+eigenaar in en start een doorlopende presentatie op één of twee beursschermen, in de stijl van de site.
+
+| Bestand | Rol |
+|---|---|
+| `src/kiosk_page.py` | genereert `beheer.html`, `kiosk.html` (alle bladen als `<template>` met faces a/b/s) en `kiosk-sw.js`; draait mee aan het eind van `src/build.py` |
+| `assets/js/kiosk.js` | speler: klok-synchronisatie, scanlijn-overgang over beide schermen, granulaatstroom over het panorama, count-ups, wake lock, stoppen (Esc / 3 s linksboven), nachtelijke herstart 04:00 |
+| `assets/js/beheer.js` | login, welkomst bij eerste login (overdrachtsmoment), instellingen, live voorbeeld, start op 1 of 2 schermen (Window Management API) |
+| `assets/css/kiosk.css` | kiosk + beheer; maten in `--u` (1 % schermhoogte) zodat 1080p, 4K en grote beursschermen gelijk ogen |
+| `src/beheer_auth.py`, `api/beheer.py` | login (PBKDF2-hash, ondertekende HttpOnly-sessiecookie, rem op mislukte pogingen); lokaal via `src/serve.py` |
+| `tools/kiosk_images.py` | zet de aangeleverde kioskrenders om naar `images/kiosk/` (AVIF/WebP, 1920/3840, panorama 3840/7680) |
+| `tools/beheer_password.py` | maakt de wachtwoord-hash en het sessiegeheim voor Vercel |
+
+**Synchronisatie zonder netwerk.** Elk scherm rekent het huidige blad uit `Date.now()` en een vaste start (t0 = 0):
+twee vensters op één pc, of twee apparaten met een gelijke klok, tonen hetzelfde blad. Binnen een blad verschuift
+`--late` (seconden dat een scherm later aansloot) alle CSS-animaties, dus ook een later geopend scherm loopt in de pas.
+Rol a = linkerscherm, b = rechterscherm, s = één scherm. De scanlijn kruist eerst A, dan B; de voortgangslijn in het
+titelblok loopt ook door over beide schermen. Het panorama (`01-proceslijn-panorama`) is één beeld over twee schermen;
+de granulaten bewegen alleen in de glazen bochten (contouren gemeten in `GLASS` in kiosk.js), door het staal loopt een glans.
+
+**Inhoud uit de site.** Componentgroepen komen uit `category_data.CATEGORIES` / `cyclone_category_data.CYCLONES`
+(naam, kop, intro, principe, uitvoeringen; Röntgen-paar exterieur + geregistreerde doorsnede), projecten uit
+`project_data.PROJECTS` (twee per ronde, wisselend), materialen uit de projecten. Alleen de werkwijze-stappen staan
+dubbel (`STEPS` in kiosk_page.py; in `pages.home()` zijn ze lokaal). Nieuwe groep: voeg een regel toe aan `GROUPS`.
+
+**Offline.** `kiosk-sw.js` pre-cachet alle kioskbestanden; versie-hash wisselt bij elke build. Pagina's network-first,
+assets cache-first. Een recente login op het apparaat geldt offline (`at-kiosk-pass` in localStorage).
+
+**Twee schermen.** In Beheer "Schermen zoeken" (Chrome/Edge, toestemming Vensterbeheer) → Start: scherm A gaat
+fullscreen op het gekozen scherm en scherm B opent als venster op het tweede scherm (één klik daar = fullscreen).
+Zonder die API: B opent als venster dat u zelf versleept. Een tweede apparaat: link onder "Scherm B op een tweede apparaat".
+Stoppen op één scherm stopt alle vensters op dezelfde pc (BroadcastChannel).
+
+**Lokaal testen.** Preview-config `flow-d-kiosk` (poort 5194). `src/serve.py` leest de testlogin uit `.env.beheer`
+(gitignored, testwachtwoord staat in dat bestand).
+
+**NL / EN / DE.** Beheer is beschikbaar op `beheer.html`, `beheer-en.html` en `beheer-de.html`; de taalwissel
+bovenaan verandert de bedieningstaal. De instelling bij "Tempo en taal" bepaalt onafhankelijk daarvan de taal
+van beide presentatieschermen, het live voorbeeld en de link voor scherm B. Instellingen blijven op dit apparaat
+bewaard. De generator gebruikt de bestaande sitecatalogi plus `src/kiosk_strings.json` voor kiosk- en beheerteksten.
+De speler gebruikt de gekozen taal voor getallen en `/h` voor uur-eenheden in EN/DE.
+
+**Beelden en bediening.** De volgende slide wordt acht seconden vooraf opgebouwd en gedecodeerd; de speler
+houdt het vorige blad vast tot het nieuwe beeld klaar is. WebP is ook offline beschikbaar als AVIF niet werkt.
+Het live voorbeeld is te pauzeren en gebruikt minder frames om de beheerpagina soepel te houden. Stoppen ruimt
+luisteraars en de scherm-wake-lock op; Esc na het verlaten van fullscreen opent ook de stopdialoog. De dialoog
+houdt toetsenbordfocus vast. Reduced motion schakelt de panorama-beweging en scanovergang uit.
+
+**Offline voorbereiden.** Open Beheer eerst online en wacht op "Gereed voor offline gebruik". De service worker
+haalt maximaal vier bestanden tegelijk op en controleert de volledige inventaris (115 bronbestanden, plus de
+gebundelde stylesheet in de publicatiebouw), inclusief de drie talen en beide beeldformaten. Met een geldige recente login kunnen Beheer en de kiosk vervolgens offline worden herladen.
+Twee apparaten hebben elk deze voorbereiding en een gelijke systeemklok nodig. BroadcastChannel stopt alleen
+vensters op hetzelfde apparaat; op een tweede apparaat stopt u de kiosk apart.
+
+**Controle.** `python src/kiosk_page.py` genereert de kiosk en Beheer. Daarna controleert
+`python tools/check_kiosk.py` de volledigheid van vertalingen, 18 bladen × 3 schermrollen per taal, lokale links,
+beelden en de offline-inventaris. `npm run build` maakt de publicatiemap; `python tools/check_kiosk.py --dist`
+controleert ook de werkelijk gepubliceerde bestanden en hun offline-cache. Browsercontrole omvat inloggen,
+taal bewaren, preview/pauze, starten/stoppen, twee vensters en offline herladen. Automatische plaatsing op
+fysieke monitoren blijft afhankelijk van browsertoestemming en moet op de beurs-pc worden gecontroleerd.
+
+## Meertaligheid (nl / en / de, Nov 22)
+
+De site wordt in drie talen gebouwd: Nederlands op de root, Engels in `en/`, Duits in `de/`. De Nederlandse
+data in `src/` blijft de enige inhoudsbron; `python src/build.py` schrijft alle talen (`python src/build.py nl`
+alleen Nederlands), `npm run build` publiceert `en/` en `de/` mee in `dist/` (eigen stylesheetbundels via `../`).
+
+- **`src/i18n.py`** — het mechanisme. Taalcontext (`i18n.use('de')`), `t(key)` voor sleutelteksten,
+  `tr('Nederlandse tekst')` voor inhoud, `localize_html()` (vertaalt een gerenderd NL-fragment segment voor
+  segment: tekst met inline opmaak als `<em>`, `<a>`, `<strong>`, plus `alt`, `aria-label`, `title`, `data-cap`,
+  `data-hint` e.d.), `localize_jsonld()`, `rewrite_urls()` (assets één map hoger, paginalinks naar de vertaalde
+  bestandsnaam), `localize_units()` (`m³/u` → `m³/h`, Engelse decimalen) en `alternates()` (hreflang).
+  `components.page()` roept dit aan wanneer de taal niet `nl` is; `build.py` doet met `finalize()` een laatste,
+  idempotente URL- en eenhedenronde (voor scripts die templates na `page()` toevoegen).
+- **`src/i18n_strings.py`** — gesleutelde UI-teksten per taal: header, Tekenblad-menu, footer-titelblok,
+  contactblok en formulier, knoppen, aria-labels, `SIG_LABELS` (`sig.*`) en de JS-teksten (`js.*`).
+- **`src/locales/en.json`, `de.json`** — inhoudscatalogi, sleutel = Nederlands segment (gettext-stijl).
+  Ontbrekende vertalingen vallen terug op NL en komen in `src/locales/missing-<taal>.json` (alleen als er iets ontbreekt).
+- **`src/i18n_slugs.py`** — vertaalde bestandsnamen (bv. `cycloonafscheider.html` → `en/cyclone-separator.html`,
+  `de/zyklonabscheider.html`). Alleen pagina's in deze lijst worden vertaald; review-/conceptpagina's blijven NL.
+  `toepassing-pet-recycling.html` is een NL-alias van de projectpagina en heeft daarom geen eigen vertaling.
+- **JS**: `components.page()` zet `window.ATI18N` (uit `i18n.js_strings()`); `site.js`, `contact-plus.js`,
+  `category.js`, `knowledge-index.js`, `mobile.js`, `signature.js`, `doorstroom.js` en `home-practice.js`
+  lezen hun teksten en `locale` daaruit, met de Nederlandse tekst als fallback.
+- **Taalwisselaar**: `components.lang_switch()` — NL/EN/DE in de header-rail en onderaan het Tekenblad-menu,
+  naar de equivalente pagina. Stijl in `assets/css/lang.css`.
+- **SEO**: `<html lang>`, canonical per taal, wederkerige `hreflang` (nl/en/de + x-default = nl), `og:locale`
+  + `og:locale:alternate`, vertaalde `<title>`, description, OG en JSON-LD (incl. kruimelpad-URL's).
+- **Stijl**: EN neutraal-zakelijk (Brits), DE met "Sie"; vakterminologie o.a. Zellenradschleuse, Durchfall-/
+  Durchblasschleuse, Zyklonabscheider, Tauchrohr, Saug-/Druckförderung, Dichtstrom/Flugförderung, Abreinigung.
+  `[TBD]`-markers blijven staan. Productfolders (PDF) zijn alleen Nederlands; de downloadlink zegt dat.
+  Het contactformulier stuurt dezelfde onderwerpsleutels naar `api/contact`; de mail naar Airtechnic blijft NL.
+
+**Kiosk / andere renderers** gebruiken dezelfde tabellen: `with i18n.use('en'): i18n.t('nav.solutions')`,
+`i18n.tr(nl_tekst)`, `i18n.localize_html(fragment)`, `i18n.js_strings('de')`.
+
+**Tekst gewijzigd?** Bouw opnieuw; nieuwe of gewijzigde NL-segmenten verschijnen in `missing-*.json`.
+`python tools/i18n_sync.py export <map>` maakt genummerde batches, vertaal naar `{id: [en, de]}` en
+`python tools/i18n_sync.py import <bestand>` voegt ze toe (controleert inline opmaak, `[TBD]` en placeholders).
+`python tools/i18n_sync.py check` valideert de catalogi.
+
+**Controle**: `python tools/check_i18n.py` (NL-restanten in tekst/attributen/meta/JSON-LD van alle EN/DE-pagina's,
+wederkerige hreflang, canonical, lang/og:locale, taalwisselaar, kapotte relatieve links) en
+`python tools/check_i18n_browser.py [--out map]` (Python Playwright + lokale Playwright-Chromium: home, categorie,
+product en kennisartikel per taal op 1440×900 en 390×844, geen console- of paginafouten, wisselaar naar elke taal).
+Resultaat Nov 22: 3.094 segmenten per taal vertaald, 0 ontbrekend; check_i18n 198 pagina's 0 problemen;
+browsercheck 12 pagina's × 2 viewports 0 problemen.

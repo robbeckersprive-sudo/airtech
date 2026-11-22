@@ -5,6 +5,7 @@
    The pause button stops everything that moves (WCAG 2.2.2): clock, granule canvas (.is-paused), SVG flows. */
 (function () {
   'use strict';
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
   var root = document.querySelector('[data-ds]');
   if (!root) return;
   var $$ = function (s, c) { return Array.prototype.slice.call((c || root).querySelectorAll(s)); };
@@ -38,21 +39,36 @@
     if (off) { el.setAttribute('aria-hidden', 'true'); el.inert = true; }
     else { el.removeAttribute('aria-hidden'); el.inert = false; }
   }
+  var sheetRequest = 0;
   function show(n, auto) {
+    var request = ++sheetRequest;
     if (n === current) { restartClock(); return; }
     var prev = current, img = slides[n].querySelector('img');
+    // A skipped inactive sheet must explicitly request its photo before decode can resolve.
+    if (img) img.loading = 'eager';
+    slides[n].querySelectorAll('img').forEach(function (image) { image.loading = 'eager'; });
+    var ready = [];
+    slides[n].querySelectorAll('image[data-sheet-href]').forEach(function (image) {
+      var href = image.getAttribute('data-sheet-href');
+      image.setAttribute('href', href);
+      image.removeAttribute('data-sheet-href');
+      var preload = new Image(); preload.src = href;
+      if (preload.decode) ready.push(preload.decode().catch(function () {}));
+    });
     var go = function () {
+      if (request !== sheetRequest) return;
       if (auto && held()) return;
       current = n;
       clearTimeout(leaveTimer);
       slides.forEach(function (s, i) {
+        s.hidden = i !== n && i !== prev;
         s.classList.toggle('is-on', i === n);
         s.classList.toggle('is-leaving', i === prev);
         setOff(s, i !== n);
       });
       root.classList.toggle('is-wiping', !reduce.matches);
       leaveTimer = setTimeout(function () {
-        slides[prev].classList.remove('is-leaving'); root.classList.remove('is-wiping');
+        slides[prev].classList.remove('is-leaving'); slides[prev].hidden = true; root.classList.remove('is-wiping');
       }, reduce.matches ? 0 : 1500);
       copies.forEach(function (c, i) { c.classList.toggle('is-on', i === n); setOff(c, i !== n); });
       mores.forEach(function (m, i) { m.classList.toggle('is-on', i === n); setOff(m, i !== n); });
@@ -63,7 +79,8 @@
       placeFill(); placeSpots(); restartClock(); kickRotor();
       root.dispatchEvent(new Event('hero-motion-change'));
     };
-    if (img && img.decode) img.decode().then(go, go); else go();
+    if (img && img.decode) ready.push(img.decode().catch(function () {}));
+    Promise.all(ready).then(go);
   }
 
   tabs.forEach(function (t, i) {
@@ -80,7 +97,7 @@
     paused = on;
     root.classList.toggle('is-paused', on);
     play.setAttribute('aria-pressed', String(on));
-    play.setAttribute('aria-label', on ? 'Animatie afspelen' : 'Animatie pauzeren');
+    play.setAttribute('aria-label', on ? L('play', 'Animatie afspelen') : L('pause', 'Animatie pauzeren'));
     play.querySelector('[data-ds-icon-pause]').toggleAttribute('hidden', on);
     play.querySelector('[data-ds-icon-play]').toggleAttribute('hidden', !on);
     root.dispatchEvent(new Event('hero-motion-change'));   // site.js runs the SVG flows of the active sheet only

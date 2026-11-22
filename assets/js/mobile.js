@@ -6,6 +6,7 @@
       section, the footer, the menu and the on-screen keyboard. */
 (function () {
   'use strict';
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -55,7 +56,7 @@
       hx.classList.add('is-mnav');
       document.body.classList.add('hx-lock');
       burger.setAttribute('aria-expanded', 'true');
-      burger.setAttribute('aria-label', 'Menu sluiten');
+      burger.setAttribute('aria-label', L('menuClose', 'Menu sluiten'));
       setOutsideInert(true);
       var first = $('.mnav__item', menu);
       if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, reduce.matches ? 0 : 420);
@@ -65,7 +66,7 @@
       isOpen = false;
       menu.classList.remove('is-open');
       burger.setAttribute('aria-expanded', 'false');
-      burger.setAttribute('aria-label', 'Menu openen');
+      burger.setAttribute('aria-label', L('menuOpen', 'Menu openen'));
       setOutsideInert(false);
       var done = function () {
         menu.hidden = true; menu.classList.remove('is-closing'); menu.style.viewTransitionName = '';
@@ -224,10 +225,10 @@
     dock.className = 'mdock';
     dock.setAttribute('data-mdock', '');
     dock.setAttribute('role', 'region');
-    dock.setAttribute('aria-label', 'Snel contact');
+    dock.setAttribute('aria-label', L('quickContact', 'Snel contact'));
     dock.innerHTML =
-      '<a class="mdock__call" href="' + tel.getAttribute('href') + '" aria-label="Bel Airtechnic Solutions">' + $('svg', tel).outerHTML + '</a>' +
-      '<a class="mdock__cta" href="' + (contact ? '#contact' : 'index.html#contact') + '"><span>Stel uw vraag</span>' + ctaIcon.outerHTML + '</a>';
+      '<a class="mdock__call" href="' + tel.getAttribute('href') + '" aria-label="' + L('callOrg', 'Bel Airtechnic Solutions') + '">' + $('svg', tel).outerHTML + '</a>' +
+      '<a class="mdock__cta" href="' + (contact ? '#contact' : 'index.html#contact') + '"><span>' + L('ask', 'Stel uw vraag') + '</span>' + ctaIcon.outerHTML + '</a>';
     document.body.appendChild(dock);
     var blockers = new Set();
     var typing = false;
