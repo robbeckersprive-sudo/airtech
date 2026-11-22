@@ -152,7 +152,23 @@ def dosing_modes():
         {"".join(pockets)}</g></g></g>
       <g mask="url(#dfx-glare)"><image href="images/33-hero-doseersluis-1200.webp" width="570" height="380" opacity=".7"/></g>'''
     return (f'<svg class="hero__flow ds-fx ds-rotor" viewBox="0 0 570 380" aria-hidden="true" focusable="false" data-rotor>'
-            f'<defs>{GOLD.format(n="dfx")}{defs}</defs>{body}</svg>')
+            f'<defs>{GOLD.format(n="dfx")}{defs}</defs>{body}</svg>' + _rotor3d())
+
+
+def _rotor3d():
+    """Real-time 3D rotor (assets/js/rotor3d.js, from the supplied 3D package): housing photo without rotor, WebGL
+    rotor, the photo's front rim on top. Shown once WebGL is up (.has-rotor3d on the box); until then / without WebGL
+    the SVG rotor above stays."""
+    from components import pic as _pic
+    href = 'images/33-hero-doseersluis-behuizing-1536.webp'
+    return (f'<div class="dr3d" aria-hidden="true"><span class="dr3d__photo">{_pic("33-hero-doseersluis-behuizing", "", "(min-width: 900px) 100vw, 160vw")}</span>'
+            '<div class="dr3d__gl" data-rotor3d></div>'
+            '<svg class="dr3d__front" viewBox="0 0 1536 1024" preserveAspectRatio="none" focusable="false"><defs>'
+            '<mask id="dr3d-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024"><rect width="1536" height="1024" fill="white"/>'
+            '<ellipse cx="816" cy="494" rx="219" ry="266" transform="rotate(-2.28 816 494)" fill="black"/></mask>'
+            '<radialGradient id="dr3d-shade"><stop offset="78%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".65"/></radialGradient></defs>'
+            f'<image href="{href}" width="1536" height="1024" mask="url(#dr3d-mask)"/>'
+            '<ellipse cx="816" cy="494" rx="219" ry="266" transform="rotate(-2.28 816 494)" fill="url(#dr3d-shade)"/></svg></div>')
 
 
 EFFECTS = {'30-hero-filter': filter_modes, '32-hero-cycloon': cyclone_modes, '33-hero-doseersluis': dosing_modes}

@@ -1009,5 +1009,15 @@
       1200
     ],
     "alpha": false
+  },
+  "33-hero-doseersluis-behuizing": {
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      800,
+      1200,
+      1536
+    ],
+    "alpha": false
   }
 }

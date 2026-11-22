@@ -630,3 +630,12 @@ main > .ds ~ section:nth-of-type(2)::before { left: 0; right: 0; top: 0; height:
 .ct-reassure .i { width: 15px; height: 15px; color: var(--red); }
 @media (max-width: 899px) { .ct-helper { min-height: 40px; } }
 @media (prefers-reduced-motion: reduce) { .ct-veil { display: none; } .ct.is-arrived .ct-card { animation: none; } }
+
+/* dosing sheet: real-time 3D rotor (Nov 22, assets/js/rotor3d.js). Photo, canvas and front rim share the 3:2 box. */
+.dr3d { position: absolute; inset: 0; z-index: 1; opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+.dr3d__photo, .dr3d__gl, .dr3d__front { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dr3d__photo picture { position: absolute; inset: 0; display: block; }
+.dr3d__photo img { width: 100%; height: 100%; object-fit: cover; }
+.dr3d__gl canvas { display: block; width: 100%; height: 100%; }
+.ds-box.has-rotor3d .dr3d { opacity: 1; }
+.ds-box.has-rotor3d .ds-rotor { opacity: 0; }

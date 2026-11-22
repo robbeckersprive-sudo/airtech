@@ -149,4 +149,5 @@ def doorstroom_hero():
   </div>
 </section>
 <script src="{_v("assets/js/granule-flow.js")}" defer></script>
-<script src="{_v("assets/js/doorstroom.js")}" defer></script>'''
+<script src="{_v("assets/js/doorstroom.js")}" defer></script>
+<script src="{_v("assets/js/rotor3d.js")}" defer></script>'''

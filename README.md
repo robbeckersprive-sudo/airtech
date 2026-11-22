@@ -355,6 +355,15 @@ product reading line has no granule head any more (red segments only).
 - Measured: hero CTA, product advice and header CTA each move the page in 1 scroll step (was 5 to 14), sheet shown,
   focus in the form, topic correct; no page errors.
 
+## Hero dosing sheet: real-time 3D rotor (Nov 22)
+
+`assets/js/rotor3d.js` (bundle of `tools/rotor3d/rotor3d.src.js`, adapted from the supplied 3D package, Three.js 0.180.0
+MIT): housing photo without rotor + WebGL rotor (8 vanes with depth, hub, screws; only its local axis turns) + the
+photo's front rim as SVG, in the same 3:2 stage box. 3D granules fill each pocket under the inlet and empty over the
+outlet. Laag / Hoog = 4 / 12 rpm, eased; builds lazily when the sheet is first shown; runs only while shown, on screen,
+not paused, no reduced motion. Without WebGL the previous SVG rotor stays. ~500 KB (~130 KB gzip). Rebuild:
+tools/rotor3d/README.txt.
+
 ## Hero slides (Nov 20, on top of Tekenblad)
 
 The home hero shows five sheets of one process line, all 1536x1024 in the same framing (equipment right, empty wall
