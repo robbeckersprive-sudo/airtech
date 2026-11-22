@@ -9,6 +9,11 @@
       "includeFiles": "src/**",
       "excludeFiles": "{images/**,images-flow-groen/**,images-review/**,assets/**,dist/**,tools/**}",
       "maxDuration": 60
+    },
+    "api/beheer.py": {
+      "includeFiles": "src/beheer_auth.py",
+      "excludeFiles": "{images/**,images-flow-groen/**,images-review/**,assets/**,dist/**,tools/**}",
+      "maxDuration": 10
     }
   }
 }

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#08182A">
+<title>Administration · Airtechnic Solutions</title>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/fonts.css?v=116ac7a36a81">
+<link rel="stylesheet" href="assets/css/tokens.css?v=853aca90b863">
+<link rel="stylesheet" href="assets/css/kiosk.css?v=904b37de2976">
+</head>
+<body class="bh-body">
+<a class="bh-skip" href="#bh-main">Skip to content</a>
+<header class="bh-top">
+  <a class="bh-logo" href="index.html" aria-label="Go to website"><img src="assets/img/airtechnic-logo-640.webp" alt="Airtechnic" width="640" height="212"></a>
+  <span class="bh-top__k">Administration</span><!--i18n:skip--><nav class="bh-languages" aria-label="Taal beheer"><a href="beheer.html" lang="nl">NL</a><a href="beheer-en.html" lang="en">EN</a><a href="beheer-de.html" lang="de">DE</a></nav><!--/i18n:skip-->
+  <span class="bh-top__user" data-user hidden><span data-user-mail></span><button type="button" class="bh-link" data-logout>Sign out</button></span>
+</header>
+<main id="bh-main" class="bh-main" tabindex="-1">
+
+  <section class="bh-login" data-view="login" hidden aria-labelledby="bh-login-h">
+    <form class="bh-plate" data-login novalidate>
+      <p class="ks-mono">Airtechnic Solutions · Administration</p>
+      <h1 id="bh-login-h" class="bh-h">Sign in</h1>
+      <div class="bh-field"><label for="bh-mail">Email address</label><input id="bh-mail" name="email" type="email" autocomplete="username" required></div>
+      <div class="bh-field"><label for="bh-pass">Password</label><input id="bh-pass" name="password" type="password" autocomplete="current-password" required></div>
+      <label class="bh-check"><input type="checkbox" name="remember"><span>Remember this device for 30 days (the kiosk computer at the stand)</span></label>
+      <p class="bh-error" data-login-error role="alert" hidden></p>
+      <button type="submit" class="ks-btn">Sign in</button>
+      <dl class="bh-tb"><div><dt>Sheet</dt><dd>Administration</dd></div><div><dt>Scale</dt><dd>1 : 1</dd></div><div><dt>Rev.</dt><dd>2026</dd></div></dl>
+    </form>
+  </section>
+
+  <section class="bh-welcome" data-view="welcome" hidden aria-labelledby="bh-welcome-h">
+    <svg class="bh-welcome__draw" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <path pathLength="100" class="bh-d1" d="M60 60H1540V840H60Z"/>
+      <path pathLength="100" class="bh-d3" d="M-20 792H560C660 792 700 752 800 752H1620"/>
+      <path pathLength="100" class="bh-d4" d="M-20 828H560C660 828 700 788 800 788H1620"/>
+    </svg>
+    <div class="bh-welcome__copy">
+      <p class="ks-mono bh-w1">Delivered · <span data-today></span></p>
+      <h1 id="bh-welcome-h" class="bh-welcome__h"><span class="bh-w2">Your exhibition stand,</span><br><em class="bh-w3">ready to go.</em></h1>
+      <p class="bh-welcome__t bh-w4">Present your expertise, components and projects continuously on one or two screens. In the style of your website and always up to date.</p>
+      <button type="button" class="ks-btn bh-w5" data-welcome-done>Set up kiosk mode</button>
+    </div>
+    <dl class="bh-welcome__tb bh-w4"><div><dt>Client</dt><dd>Airtechnic Solutions</dd></div><div><dt>Sheet</dt><dd>Kiosk mode</dd></div><div><dt>Status</dt><dd>Ready</dd></div></dl>
+  </section>
+
+  <section class="bh-dash" data-view="dash" hidden aria-labelledby="bh-dash-h">
+    <div class="bh-dash__head">
+      <div><p class="ks-mono">Administration · Exhibition</p><h1 id="bh-dash-h" class="bh-h">Kiosk mode</h1>
+        <p class="bh-sub">A continuous presentation for your exhibition stand, using content directly from your website.</p></div>
+      <button type="button" class="bh-link" data-welcome-replay>Replay welcome</button>
+    </div>
+    <div class="bh-grid">
+      <form class="bh-settings" data-settings>
+        <fieldset class="bh-set"><legend><b>01</b> Screen layout</legend>
+          <div class="bh-cards">
+            <label class="bh-card"><input type="radio" name="layout" value="1"><span class="bh-card__fig bh-card__fig--one" aria-hidden="true"><i></i></span><span class="bh-card__t">One screen</span><span class="bh-card__s">Laptop or one monitor</span></label>
+            <label class="bh-card"><input type="radio" name="layout" value="2" checked><span class="bh-card__fig bh-card__fig--two" aria-hidden="true"><i></i><i></i></span><span class="bh-card__t">Two screens</span><span class="bh-card__s">Side by side, one continuous image</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="bh-set"><legend><b>02</b> Components to present</legend>
+          <div class="bh-chips"><label class="bh-chip"><input type="checkbox" name="groups" value="blowers-ventilatoren" checked><span>Blowers & fans</span></label><label class="bh-chip"><input type="checkbox" name="groups" value="cyclonen" checked><span>Cyclones & separators</span></label><label class="bh-chip"><input type="checkbox" name="groups" value="filters" checked><span>Filters</span></label><label class="bh-chip"><input type="checkbox" name="groups" value="doseersluizen" checked><span>Rotary valves</span></label><label class="bh-chip"><input type="checkbox" name="groups" value="leidingwerk-koppelingen" checked><span>Piping & couplings</span></label><label class="bh-chip"><input type="checkbox" name="groups" value="bigbag-stations" checked><span>Big bag stations</span></label><label class="bh-chip"><input type="checkbox" name="groups" value="afsluiters" checked><span>Valves</span></label><label class="bh-chip"><input type="checkbox" name="groups" value="zeven" checked><span>Screens</span></label></div>
+          <div class="bh-toggles"><label class="bh-check"><input type="checkbox" name="projects" checked><span>Projects (two per loop, rotating)</span></label>
+            <label class="bh-check"><input type="checkbox" name="steps" checked><span>Our approach</span></label></div>
+        </fieldset>
+        <fieldset class="bh-set"><legend><b>03</b> Pace and language</legend>
+          <div class="bh-seg" role="radiogroup" aria-label="Pace"><label><input type="radio" name="tempo" value="1" checked><span>Normal</span></label><label><input type="radio" name="tempo" value="1.3"><span>Relaxed</span></label></div>
+          <div class="bh-seg" role="radiogroup" aria-label="Language"><label><input type="radio" name="lang" value="nl" checked><span>NL</span></label><label><input type="radio" name="lang" value="en"><span>EN</span></label><label><input type="radio" name="lang" value="de"><span>DE</span></label></div>
+          <p class="bh-hint">The selected language applies to both screens and is saved on this device.</p>
+        </fieldset>
+        <fieldset class="bh-set" data-screens-set><legend><b>04</b> Displays</legend>
+          <p class="bh-hint" data-screens-text>Connect the second screen and let the browser find your displays. Screen B will then open on the second display.</p>
+          <button type="button" class="ks-btn ks-btn--ghost" data-screens-find>Find displays</button>
+          <ol class="bh-screens" data-screens hidden></ol>
+        </fieldset>
+      </form>
+      <aside class="bh-preview" aria-labelledby="bh-prev-h">
+        <div class="bh-preview__head"><h2 id="bh-prev-h" class="ks-mono">Live preview</h2><p class="bh-preview__meta" data-loop-meta></p></div>
+        <p class="bh-offline" data-offline-status role="status">Preparing offline use…</p><p class="bh-status" data-save-status role="status" aria-live="polite"></p><div class="bh-preview__screens" data-preview></div>
+        <button type="button" class="bh-link bh-preview__pause" data-preview-pause aria-pressed="false">Pause preview</button><p class="bh-error" data-preview-error role="alert" hidden></p><button type="button" class="ks-btn ks-btn--big" data-start>Start kiosk</button>
+        <p class="bh-hint" data-start-hint>To stop: press Esc or hold the top-left corner for 3 seconds.</p>
+        <details class="bh-more"><summary>Screen B on another device</summary>
+          <p class="bh-hint">Open this link on the other device (signed in as well). The screens follow the same clock, even without a network.</p>
+          <div class="bh-copy"><input type="text" readonly data-b-link aria-label="Link for screen B"><button type="button" class="ks-btn ks-btn--ghost" data-b-copy>Copy</button></div>
+        </details>
+      </aside>
+    </div>
+  </section>
+</main>
+<div class="bh-host" data-host hidden></div>
+<script>window.KI={"Airtechnic · Kiosk": "Airtechnic · Kiosk", "Blad": "Sheet", "&amp; solids processing": "&amp; solids processing", "Web": "Web", "Telefoon": "Phone", "Schaal": "Scale", "Kiosk starten": "Start kiosk", "Klik om dit scherm volledig te vullen.": "Click to fill this screen.", "Start dit scherm": "Start this screen", "Naar Beheer": "Go to administration", "Kiosk stoppen?": "Stop kiosk?", "Alle kioskschermen stoppen tegelijk.": "All kiosk screens stop together.", "Doorgaan": "Continue", "Stoppen": "Stop", "Airtechnic Solutions · Beek en Donk": "Airtechnic Solutions · Beek en Donk", "Industriële luchttechniek<br><em>&amp; solids processing.<\/em>": "Industrial air technology<br><em>&amp; solids processing.<\/em>", "Van procesanalyse tot werkende installatie": "From process analysis to a working installation", "Grip op<br><em>elke stroom.<\/em>": "Control over<br><em>every flow.<\/em>", "Grip op elke stroom.": "Control over every flow.", "Specialisatie A · Productstromen": "Specialisation A · Product flows", "Poeders en granulaten.<br><em>Gecontroleerd verplaatst.<\/em>": "Powders and granules.<br><em>Moved with precision.<\/em>", "<b>01<\/b>Opslaan": "<b>01<\/b>Storage", "<b>02<\/b>Doseren": "<b>02<\/b>Dosing", "<b>03<\/b>Pneumatisch transport": "<b>03<\/b>Pneumatic conveying", "<b>04<\/b>Zeven en scheiden": "<b>04<\/b>Screening and separation", "Specialisatie B · Luchtstromen": "Specialisation B · Air flows", "Lucht en stof.<br><em>Onder controle.<\/em>": "Air and dust.<br><em>Under control.<\/em>", "<b>05<\/b>Stofafzuiging": "<b>05<\/b>Dust extraction", "<b>06<\/b>Hoogvacuüm": "<b>06<\/b>High vacuum", "<b>07<\/b>Filtratie": "<b>07<\/b>Filtration", "Doseersluizen voor<br><em>productstromen<\/em>": "Rotary valves for<br><em>product flows<\/em>", "Leidingwerk &amp;<br><em>koppelingen<\/em>": "Pipework &amp;<br><em>couplings<\/em>", "Zeven voor<br><em>productkwaliteit<\/em>": "Screening for<br><em>product quality<\/em>", "Projectdossier · Recycling": "Project file · Recycling", "Feiten uit dit project": "Project facts", "Omvang": "Scope", "Projectdossier · Food": "Project file · Food", "Projectdossier · Feed": "Project file · Feed", "Werkwijze": "Our approach", "Van tekening<br><em>tot installatie.<\/em>": "From drawing<br><em>to installation.<\/em>", "We brengen uw proces en de gewenste capaciteit in kaart.": "We map your process and required capacity.", "We ontwerpen een installatie voor uw productieomgeving.": "We design an installation for your production environment.", "We produceren of leveren de onderdelen volgens het ontwerp en monteren de procesinstallatie op locatie.": "We manufacture or supply the components to the design and assemble the process installation on site.", "We starten de installatie op, stellen de bedrijfsparameters af en toetsen de werking aan de afgesproken eisen.": "We commission the installation, adjust operating parameters and verify performance against the agreed requirements.", "<b>Opslaan<\/b>Silo": "<b>Storage<\/b>Silo", "<b>Scheiden<\/b>Cycloon": "<b>Separation<\/b>Cyclone", "<b>Filtreren<\/b>Filter": "<b>Filtration<\/b>Filter", "<b>Doseren<\/b>Sluis": "<b>Dosing<\/b>Rotary valve", "Componenten in samenhang": "Components working together", "Van component<br><em>tot complete installatie.<\/em>": "From component<br><em>to complete installation.<\/em>", "Materialen uit onze projecten": "Materials from our projects", "Stel uw procesvraag": "Tell us about your process", "Bespreek uw proces.<br><em>Hier op de stand.<\/em>": "Discuss your process.<br><em>Here at our stand.<\/em>", "E-mail": "Email", "Adres": "Address", "Beheer · Airtechnic Solutions": "Administration · Airtechnic Solutions", "Direct naar de inhoud": "Skip to content", "Beheer": "Administration", "Uitloggen": "Sign out", "Airtechnic Solutions · Beheer": "Airtechnic Solutions · Administration", "Inloggen": "Sign in", "E-mailadres": "Email address", "Wachtwoord": "Password", "Onthoud dit apparaat 30 dagen (de kiosk-pc op de stand)": "Remember this device for 30 days (the kiosk computer at the stand)", "Opgeleverd ·": "Delivered ·", "Uw beursstand,": "Your exhibition stand,", "<br><em class=\"bh-w3\">klaar voor gebruik.<\/em>": "<br><em class=\"bh-w3\">ready to go.<\/em>", "Vanaf hier toont u op één of twee schermen een doorlopende presentatie van uw expertise, componenten en projecten. In de stijl van uw website, en altijd actueel.": "Present your expertise, components and projects continuously on one or two screens. In the style of your website and always up to date.", "Naar de kioskmodus": "Set up kiosk mode", "Kiosk modus": "Kiosk mode", "Status": "Status", "Gereed": "Ready", "Beheer · Beurs": "Administration · Exhibition", "Een doorlopende presentatie voor de beursstand. De inhoud komt rechtstreeks uit de website.": "A continuous presentation for your exhibition stand, using content directly from your website.", "Welkomst opnieuw afspelen": "Replay welcome", "<b>01<\/b> Opstelling": "<b>01<\/b> Screen layout", "Eén scherm": "One screen", "Laptop of één monitor": "Laptop or one monitor", "Twee schermen": "Two screens", "Naast elkaar, één doorlopend beeld": "Side by side, one continuous image", "<b>02<\/b> Componenten in de presentatie": "<b>02<\/b> Components to present", "Projecten (twee per ronde, wisselend)": "Projects (two per loop, rotating)", "<b>03<\/b> Tempo en taal": "<b>03<\/b> Pace and language", "Normaal": "Normal", "Rustig": "Relaxed", "De gekozen taal geldt voor beide schermen en wordt op dit apparaat bewaard.": "The selected language applies to both screens and is saved on this device.", "<b>04<\/b> Schermen": "<b>04<\/b> Displays", "Sluit het tweede scherm aan en laat de browser uw schermen zoeken. Scherm B opent dan vanzelf op het tweede scherm.": "Connect the second screen and let the browser find your displays. Screen B will then open on the second display.", "Schermen zoeken": "Find displays", "Live voorbeeld": "Live preview", "Start kiosk": "Start kiosk", "Stoppen: druk op Esc, of houd linksboven 3 seconden ingedrukt.": "To stop: press Esc or hold the top-left corner for 3 seconds.", "Scherm B op een tweede apparaat": "Screen B on another device", "Open deze link op het tweede apparaat (ook ingelogd). De schermen lopen gelijk op de klok, ook zonder netwerk.": "Open this link on the other device (signed in as well). The screens follow the same clock, even without a network.", "Kopieer": "Copy", "Twee specialisaties": "Two specialisations", "Installaties": "Installations", "Contact": "Contact", "Naar de website": "Go to website", "Tempo": "Pace", "Taal": "Language", "Taal beheer": "Administration language", "Link voor scherm B": "Link for screen B", "E-mailadres of wachtwoord klopt niet.": "Incorrect email address or password.", "Te veel pogingen. Probeer het over 15 minuten opnieuw.": "Too many attempts. Try again in 15 minutes.", "De login is nog niet ingericht. Zet de omgevingsvariabelen voor Beheer in Vercel (zie DEPLOYMENT.md).": "Sign-in has not been configured. Ask your website administrator to configure it.", "Vul uw e-mailadres en wachtwoord in.": "Enter your email address and password.", "Geen verbinding met de server. Controleer het netwerk en probeer het opnieuw.": "Cannot connect to the server. Check your network and try again.", "Voorbeeld scherm ": "Screen preview ", "ÉÉN SCHERM": "ONE SCREEN", "SCHERM ": "SCREEN ", " bladen · één ronde ": " sheets · loop duration ", "Gekopieerd": "Copied", "Scherm ": "Screen ", " · hoofdscherm": " · primary display", "Rol van dit scherm": "Role of this display", "Niet gebruiken": "Do not use", "Scherm A (links)": "Screen A (left)", "Scherm B (rechts)": "Screen B (right)", "Deze browser kan schermen niet automatisch plaatsen. Gebruik Chrome of Edge, of sleep scherm B na de start zelf naar het tweede scherm.": "This browser cannot place screens automatically. Use Chrome or Edge, or move screen B to the second display after starting.", "Gevonden. Controleer welk scherm links (A) en rechts (B) staat.": "Displays found. Check which screen is on the left (A) and right (B).", "Er is maar één scherm gevonden. Sluit het tweede scherm aan (uitbreiden, niet dupliceren) en zoek opnieuw.": "Only one display found. Connect the second screen (extend, do not duplicate) and search again.", "Geen toestemming om schermen te zoeken. Sta \"Vensterbeheer\" toe via het slotje in de adresbalk en probeer het opnieuw.": "Permission to find displays was denied. Allow window management in the address bar and try again.", "Scherm B staat open op het tweede scherm: klik daar één keer om het volledig te vullen.": "Screen B is open on the second display. Click there once for fullscreen.", "Sleep het venster van scherm B naar het tweede scherm en klik erop om het volledig te vullen.": "Move the screen B window to the second display and click it for fullscreen.", "De browser blokkeerde scherm B. Sta pop-ups toe voor deze site en start opnieuw.": "The browser blocked screen B. Allow pop-ups for this site and start again.", "Eerst inloggen": "Sign in first", "De kiosk start vanuit Beheer. Log in en kies daar \"Start kiosk\".": "Start the kiosk from Administration. Sign in and choose \"Start kiosk\".", "Scherm B": "Screen B", "Klik om dit scherm volledig te vullen. De presentatie loopt al gelijk met de andere schermen.": "Click for fullscreen. The presentation is already synchronised with the other screens.", "Instellingen bewaard op dit apparaat.": "Settings saved on this device.", "Opslaan lukt niet. De instellingen gelden alleen zolang deze pagina open is.": "Unable to save. Settings apply only while this page stays open.", "Voorbeeld laden…": "Loading preview…", "De presentatie kon niet worden geladen. Controleer de verbinding en probeer opnieuw.": "The presentation could not load. Check your connection and try again.", "Kiosk voorbereiden…": "Preparing kiosk…", "Kies verschillende schermen voor A en B.": "Choose different displays for A and B.", "Eén component blijft geselecteerd.": "At least one component must remain selected.", "Voorbeeld pauzeren": "Pause preview", "Voorbeeld hervatten": "Resume preview", "NL": "NL", "EN": "EN", "DE": "DE", "airtechnicsolutions.nl": "airtechnicsolutions.nl", "Scherpenbeemd 3, Beek en Donk": "Scherpenbeemd 3, Beek en Donk", "Offline voorbereiden…": "Preparing offline use…", "Gereed voor offline gebruik.": "Ready for offline use.", "Offline nog niet gereed. Houd verbinding en vernieuw deze pagina.": "Offline use is not ready yet. Stay connected and reload this page.", "Offline gebruik is niet beschikbaar in deze browser.": "Offline use is not available in this browser."};</script><script src="assets/js/kiosk.js?v=2ae537031a78"></script>
+<script src="assets/js/beheer.js?v=9aadaee78eba"></script>
+</body>
+</html>

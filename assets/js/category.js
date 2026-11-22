@@ -3,6 +3,7 @@
    shows the same uitvoeringen as cards or as a spec table. */
 (function () {
   'use strict';
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
   var root = document.querySelector('[data-cv]');
   if (!root) return;
   var $$ = function (s, c) { return Array.prototype.slice.call((c || root).querySelectorAll(s)); };
@@ -20,7 +21,8 @@
         it.classList.toggle('is-dim', !fit);
         if (fit && it.classList.contains('cv-card')) n++;
       });
-      if (count) count.textContent = n + ' van ' + total + ' uitvoeringen' + (app ? ' passen' : '');
+      if (count) count.textContent = app ? L('countFit', '{n} van {total} uitvoeringen passen', { n: n, total: total })
+        : L('countAll', '{n} van {total} uitvoeringen', { n: n, total: total });
     });
   });
 

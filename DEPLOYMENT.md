@@ -53,3 +53,15 @@ De bestaande `.html`-adressen blijven behouden. Conceptpagina's uit de lokale
 website blijven eveneens beschikbaar. Dit is een voorbereiding voor deployment;
 de Vercel-projectkoppeling en mailboxcontrole worden bij de daadwerkelijke
 deployment uitgevoerd.
+
+## Beheer (kioskmodus)
+
+`api/beheer.py` is de login voor `/beheer.html`. Zonder deze variabelen meldt de login "nog niet ingericht".
+
+- `AIRTECHNIC_BEHEER_EMAIL`: inlog-e-mailadres van de eigenaar.
+- `AIRTECHNIC_BEHEER_PASSWORD_HASH`: maak met `python tools/beheer_password.py` (vraagt het wachtwoord, toont de hash).
+- `AIRTECHNIC_BEHEER_SECRET`: wordt door hetzelfde script gemaakt; ondertekent de sessiecookie.
+
+Deploy daarna opnieuw. Een nieuw wachtwoord = nieuwe hash; een nieuw geheim logt alle apparaten uit.
+De rem op mislukte pogingen geldt per functie-instantie; stel voor een gedeelde limiet een Vercel Firewall-regel in
+voor `POST /api/beheer`.

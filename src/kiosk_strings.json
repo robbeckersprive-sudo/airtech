@@ -1,0 +1,594 @@
+{
+  "Airtechnic · Kiosk": [
+    "Airtechnic · Kiosk",
+    "Airtechnic · Kiosk"
+  ],
+  "Blad": [
+    "Sheet",
+    "Blatt"
+  ],
+  "&amp; solids processing": [
+    "&amp; solids processing",
+    "&amp; Schüttguttechnik"
+  ],
+  "Web": [
+    "Web",
+    "Web"
+  ],
+  "Telefoon": [
+    "Phone",
+    "Telefon"
+  ],
+  "Schaal": [
+    "Scale",
+    "Maßstab"
+  ],
+  "Kiosk starten": [
+    "Start kiosk",
+    "Kiosk starten"
+  ],
+  "Klik om dit scherm volledig te vullen.": [
+    "Click to fill this screen.",
+    "Klicken Sie, um diesen Bildschirm vollständig zu füllen."
+  ],
+  "Start dit scherm": [
+    "Start this screen",
+    "Diesen Bildschirm starten"
+  ],
+  "Naar Beheer": [
+    "Go to administration",
+    "Zur Verwaltung"
+  ],
+  "Kiosk stoppen?": [
+    "Stop kiosk?",
+    "Kiosk beenden?"
+  ],
+  "Alle kioskschermen stoppen tegelijk.": [
+    "All kiosk screens stop together.",
+    "Alle Kioskbildschirme werden gemeinsam beendet."
+  ],
+  "Doorgaan": [
+    "Continue",
+    "Fortsetzen"
+  ],
+  "Stoppen": [
+    "Stop",
+    "Beenden"
+  ],
+  "Airtechnic Solutions · Beek en Donk": [
+    "Airtechnic Solutions · Beek en Donk",
+    "Airtechnic Solutions · Beek en Donk"
+  ],
+  "Industriële luchttechniek<br><em>&amp; solids processing.</em>": [
+    "Industrial air technology<br><em>&amp; solids processing.</em>",
+    "Industrielle Lufttechnik<br><em>&amp; Schüttguttechnik.</em>"
+  ],
+  "Van procesanalyse tot werkende installatie": [
+    "From process analysis to a working installation",
+    "Von der Prozessanalyse zur fertigen Anlage"
+  ],
+  "Grip op<br><em>elke stroom.</em>": [
+    "Control over<br><em>every flow.</em>",
+    "Kontrolle über<br><em>jeden Strom.</em>"
+  ],
+  "Grip op elke stroom.": [
+    "Control over every flow.",
+    "Kontrolle über jeden Strom."
+  ],
+  "Specialisatie A · Productstromen": [
+    "Specialisation A · Product flows",
+    "Spezialisierung A · Produktströme"
+  ],
+  "Poeders en granulaten.<br><em>Gecontroleerd verplaatst.</em>": [
+    "Powders and granules.<br><em>Moved with precision.</em>",
+    "Pulver und Granulate.<br><em>Kontrolliert gefördert.</em>"
+  ],
+  "<b>01</b>Opslaan": [
+    "<b>01</b>Storage",
+    "<b>01</b>Lagern"
+  ],
+  "<b>02</b>Doseren": [
+    "<b>02</b>Dosing",
+    "<b>02</b>Dosieren"
+  ],
+  "<b>03</b>Pneumatisch transport": [
+    "<b>03</b>Pneumatic conveying",
+    "<b>03</b>Pneumatische Förderung"
+  ],
+  "<b>04</b>Zeven en scheiden": [
+    "<b>04</b>Screening and separation",
+    "<b>04</b>Sieben und Trennen"
+  ],
+  "Specialisatie B · Luchtstromen": [
+    "Specialisation B · Air flows",
+    "Spezialisierung B · Luftströme"
+  ],
+  "Lucht en stof.<br><em>Onder controle.</em>": [
+    "Air and dust.<br><em>Under control.</em>",
+    "Luft und Staub.<br><em>Unter Kontrolle.</em>"
+  ],
+  "<b>05</b>Stofafzuiging": [
+    "<b>05</b>Dust extraction",
+    "<b>05</b>Staubabsaugung"
+  ],
+  "<b>06</b>Hoogvacuüm": [
+    "<b>06</b>High vacuum",
+    "<b>06</b>Hochvakuum"
+  ],
+  "<b>07</b>Filtratie": [
+    "<b>07</b>Filtration",
+    "<b>07</b>Filtration"
+  ],
+  "Doseersluizen voor<br><em>productstromen</em>": [
+    "Rotary valves for<br><em>product flows</em>",
+    "Zellenradschleusen für<br><em>Produktströme</em>"
+  ],
+  "Leidingwerk &amp;<br><em>koppelingen</em>": [
+    "Pipework &amp;<br><em>couplings</em>",
+    "Rohrleitungen &amp;<br><em>Kupplungen</em>"
+  ],
+  "Zeven voor<br><em>productkwaliteit</em>": [
+    "Screening for<br><em>product quality</em>",
+    "Sieben für<br><em>Produktqualität</em>"
+  ],
+  "Projectdossier · Recycling": [
+    "Project file · Recycling",
+    "Projektdossier · Recycling"
+  ],
+  "Feiten uit dit project": [
+    "Project facts",
+    "Projektkennzahlen"
+  ],
+  "Omvang": [
+    "Scope",
+    "Umfang"
+  ],
+  "Projectdossier · Food": [
+    "Project file · Food",
+    "Projektdossier · Lebensmittel"
+  ],
+  "Projectdossier · Feed": [
+    "Project file · Feed",
+    "Projektdossier · Futtermittel"
+  ],
+  "Werkwijze": [
+    "Our approach",
+    "Vorgehensweise"
+  ],
+  "Van tekening<br><em>tot installatie.</em>": [
+    "From drawing<br><em>to installation.</em>",
+    "Von der Zeichnung<br><em>zur Anlage.</em>"
+  ],
+  "We brengen uw proces en de gewenste capaciteit in kaart.": [
+    "We map your process and required capacity.",
+    "Wir erfassen Ihren Prozess und die gewünschte Kapazität."
+  ],
+  "We ontwerpen een installatie voor uw productieomgeving.": [
+    "We design an installation for your production environment.",
+    "Wir planen eine Anlage für Ihre Produktionsumgebung."
+  ],
+  "We produceren of leveren de onderdelen volgens het ontwerp en monteren de procesinstallatie op locatie.": [
+    "We manufacture or supply the components to the design and assemble the process installation on site.",
+    "Wir fertigen oder liefern die Komponenten gemäß Planung und montieren die Prozessanlage vor Ort."
+  ],
+  "We starten de installatie op, stellen de bedrijfsparameters af en toetsen de werking aan de afgesproken eisen.": [
+    "We commission the installation, adjust operating parameters and verify performance against the agreed requirements.",
+    "Wir nehmen die Anlage in Betrieb, stellen die Betriebsparameter ein und prüfen die Funktion anhand der vereinbarten Anforderungen."
+  ],
+  "<b>Opslaan</b>Silo": [
+    "<b>Storage</b>Silo",
+    "<b>Lagern</b>Silo"
+  ],
+  "<b>Scheiden</b>Cycloon": [
+    "<b>Separation</b>Cyclone",
+    "<b>Trennen</b>Zyklon"
+  ],
+  "<b>Filtreren</b>Filter": [
+    "<b>Filtration</b>Filter",
+    "<b>Filtern</b>Filter"
+  ],
+  "<b>Doseren</b>Sluis": [
+    "<b>Dosing</b>Rotary valve",
+    "<b>Dosieren</b>Schleuse"
+  ],
+  "Componenten in samenhang": [
+    "Components working together",
+    "Komponenten im Zusammenspiel"
+  ],
+  "Van component<br><em>tot complete installatie.</em>": [
+    "From component<br><em>to complete installation.</em>",
+    "Von der Komponente<br><em>zur kompletten Anlage.</em>"
+  ],
+  "Materialen uit onze projecten": [
+    "Materials from our projects",
+    "Materialien aus unseren Projekten"
+  ],
+  "Stel uw procesvraag": [
+    "Tell us about your process",
+    "Ihre Prozessfrage"
+  ],
+  "Bespreek uw proces.<br><em>Hier op de stand.</em>": [
+    "Discuss your process.<br><em>Here at our stand.</em>",
+    "Besprechen Sie Ihren Prozess.<br><em>Hier am Messestand.</em>"
+  ],
+  "E-mail": [
+    "Email",
+    "E-Mail"
+  ],
+  "Adres": [
+    "Address",
+    "Adresse"
+  ],
+  "Beheer · Airtechnic Solutions": [
+    "Administration · Airtechnic Solutions",
+    "Verwaltung · Airtechnic Solutions"
+  ],
+  "Direct naar de inhoud": [
+    "Skip to content",
+    "Direkt zum Inhalt"
+  ],
+  "Beheer": [
+    "Administration",
+    "Verwaltung"
+  ],
+  "Uitloggen": [
+    "Sign out",
+    "Abmelden"
+  ],
+  "Airtechnic Solutions · Beheer": [
+    "Airtechnic Solutions · Administration",
+    "Airtechnic Solutions · Verwaltung"
+  ],
+  "Inloggen": [
+    "Sign in",
+    "Anmelden"
+  ],
+  "E-mailadres": [
+    "Email address",
+    "E-Mail-Adresse"
+  ],
+  "Wachtwoord": [
+    "Password",
+    "Passwort"
+  ],
+  "Onthoud dit apparaat 30 dagen (de kiosk-pc op de stand)": [
+    "Remember this device for 30 days (the kiosk computer at the stand)",
+    "Dieses Gerät 30 Tage merken (Kiosk-PC am Messestand)"
+  ],
+  "Opgeleverd ·": [
+    "Delivered ·",
+    "Bereitgestellt ·"
+  ],
+  "Uw beursstand,": [
+    "Your exhibition stand,",
+    "Ihr Messestand,"
+  ],
+  "<br><em class=\"bh-w3\">klaar voor gebruik.</em>": [
+    "<br><em class=\"bh-w3\">ready to go.</em>",
+    "<br><em class=\"bh-w3\">einsatzbereit.</em>"
+  ],
+  "Vanaf hier toont u op één of twee schermen een doorlopende presentatie van uw expertise, componenten en projecten. In de stijl van uw website, en altijd actueel.": [
+    "Present your expertise, components and projects continuously on one or two screens. In the style of your website and always up to date.",
+    "Präsentieren Sie Ihre Kompetenz, Komponenten und Projekte fortlaufend auf einem oder zwei Bildschirmen. Im Stil Ihrer Website und stets aktuell."
+  ],
+  "Naar de kioskmodus": [
+    "Set up kiosk mode",
+    "Kioskmodus einrichten"
+  ],
+  "Kiosk modus": [
+    "Kiosk mode",
+    "Kioskmodus"
+  ],
+  "Status": [
+    "Status",
+    "Status"
+  ],
+  "Gereed": [
+    "Ready",
+    "Bereit"
+  ],
+  "Beheer · Beurs": [
+    "Administration · Exhibition",
+    "Verwaltung · Messe"
+  ],
+  "Een doorlopende presentatie voor de beursstand. De inhoud komt rechtstreeks uit de website.": [
+    "A continuous presentation for your exhibition stand, using content directly from your website.",
+    "Eine fortlaufende Präsentation für Ihren Messestand. Die Inhalte stammen direkt von Ihrer Website."
+  ],
+  "Welkomst opnieuw afspelen": [
+    "Replay welcome",
+    "Begrüßung erneut ansehen"
+  ],
+  "<b>01</b> Opstelling": [
+    "<b>01</b> Screen layout",
+    "<b>01</b> Bildschirmaufstellung"
+  ],
+  "Eén scherm": [
+    "One screen",
+    "Ein Bildschirm"
+  ],
+  "Laptop of één monitor": [
+    "Laptop or one monitor",
+    "Laptop oder ein Monitor"
+  ],
+  "Twee schermen": [
+    "Two screens",
+    "Zwei Bildschirme"
+  ],
+  "Naast elkaar, één doorlopend beeld": [
+    "Side by side, one continuous image",
+    "Nebeneinander, ein durchgehendes Bild"
+  ],
+  "<b>02</b> Componenten in de presentatie": [
+    "<b>02</b> Components to present",
+    "<b>02</b> Komponenten der Präsentation"
+  ],
+  "Projecten (twee per ronde, wisselend)": [
+    "Projects (two per loop, rotating)",
+    "Projekte (zwei pro Durchlauf, wechselnd)"
+  ],
+  "<b>03</b> Tempo en taal": [
+    "<b>03</b> Pace and language",
+    "<b>03</b> Tempo und Sprache"
+  ],
+  "Normaal": [
+    "Normal",
+    "Normal"
+  ],
+  "Rustig": [
+    "Relaxed",
+    "Ruhig"
+  ],
+  "De gekozen taal geldt voor beide schermen en wordt op dit apparaat bewaard.": [
+    "The selected language applies to both screens and is saved on this device.",
+    "Die gewählte Sprache gilt für beide Bildschirme und wird auf diesem Gerät gespeichert."
+  ],
+  "<b>04</b> Schermen": [
+    "<b>04</b> Displays",
+    "<b>04</b> Bildschirme"
+  ],
+  "Sluit het tweede scherm aan en laat de browser uw schermen zoeken. Scherm B opent dan vanzelf op het tweede scherm.": [
+    "Connect the second screen and let the browser find your displays. Screen B will then open on the second display.",
+    "Schließen Sie den zweiten Bildschirm an und lassen Sie den Browser Ihre Bildschirme suchen. Bildschirm B öffnet sich dann auf dem zweiten Bildschirm."
+  ],
+  "Schermen zoeken": [
+    "Find displays",
+    "Bildschirme suchen"
+  ],
+  "Live voorbeeld": [
+    "Live preview",
+    "Live-Vorschau"
+  ],
+  "Start kiosk": [
+    "Start kiosk",
+    "Kiosk starten"
+  ],
+  "Stoppen: druk op Esc, of houd linksboven 3 seconden ingedrukt.": [
+    "To stop: press Esc or hold the top-left corner for 3 seconds.",
+    "Beenden: Esc drücken oder die linke obere Ecke 3 Sekunden gedrückt halten."
+  ],
+  "Scherm B op een tweede apparaat": [
+    "Screen B on another device",
+    "Bildschirm B auf einem zweiten Gerät"
+  ],
+  "Open deze link op het tweede apparaat (ook ingelogd). De schermen lopen gelijk op de klok, ook zonder netwerk.": [
+    "Open this link on the other device (signed in as well). The screens follow the same clock, even without a network.",
+    "Öffnen Sie diesen Link auf dem zweiten Gerät (ebenfalls angemeldet). Die Bildschirme laufen zeitgleich, auch ohne Netzwerk."
+  ],
+  "Kopieer": [
+    "Copy",
+    "Kopieren"
+  ],
+  "Twee specialisaties": [
+    "Two specialisations",
+    "Zwei Spezialisierungen"
+  ],
+  "Installaties": [
+    "Installations",
+    "Anlagen"
+  ],
+  "Contact": [
+    "Contact",
+    "Kontakt"
+  ],
+  "Naar de website": [
+    "Go to website",
+    "Zur Website"
+  ],
+  "Tempo": [
+    "Pace",
+    "Tempo"
+  ],
+  "Taal": [
+    "Language",
+    "Sprache"
+  ],
+  "Taal beheer": [
+    "Administration language",
+    "Verwaltungssprache"
+  ],
+  "Link voor scherm B": [
+    "Link for screen B",
+    "Link für Bildschirm B"
+  ],
+  "E-mailadres of wachtwoord klopt niet.": [
+    "Incorrect email address or password.",
+    "E-Mail-Adresse oder Passwort ist falsch."
+  ],
+  "Te veel pogingen. Probeer het over 15 minuten opnieuw.": [
+    "Too many attempts. Try again in 15 minutes.",
+    "Zu viele Versuche. Bitte in 15 Minuten erneut versuchen."
+  ],
+  "De login is nog niet ingericht. Zet de omgevingsvariabelen voor Beheer in Vercel (zie DEPLOYMENT.md).": [
+    "Sign-in has not been configured. Ask your website administrator to configure it.",
+    "Die Anmeldung ist noch nicht eingerichtet. Bitten Sie Ihre Websiteverwaltung um die Einrichtung."
+  ],
+  "Vul uw e-mailadres en wachtwoord in.": [
+    "Enter your email address and password.",
+    "Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein."
+  ],
+  "Geen verbinding met de server. Controleer het netwerk en probeer het opnieuw.": [
+    "Cannot connect to the server. Check your network and try again.",
+    "Keine Verbindung zum Server. Prüfen Sie das Netzwerk und versuchen Sie es erneut."
+  ],
+  "Voorbeeld scherm ": [
+    "Screen preview ",
+    "Vorschau Bildschirm "
+  ],
+  "ÉÉN SCHERM": [
+    "ONE SCREEN",
+    "EIN BILDSCHIRM"
+  ],
+  "SCHERM ": [
+    "SCREEN ",
+    "BILDSCHIRM "
+  ],
+  " bladen · één ronde ": [
+    " sheets · loop duration ",
+    " Blätter · Durchlauf "
+  ],
+  "Gekopieerd": [
+    "Copied",
+    "Kopiert"
+  ],
+  "Scherm ": [
+    "Screen ",
+    "Bildschirm "
+  ],
+  " · hoofdscherm": [
+    " · primary display",
+    " · Hauptbildschirm"
+  ],
+  "Rol van dit scherm": [
+    "Role of this display",
+    "Rolle dieses Bildschirms"
+  ],
+  "Niet gebruiken": [
+    "Do not use",
+    "Nicht verwenden"
+  ],
+  "Scherm A (links)": [
+    "Screen A (left)",
+    "Bildschirm A (links)"
+  ],
+  "Scherm B (rechts)": [
+    "Screen B (right)",
+    "Bildschirm B (rechts)"
+  ],
+  "Deze browser kan schermen niet automatisch plaatsen. Gebruik Chrome of Edge, of sleep scherm B na de start zelf naar het tweede scherm.": [
+    "This browser cannot place screens automatically. Use Chrome or Edge, or move screen B to the second display after starting.",
+    "Dieser Browser kann Fenster nicht automatisch platzieren. Nutzen Sie Chrome oder Edge, oder verschieben Sie Bildschirm B nach dem Start auf den zweiten Bildschirm."
+  ],
+  "Gevonden. Controleer welk scherm links (A) en rechts (B) staat.": [
+    "Displays found. Check which screen is on the left (A) and right (B).",
+    "Bildschirme gefunden. Prüfen Sie die Zuordnung links (A) und rechts (B)."
+  ],
+  "Er is maar één scherm gevonden. Sluit het tweede scherm aan (uitbreiden, niet dupliceren) en zoek opnieuw.": [
+    "Only one display found. Connect the second screen (extend, do not duplicate) and search again.",
+    "Nur ein Bildschirm gefunden. Schließen Sie den zweiten an (erweitern, nicht duplizieren) und suchen Sie erneut."
+  ],
+  "Geen toestemming om schermen te zoeken. Sta \"Vensterbeheer\" toe via het slotje in de adresbalk en probeer het opnieuw.": [
+    "Permission to find displays was denied. Allow window management in the address bar and try again.",
+    "Keine Berechtigung zur Bildschirmsuche. Erlauben Sie die Fensterverwaltung in der Adressleiste und versuchen Sie es erneut."
+  ],
+  "Scherm B staat open op het tweede scherm: klik daar één keer om het volledig te vullen.": [
+    "Screen B is open on the second display. Click there once for fullscreen.",
+    "Bildschirm B ist auf dem zweiten Monitor geöffnet. Klicken Sie dort einmal für Vollbild."
+  ],
+  "Sleep het venster van scherm B naar het tweede scherm en klik erop om het volledig te vullen.": [
+    "Move the screen B window to the second display and click it for fullscreen.",
+    "Verschieben Sie Fenster B auf den zweiten Bildschirm und klicken Sie für Vollbild."
+  ],
+  "De browser blokkeerde scherm B. Sta pop-ups toe voor deze site en start opnieuw.": [
+    "The browser blocked screen B. Allow pop-ups for this site and start again.",
+    "Der Browser hat Bildschirm B blockiert. Erlauben Sie Pop-ups für diese Website und starten Sie erneut."
+  ],
+  "Eerst inloggen": [
+    "Sign in first",
+    "Zuerst anmelden"
+  ],
+  "De kiosk start vanuit Beheer. Log in en kies daar \"Start kiosk\".": [
+    "Start the kiosk from Administration. Sign in and choose \"Start kiosk\".",
+    "Starten Sie den Kiosk über die Verwaltung. Melden Sie sich an und wählen Sie „Kiosk starten“."
+  ],
+  "Scherm B": [
+    "Screen B",
+    "Bildschirm B"
+  ],
+  "Klik om dit scherm volledig te vullen. De presentatie loopt al gelijk met de andere schermen.": [
+    "Click for fullscreen. The presentation is already synchronised with the other screens.",
+    "Klicken Sie für Vollbild. Die Präsentation läuft bereits synchron mit den anderen Bildschirmen."
+  ],
+  "Instellingen bewaard op dit apparaat.": [
+    "Settings saved on this device.",
+    "Einstellungen auf diesem Gerät gespeichert."
+  ],
+  "Opslaan lukt niet. De instellingen gelden alleen zolang deze pagina open is.": [
+    "Unable to save. Settings apply only while this page stays open.",
+    "Speichern nicht möglich. Die Einstellungen gelten nur, solange diese Seite geöffnet bleibt."
+  ],
+  "Voorbeeld laden…": [
+    "Loading preview…",
+    "Vorschau wird geladen…"
+  ],
+  "De presentatie kon niet worden geladen. Controleer de verbinding en probeer opnieuw.": [
+    "The presentation could not load. Check your connection and try again.",
+    "Die Präsentation konnte nicht geladen werden. Prüfen Sie die Verbindung und versuchen Sie es erneut."
+  ],
+  "Kiosk voorbereiden…": [
+    "Preparing kiosk…",
+    "Kiosk wird vorbereitet…"
+  ],
+  "Kies verschillende schermen voor A en B.": [
+    "Choose different displays for A and B.",
+    "Wählen Sie unterschiedliche Bildschirme für A und B."
+  ],
+  "Eén component blijft geselecteerd.": [
+    "At least one component must remain selected.",
+    "Mindestens eine Komponente muss ausgewählt bleiben."
+  ],
+  "Voorbeeld pauzeren": [
+    "Pause preview",
+    "Vorschau pausieren"
+  ],
+  "Voorbeeld hervatten": [
+    "Resume preview",
+    "Vorschau fortsetzen"
+  ],
+  "NL": [
+    "NL",
+    "NL"
+  ],
+  "EN": [
+    "EN",
+    "EN"
+  ],
+  "DE": [
+    "DE",
+    "DE"
+  ],
+  "airtechnicsolutions.nl": [
+    "airtechnicsolutions.nl",
+    "airtechnicsolutions.nl"
+  ],
+  "Scherpenbeemd 3, Beek en Donk": [
+    "Scherpenbeemd 3, Beek en Donk",
+    "Scherpenbeemd 3, Beek en Donk"
+  ],
+  "Offline voorbereiden…": [
+    "Preparing offline use…",
+    "Offline-Nutzung wird vorbereitet…"
+  ],
+  "Gereed voor offline gebruik.": [
+    "Ready for offline use.",
+    "Bereit für die Offline-Nutzung."
+  ],
+  "Offline nog niet gereed. Houd verbinding en vernieuw deze pagina.": [
+    "Offline use is not ready yet. Stay connected and reload this page.",
+    "Offline-Nutzung noch nicht bereit. Bleiben Sie verbunden und laden Sie diese Seite erneut."
+  ],
+  "Offline gebruik is niet beschikbaar in deze browser.": [
+    "Offline use is not available in this browser.",
+    "Offline-Nutzung ist in diesem Browser nicht verfügbar."
+  ]
+}

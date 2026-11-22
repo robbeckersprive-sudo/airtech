@@ -8,7 +8,7 @@
     const empty = document.querySelector('[data-project-empty]');
     const reset = form.querySelector('[type="reset"]');
     const fields = ['q', 'sector', 'toepassing'];
-    const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('nl');
+    const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase(document.documentElement.lang || 'nl');
     const readURL = () => {
       const params = new URLSearchParams(location.search);
       fields.forEach(name => { form.elements[name].value = params.get(name) || ''; });

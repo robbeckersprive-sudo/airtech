@@ -1,10 +1,22 @@
 """The cycloonafscheider structure, shared verbatim by all product pages."""
+import os
 from html import escape
-from components import (SITE, ORG, pic, media, link, contact, contact_url, page, icon, COMPONENTEN, _v,
+from components import (ROOT, SITE, ORG, pic, media, link, contact, contact_url, page, icon, COMPONENTEN, _v,
                         breadcrumb_jsonld, faq_jsonld, faq_section)
 from home_knowledge import faq_block
 from product_routes import PRODUCT_ROUTES
 from component_detail import GALLERY_SIZES, component_intro, component_nav, component_principle
+
+
+def _folder_link(slug, name):
+    """Productfolder download, shown only once tools/render_folders.py has made the PDF."""
+    pdf = os.path.join(ROOT, 'folders', slug + '.pdf')
+    if not os.path.exists(pdf):
+        return ''
+    kb = os.path.getsize(pdf) // 1024
+    return link(f'Download productfolder <span class="detail-documentation__meta">PDF · {kb} KB</span>',
+                f'folders/{slug}.pdf', arrow='down',
+                attrs=f' download="Productfolder {escape(name)} - {ORG}.pdf" type="application/pdf"')
 
 
 def product_page(d):
@@ -33,6 +45,7 @@ def product_page(d):
         <h3 class="h3" id="detail-doc-title">Technische documentatie</h3>
         <p>Vraag informatie aan over inbouwmaten, aansluitingen, materialen of procescondities.</p>
         {link('Vraag documentatie aan',contact_url(d['documentation_topic']))}
+        {_folder_link(slug, name)}
       </aside>
     </div>
     <table class="detail-specs">

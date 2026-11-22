@@ -5,6 +5,7 @@
    The pause button stops everything that moves (WCAG 2.2.2): clock, granule canvas (.is-paused), SVG flows. */
 (function () {
   'use strict';
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
   var root = document.querySelector('[data-ds]');
   if (!root) return;
   var $$ = function (s, c) { return Array.prototype.slice.call((c || root).querySelectorAll(s)); };
@@ -96,7 +97,7 @@
     paused = on;
     root.classList.toggle('is-paused', on);
     play.setAttribute('aria-pressed', String(on));
-    play.setAttribute('aria-label', on ? 'Animatie afspelen' : 'Animatie pauzeren');
+    play.setAttribute('aria-label', on ? L('play', 'Animatie afspelen') : L('pause', 'Animatie pauzeren'));
     play.querySelector('[data-ds-icon-pause]').toggleAttribute('hidden', on);
     play.querySelector('[data-ds-icon-play]').toggleAttribute('hidden', !on);
     root.dispatchEvent(new Event('hero-motion-change'));   // site.js runs the SVG flows of the active sheet only

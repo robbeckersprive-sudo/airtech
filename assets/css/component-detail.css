@@ -300,6 +300,8 @@ html:not(.js) .detail-marker { display: none; }
 }
 .detail-documentation p { color: var(--muted); margin-block: 8px 12px; }
 .detail-documentation .link, .detail-related .link { min-height: 44px; }
+.detail-documentation .link { display: flex; width: fit-content; }
+.detail-documentation__meta { margin-left: .5em; font: 500 .78em var(--font-mono); color: var(--muted); white-space: nowrap; }
 .detail-specs {
   width: 100%;
   table-layout: fixed;

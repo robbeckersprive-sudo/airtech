@@ -1,6 +1,7 @@
 /* Airtechnic "Flow" — home blocks 4 "Projectdossier" and 5 "Van tekening tot installatie" (src/home_practice.py). */
 (function () {
   'use strict';
+  var L = function (k, nl, v) { var s = (window.ATI18N || {})[k] || nl; return v ? s.replace(/\{(\w+)\}/g, function (_, n) { return v[n]; }) : s; };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
@@ -10,7 +11,7 @@
   if (pd) {
     var imgs = $$('[data-pd-img]', pd), copies = $$('[data-pd-copy]', pd), tabs = $$('[data-pd-tab]', pd);
     var count = pd.querySelector('[data-pd-count]'), cur = 0, timer = 0;
-    var fmt = function (v, dec) { return v.toLocaleString('nl-NL', { minimumFractionDigits: dec, maximumFractionDigits: dec }); };
+    var fmt = function (v, dec) { return v.toLocaleString(L('locale', 'nl-NL'), { minimumFractionDigits: dec, maximumFractionDigits: dec }); };
     // the hard facts count up as a project opens (the final text is already in the HTML)
     var countUp = function (copy) {
       $$('dd[data-count]', copy).forEach(function (dd, k) {
