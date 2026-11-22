@@ -131,7 +131,10 @@
     if (url.hash !== '#contact' || url.origin !== location.origin) return;
     // every page with its own contact block keeps the visitor there (header CTA used to jump to the home page)
     e.preventDefault(); e.stopImmediatePropagation();   // runs in the capture phase, before site.js' smooth scroll
-    go(url.searchParams.get('aanvraag'));
+    var topic = url.searchParams.get('aanvraag');
+    // from the open mobile menu: close it first (it locks the page scroll), then go
+    var burger = document.querySelector('[data-hx-burger][aria-expanded="true"]');
+    if (burger) { burger.click(); setTimeout(function () { go(topic); }, 80); } else go(topic);
   }, true);
   // arriving with ?aanvraag=...#contact from another page: pick the topic
   var q = new URLSearchParams(location.search).get('aanvraag');
