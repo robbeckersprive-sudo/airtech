@@ -107,25 +107,104 @@
     window.addEventListener('pageshow', function (e) { if (e.persisted && isOpen) close(true, true); });
   }
 
-  /* ---------- 2. Home hero: swipe between sheets ---------- */
-  var hero = $('[data-hero-slides]');
-  if (hero) {
-    var tabs = $$('[data-tab]', hero);
+  /* ---------- 2. Home hero: swipe between sheets ----------
+     Works for both home heroes: the Tekenblad slides ([data-hero-slides], tabs [data-tab] + aria-current) and the
+     cinema carousel ([data-hc], tabs [data-hc-tab] + aria-pressed). It clicks the tabs, so each hero's own script
+     stays in charge of the change. */
+  var swipeHero = function (root, tabSel, isOn, skip) {
+    var tabs = $$(tabSel, root);
     var sx = 0, sy = 0, st = 0, tracking = false;
-    hero.addEventListener('touchstart', function (e) {
-      if (e.touches.length !== 1) { tracking = false; return; }
+    root.addEventListener('touchstart', function (e) {
+      // skip: an area where the hero's own script already handles the swipe
+      if (e.touches.length !== 1 || (skip && e.target.closest && e.target.closest(skip))) { tracking = false; return; }
       tracking = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now();
     }, { passive: true });
-    hero.addEventListener('touchend', function (e) {
+    root.addEventListener('touchend', function (e) {
       if (!tracking || !tabs.length) return;
       tracking = false;
       var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
       if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.4 || Date.now() - st > 800) return;
-      var cur = tabs.findIndex(function (b) { return b.hasAttribute('aria-current'); });
+      var cur = Math.max(0, tabs.findIndex(isOn));
       var next = (cur + (dx < 0 ? 1 : -1) + tabs.length) % tabs.length;
-      hero.classList.add('is-swiped');
       tabs[next].click();
     }, { passive: true });
+  };
+  var hero = $('[data-hero-slides]');
+  if (hero) swipeHero(hero, '[data-tab]', function (b) { return b.hasAttribute('aria-current'); });
+  // "Doorstroom" hero: doorstroom.js swipes on the stage; on the cover the copy covers the lower photo, so the copy
+  // and the Proceslijn swipe too
+  var ds = $('[data-ds]');
+  if (ds) swipeHero(ds, '[data-ds-tab]', function (b) { return b.hasAttribute('aria-current'); }, '[data-ds-stage]');
+  var hc = $('[data-hc]');
+  if (hc) {
+    swipeHero(hc, '[data-hc-tab]', function (b) { return b.getAttribute('aria-pressed') === 'true'; });
+    // scroll-out progress for the cover's fold into a plate (CSS reads --p)
+    var hcTick = false;
+    var hcScroll = function () {
+      hcTick = false;
+      if (reduce.matches) return;
+      var h = hc.offsetHeight || 1, y = window.scrollY;
+      if (y > h * 1.2 && hc.style.getPropertyValue('--p') === '1') return;
+      hc.style.setProperty('--p', Math.min(1, Math.max(0, y / h)).toFixed(4));
+    };
+    window.addEventListener('scroll', function () { if (!hcTick) { hcTick = true; requestAnimationFrame(hcScroll); } }, { passive: true });
+    hcScroll();
+    // portrait cover: hotspot labels open towards the middle of the screen (hero-concepts.js flips them only near
+    // the left edge, which on a phone sends right-hand labels off screen). Runs after each repositioning.
+    var cover = window.matchMedia('(max-width: 719px), (max-aspect-ratio: 6/5) and (max-width: 1100px)');
+    var spots = $$('.hc-spot', hc);
+    var sideSpots = function () {
+      if (!cover.matches) return;
+      spots.forEach(function (a) {
+        var v = a.closest('.hc-visual');
+        var x = parseFloat(a.style.left);
+        if (v && !isNaN(x)) a.classList.toggle('is-label-right', x < v.clientWidth / 2);
+      });
+    };
+    if ('MutationObserver' in window) {
+      var mo = new MutationObserver(sideSpots);
+      // 'class' too: hero-concepts.js re-sets the label side even when the position is unchanged (no style mutation)
+      spots.forEach(function (a) { mo.observe(a, { attributes: true, attributeFilter: ['style', 'class'] }); });
+    }
+    sideSpots();
+  }
+
+  /* ---------- 2b. Catalogusbladen on touch: each sheet with a cross-section plays its cut once by itself ----------
+     On desktop the cut runs on hover; touch screens never hover, so when a sheet reaches the middle of the screen the
+     red cutting line sweeps across, the section shows for a moment and the sheet closes again (.is-demo, CSS in
+     mobile.css 5b). The "Doorsnede" toggle keeps working; a sheet the visitor opened is left alone. */
+  var touchOnly = window.matchMedia('(hover: none), (pointer: coarse)');
+  var demoCells = $$('[data-catalog] .catalog__cell').filter(function (c) { return c.querySelector('.sheet__img--sec'); });
+  if (demoCells.length && touchOnly.matches && !reduce.matches && 'IntersectionObserver' in window) {
+    var playDemo = function (cell) {
+      if (!cell.classList.contains('is-ready')) { setTimeout(function () { playDemo(cell); }, 400); return; }
+      if (cell.classList.contains('is-section')) return;
+      cell.classList.add('is-demo');
+      setTimeout(function () { cell.classList.remove('is-demo'); }, 2600);
+    };
+    var demoIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        demoIO.unobserve(en.target);
+        setTimeout(function () { playDemo(en.target); }, 250);
+      });
+    }, { rootMargin: '-38% 0px -38% 0px' });
+    demoCells.forEach(function (c) { demoIO.observe(c); });
+  }
+
+  /* ---------- 2c. Werkwijze: the open step's intro (step-in, clip-in, settle) ran at page load, far below the fold.
+     Replay it when the steps block scrolls into view, so it is actually seen. ---------- */
+  var steps = $('.steps');
+  if (steps && !reduce.matches && 'IntersectionObserver' in window) {
+    var replay = function () {
+      $$('.step-panel:not([hidden]), .step-panel:not([hidden]) .media, .step-panel:not([hidden]) .media img', steps).forEach(function (el) {
+        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+      });
+    };
+    var stepIO = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { stepIO.disconnect(); replay(); }
+    }, { rootMargin: '0px 0px -25% 0px' });
+    stepIO.observe(steps);
   }
 
   /* ---------- 3. Breadcrumbs: show the current page ---------- */

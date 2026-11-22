@@ -27,6 +27,10 @@ CONTACT_TOPICS = {
     'transportafscheider': ('Transportafscheider', 'Vertel ons welk materiaal u transporteert en hoe het na de afscheider moet worden opgevangen of afgevoerd.'),
     'cycloonafscheider': ('Advies cycloonafscheider', 'Noem het te scheiden materiaal, het luchtdebiet en het resultaat dat u wilt bereiken, voor zover bekend.'),
     'cycloon-documentatie': ('Documentatie cycloon', 'Welke informatie zoekt u? Denk aan inbouwmaten, aansluitingen, materialen of procescondities.'),
+    # intent shortcuts shown on every contact form (Nov 22)
+    'bestaande-installatie': ('Bestaande installatie verbeteren', 'Wat loopt er niet zoals u wilt? Denk aan capaciteit, stof, slijtage of storingen.'),
+    'onderdelen': ('Onderdelen of vervanging', 'Om welk onderdeel gaat het? Een foto, maat of de gegevens van het typeplaatje helpen ons verder.'),
+    'terugbellen': ('Liever teruggebeld', 'Laat kort weten waarover u wilt praten en vul uw telefoonnummer in. Dan bellen wij u.'),
 }
 
 

@@ -35,6 +35,16 @@ src/serve.py            tiny static server (works on the D: drive)
 The HTML files are generated: edit `src/` and run `python src/build.py` (Python 3, no packages).
 Asset URLs get an mtime-based `?v=` so browsers pick up CSS/JS changes after a rebuild.
 
+## Airtechnic-logo
+
+`logo()` gebruikt `assets/img/airtechnic-logo-transparent.png`: een met beeldbewerking gemaakte
+RGBA-versie van het aangeleverde woordmerk, met echte transparantie. Het origineel blijft bewaard.
+`assets/css/brand.css` verzorgt de uitsnede en een eenmalige luchtstroom bij hover/toetsenbordfocus.
+Reduced motion toont een stil accent. Desktop en footer tonen de onderregel; de mobiele header
+toont alleen het krachtige woordmerk. Op de mobiele fotoheader en in het geopende menu is het
+logo wit; in een lichte header blauw. Er is geen afhankelijkheid meer van een extern SVG-filter.
+Het bestand is een rasterafbeelding; een officieel SVG blijft de voorkeur voor exacte vectorweergave.
+
 ## Componentdetailpagina als sjabloon
 
 Gebruik `product()` in `src/pages.py` als voorbeeld. `src/component_detail.py` levert de
@@ -169,6 +179,181 @@ plate state is shown statically. Portrait/phones keep the framed-card hero. `.se
 above "Twee specialisaties". Checked at 1024x768, 1440x900, 2560x1440 and 390x844: CLS 0, no overlap with the type.
 The review pages `hero-{a,b,c}.html` were generated from the pre-rollout hero; `tools/hero_concepts.py` no longer
 applies to the current build.
+
+## Home hero "Doorstroom" + header refinements (Nov 20, current home)
+
+Replaces the "cinema" hero on `index.html` (that one stays reviewable as `hero-concept-cinema.html`). Markup
+`src/hero_doorstroom.py` (`doorstroom_hero()`, called from `pages.home()`), styles `assets/css/top.css` (loaded on every
+page, after signature.css), behaviour `assets/js/doorstroom.js`.
+- **One sheet.** The header overlays the hero (`page(..., overlay=True)`); the photo stage fades into the stone ground at
+  the bottom, the drawing grid is anchored to the hero's bottom edge and carries on into "Twee specialisaties" with the
+  same pitch; no ruler, no band in between. The Proceslijn's datum mark carries `data-sig-origin`: `signature.js` starts
+  the Hartlijn there, so the line visibly turns from the hero down into block 2.
+- **Live flow.** Sheet 1 is the empty tube with the granule canvas again (`granule-flow.js`), not the baked photo. New in
+  the sim, both opt-in via `data-mode` on the canvas: an eased regime switch *dichte fase* (bed + dunes) / *verdunde
+  fase* (thin saltating layer, granules suspended and fast), driven by the "Stromingsbeeld" instrument; and an air pulse
+  where a fine pointer moves over the tube (bed bulges, granules kicked up and sped up locally). Sheets 2-5 keep their
+  SVG grain flows and traces.
+- **Instruments on more sheets** (`src/hero_modes.py`, `SHEET_MODES` + `EFFECTS`): only where the two states teach
+  something. Filtratie *Filteren / Afreinigen* (dust cake grows on the cartridges / an air pulse runs down each cartridge
+  in turn and the cake falls into the cone), Cyclonen *Grof / Fijn* (coarse product spirals to the outlet / the finest
+  part rides the inner vortex up into the dompelbuis), Doseren *Laag / Hoog toerental* (the photographed rotor really
+  turns: a glare-free rotor texture from `tools/rotor_texture.py` spins in unsquashed space because the rotor is seen
+  in perspective, rx 79 / ry 98; the window glare stays on the glass; `doorstroom.js` integrates the angle so a speed
+  change eases, pockets fill under the inlet and empty over the outlet). Wissels has none on purpose: the flap is fixed
+  in the photo, a route switch would contradict it. One instrument per sheet (`data-for`, `.is-for`); a choice sets
+  `data-mode` (a | b) on its slide and keeps the visitor on that sheet until another station is picked.
+- **No bounce.** A box's animation list never depends on slide state (only sheet 1 has the develop intro); the wipe
+  is clip-path only. Measured headless: scale jumps > 0.5 % during a sheet change 12 → 0.
+- **Proceslijn = the buttons under the hero.** Five stations on a dash-dot centre line with granules running along it,
+  red fill to the active sheet, preview plate on hover, the play/pause button's ring is the slide clock (10 s). The
+  clock holds on hover/focus of copy, line, callouts or instrument, while the tube is being blown, off-screen, hidden
+  tab, and under reduced motion (then nothing moves at all). Pause stops clock, canvas, SVG flows and pulses (2.2.2).
+- **Callouts** A/B: ringed point + leader + label chip; hovering shows no extra text (client request; the line stays for
+  screen readers). JS hides callouts that would sit under the type, the instrument or in the faded edges, and puts the
+  chip on the free side.
+- **Header (all pages):** light rail (paper, steel type, red icons, hairline dividers) instead of the black band; nav
+  pills on hover/open, chevron turns. On the home page rail + bar are transparent over the hero until scrolled.
+- **Breakpoints:** desktop layout from 900px wide and landscape; below that type, sheet, instrument, line stack (swipe
+  on the sheet; only the active station shows its label below 640px).
+- Checked headless (Chromium, playwright-core) at 1920x1080, 1440x900, 1024x768, 390x844: no console errors, no
+  horizontal overflow, keyboard arrows on the stations, one H1, inactive sheets `inert`, reduced motion holds sheet 1.
+
+## Home blocks 2 "Processchema" + 3 "Röntgen" (Nov 20, replace "Processchema A" and "Catalogusbladen")
+
+Markup `src/home_blocks.py` (`schema_block()`, `catalog_block()`, used by `pages.home()`; the old `specs` / `carousel`
+markup is left in `pages.py` but not rendered), styles `assets/css/home-blocks.css` (home only, via `page(stylesheet=)`),
+behaviour `assets/js/home-blocks.js`. Copy comes from `solution_data` / `category_data` / `cyclone_category_data`.
+- **Block 2** draws the heading's promise: two lines of one installation. A Solids processing (product line, steel with
+  running granules): Opslaan → Doseren → Pneumatisch transport → Zeven en scheiden → "naar uw proces". B Industriële
+  luchttechniek (air line, dashed with running air): Stofafzuiging → Hoogvacuüm → Filtratie → "schone lucht". A dashed
+  join drops from A3 to B3: the transport air goes to the filter. Every station is a link (two `<ol>` under an h3 each);
+  hover/focus fills the inspector plate next to the heading (render, solution title, first sentence of the lead).
+  Arrival: lines draw, stations come in one by one. Below 900px: two vertical lines with photo rows (64px thumbs), the
+  join becomes a note between the lines, no inspector.
+- **Block 3** keeps the eight groups as light catalogue plates (drawing grid, registration marks, `01/08`) and makes the
+  cross-sections the point: a red scan line follows the pointer, left of it the section, right of it the exterior
+  (`--x`, a registered `@property`). Hover also lists the group's four uitvoeringen (hidden 900-1199px, where they would
+  cover the machine); focus opens the plate halfway. Cycloon, doseersluis and blower sections are registered onto their
+  exteriors by `tools/register_sections.py` (alpha bounding box fit; blower mirrored first) as `*-doorsnede-reg`
+  (+ manifest entries). Below 900px: a snap deck (78vw cards) where the swipe itself moves the scan line (centred = half
+  open) and a dash-dot progress line with dots.
+- Checked headless at 1440x900, 1024x768, 390x844: no page errors, keyboard focus drives inspector and scan, reduced
+  motion shows everything at once with nothing travelling.
+
+## Home blocks 4 "Projectdossier" + 5 "Van tekening tot installatie" (Nov 21)
+
+Markup `src/home_practice.py` (`dossier_block()`, `werkwijze_block(steps)`, used by `pages.home()`; the old `case` /
+`werkwijze` markup stays in `pages.py` unrendered), styles appended to `assets/css/home-blocks.css`, behaviour
+`assets/js/home-practice.js`.
+- **Block 4 (#projecten)** shows all five projects from `project_data.PROJECTS` (order in `ORDER`) instead of two tabs.
+  The illustration fills the right of the steel band and fades into it (mask, no boxed picture); a project changes
+  behind the hero's red scan line (`ds-wipe` / `ds-scan` from top.css). Copy: sector chip, project title, lead, the
+  project's facts as large readings (numbers count up, Dutch formatting; "3 × 2" and words do not count), client /
+  material / scope, links to the project page and all projects. Dossier index = ARIA tabs with thumbnails (arrow keys,
+  Home/End); phones: picture on top, swipe it, index scrolls sideways. "Beeld: technische projectillustratie" stays.
+- **Block 5 (#steps-title)**: all four steps are readable (no hidden tab panels). Desktop: a sticky sheet shows the step
+  under the reading line, first as a blueprint drawing of its photo, then scrolling plots the photo over it behind the
+  scan line (`--x`); title block "Blad 0n / 04 · step · Tekening → Installatie"; a dashed rail with numbered nodes
+  fills red down to the reading line. Phones: each step carries its own sheet, plotted by its own scroll position.
+  Drawings: `tools/drawing_versions.py` (difference of Gaussians on the photo, pale lines on a steel 24px grid) writes
+  `*-tekening-{480,800,1200}` + manifest entries. Designer drawings in `tools/drawing-src/<name>.webp` (registered to the
+  photo, 1672 x 941) replace the generated ones: all four are designer drawings (inbedrijfstelling added Nov 22).
+- Checked headless at 1440x900, 1024x768, 390x844: no page errors; keyboard tabs; inactive dossiers `inert`; reduced
+  motion shows final numbers and full photos.
+
+## Home blocks 6 "Vraagbaak" + 7 "Vragen" (Nov 21)
+
+Markup `src/home_knowledge.py` (`kennis_block()`, `faq_block(items)`, used by `pages.home()`), styles appended to
+`assets/css/home-blocks.css`, behaviour `assets/js/home-knowledge.js`.
+- **Block 6** shows all nine knowledge articles (the druk/vacuüm article + `knowledge_data.ARTICLES`) as a numbered
+  editorial index: K.0n, the question, its first description sentence, topic, arrow. Topic chips (`TOPICS`, `TOPIC_OF`)
+  fold rows away; on a fine pointer a preview plate glides along the side column level with the hovered row (never over
+  the side text; hidden when there is no room). Phones: rows with a 64px thumbnail, chips scroll sideways.
+- **Block 7** keeps `components.faq()` (and the FAQPage JSON-LD) but as an exclusive accordion (`details name`), numbered
+  V.0n, red rule on the open item, smooth opening via `::details-content` + `interpolate-size` where supported. A sticky
+  steel card "Staat uw vraag er niet bij?" carries the contact button, phone and e-mail (below the list on phones).
+- Gotcha: a single-column grid on phones needs `minmax(0, 1fr)`; a sideways-scrolling chip row otherwise widens it.
+
+## Contact block + footer "Titelblok" (Nov 21, every page)
+
+`components.contact()` and `components.footer()` keep their signatures (all templates call them unchanged); styles in
+`assets/css/top.css` ("CONTACT" / "FOOTER"), extras in `assets/js/contact-plus.js`.
+- **Contact**: the form logic stays in `site.js` (it needs `#contact`, `.contact__lines a[href^=mailto]`, the
+  `<select data-contact-topic>` and the `[data-validate]` fields). Topic chips (ARIA radiogroup) drive that select and
+  fire its `change` event, so hints and `?aanvraag=` keep working; the select is visually hidden once the chips show.
+  A progress line over the card (Vraag, Naam, E-mail) lights up per required field. Left: "Handig om te noemen" (from
+  the FAQ answer), large call / mail lines, address. Phones: one column, chips scroll sideways, full-width submit.
+- **Footer** = the drawing's title block: a framed grid of cells (brand, motto, Techniek, Airtechnic, Direct contact,
+  Blad / Schaal / Rev. with the current page name from `<title>` via `_sheet_name()`, "Naar boven"). 2 columns below
+  900px, 1 column below 480px.
+
+## Component pages: overview + category template v2 "Catalogusblad" (Nov 21)
+
+- **componenten.html** (`home_destinations.component_index`, styles `home-blocks.css` "OVERVIEW", script
+  `home-blocks.js`): the eight groups as the home Röntgen plates (pointer scan; on phones the page scroll moves the scan,
+  grid `data-cx-deck data-cx-vertical`), each with its uitvoeringen as a numbered list, jump chips, "8 groepen, 32
+  uitvoeringen" counted from the data.
+- **Category template** (`category_page.py`, all eight groups incl. Cyclonen; styles appended to
+  `category-overview.css` "TEMPLATE V2", script `assets/js/category.js`): hero with kicker "Componenten · 0n / 08",
+  toepassing tags and an index of the uitvoeringen (thumbnail stations on a dash-dot line, anchors to the cards);
+  "Vergelijk de uitvoeringen" with toepassing chips that dim what does not fit (nothing disappears) and a
+  Kaarten / Tabel switch (spec table); criteria as a numbered index; the FAQ as the home FAQ index
+  (`home_knowledge.faq_block(card=False)`; `.fq` CSS now lives in `top.css`); "Verder in de installatie" = rail with
+  the other seven groups. The old filter form (`category_overview.category_catalog`) is no longer used by the template.
+  Breadcrumb "Componenten" now points to componenten.html.
+
+## Product pages: template upgrade (Nov 22)
+
+`product_page.py` (all 32 product pages) + `component_detail.component_intro(kicker=)`, styles appended to
+`component-detail.css` ("PRODUCT TEMPLATE UPGRADE"): kicker "Family · g.k" (same numbering as componenten.html), the
+section nav as a process line (stations on a dash-dot line, current one red; scrolls sideways on phones), a calm spec
+table head, related uitvoeringen as light catalogue plates (sideways deck on phones), the FAQ as the shared `.fq` index,
+breadcrumb "Componenten" and the related link point to componenten.html / the category. Checked: 32 of 32 pages
+render kicker, FAQ index and plates without page errors; no horizontal overflow at 390px.
+
+## Fine-tuning (Nov 22)
+
+- Category index: the dash-dot line runs through the thumbnail centres and starts at the first one; number 8px above,
+  name 7px below it; long names end in "…" with the full name as tooltip.
+- Signature start (`signature.js`, all templates without the home hero): skips zero-height siblings (closed lightbox),
+  counts a page subnav as part of the opening and puts the datum 36px below it, clear of borders and bars.
+- Names in card rows (`[data-eq]` + `assets/js/equalize.js`, loaded on every page): balanced line breaks, at most two
+  lines, and the cards in one row share the tallest name height, so rows always end level. Rail arrows have their own
+  column. Measured: rail cards one height (177px), no name/arrow overlap, home catalogue metas one height at 1024px.
+
+## Product section nav "reading line" (Nov 22)
+
+`assets/js/subnav.js` (product pages): the sticky nav gets `.is-stuck` (frosted, shadow) once it sticks; one pill glides
+to the current station (site.js scrollspy); the line is drawn as segments only in the gaps between stations (never under a label), each filling red as you read on, with a granule at the head; read stations get a filled dot.
+Styles: component-detail.css "STICKY NAV". Category index got more space below it.
+
+## Mobile text (Nov 22)
+
+top.css "MOBILE TEXT": form fields 16px (no iOS zoom), contact topic chips wrap instead of scrolling behind the card
+edge, headings hyphenate long Dutch compounds, sideways rows get a right-edge fade plus end padding so the last item
+scrolls clear. Audit: `tools/mobile_text_audit.js` (10 templates at 360 / 390px: clipped text, off-screen text, rows cut
+without a fade, form text under 16px, tiny text). Before: 8 / 0 / 34 / 70 / 4. After: all 0.
+
+## Header current state (Nov 22)
+
+top.css "HEADER CURRENT STATE": the ruler marker is a 2px steel dimension line with end ticks (gold dot removed); the
+current item's label is set heavier; while hovering another item the marker previews there in a lighter steel. The
+product reading line has no granule head any more (red segments only).
+
+## Contact: the way there + low-threshold form (Nov 22)
+
+- `contact-plus.js` catches every link to `#contact` in the capture phase (before site.js): far away, a steel sheet
+  slides up, the page jumps behind it in one step, the sheet lifts off and focus lands on the topic chips; close by, a
+  short smooth scroll; reduced motion, an instant jump. Links to another page's #contact (header CTA) stay on the
+  current page when it has its own contact block. `?aanvraag=topic` still preselects the topic.
+- Topics (`components.contact`): at most two page-specific topics, then four intent shortcuts on every page
+  (`installatieontwerp`, `bestaande-installatie`, `onderdelen`, `terugbellen`; new keys in
+  `contact_delivery.CONTACT_TOPICS`, so the API accepts them), "Algemene vraag" last. "Liever teruggebeld" marks the
+  phone field. Message helpers (+ Product, + Capaciteit, + Afstand, + Huidige situatie) start a line to complete.
+  "Vrijblijvend" next to the privacy link (confirm with the client).
+- Measured: hero CTA, product advice and header CTA each move the page in 1 scroll step (was 5 to 14), sheet shown,
+  focus in the form, topic correct; no page errors.
 
 ## Hero slides (Nov 20, on top of Tekenblad)
 
@@ -316,3 +501,50 @@ De drie aangekondigde kennisartikelen zijn beschikbaar via de homepage. Naast `k
 De vaste opbouw omvat hero, kort antwoord, inhoudsnavigatie, zes inhoudssecties, twee processchema's, vergelijking, drie praktijksituaties, advieschecklist, technische bronnen, twee relevante componentlinks en contact. Bestaande filter- en ventilatorbeelden worden hergebruikt met specifieke alternatieve teksten, bijschriften en deelafbeeldingen. Er zijn geen onbewezen universele vervangingstermijnen of prestatiegrenzen toegevoegd. Bronverwijzingen van Donaldson, CAGI en Busch staan per artikel onder Technische bronnen.
 
 Controleer na wijzigingen met `python src/build.py` en `python tools/check_knowledge.py`. Browsercontrole: 320, 375, 768, 1024 en 1440 pixels; beelden, inhoudslinks en focus, praktijksituaties, deelknop, contactonderwerp en rechtstreeks mobiel openen met en zonder JavaScript.
+
+## Mobile layer + page transitions (Nov 20)
+
+New files, loaded last on every page by `components.page()`: `assets/css/mobile.css`, `assets/js/mobile.js` (defer) and
+`assets/js/page-transitions.js` (no defer, in `<head>`, plus `<link rel="expect" href="#main" blocking="render">`).
+Shared files were only touched surgically: `components._header_sheet()` (new menu markup, same `id="hx-sheet"` /
+`data-hx-sheet` hooks), the old burger block in `site.js` removed (now in `mobile.js`), and the hero clock's hold logic in
+`site.js` ignores sticky `:hover` on touch (a tap used to stop the slides for good).
+- **Menu "Tekenblad"** (< 1040px): full-screen steel sheet drawn down behind a red scan line (registered `--mnav-r`
+  drives clip + line), numbered index rising row by row, Oplossingen / Componenten drill in sideways (photo rows /
+  product plates), contact (CTA, Bel ons, Mail ons) in thumb reach. `role="dialog"`, rest of the page `inert`, focus to
+  the first item, Escape = back, then close; closes on bfcache restore and above 1040px.
+- **Page transitions "Nieuw blad"** (cross-document View Transitions, all viewports, off under reduced motion): forward =
+  the next page slides up like a fresh sheet (red top edge) while the old one sinks into steel; back = the reverse; from
+  the open menu the menu lifts off (type `from-menu`, passed via sessionStorage because the animation runs in the new
+  document); a tapped card's picture morphs into the next page's hero plate (`vt-media`; hero selectors in
+  `HERO_MEDIA`). Header is its own layer (`view-transition-name: site-header`). Unsupported browsers just navigate.
+- **Home hero cover** (portrait / < 720px): full-screen photo under the transparent header, statement on a steel fade,
+  one-row sheet index under the thumb, swipe between sheets (`mobile.js` clicks the hero's own tabs), photo folds into
+  a plate on scroll (`--p`). Two sets of rules in `mobile.css`: `.hero` (Tekenblad slides, still used by
+  `hero-{variant}.html`) and `.hc--cinema` (the live home carousel from `hero_concepts.py`; also portrait tablets up to
+  1100px). For `.hc`: object-position per sheet (transport + wissels 90%, others 70%), hotspots only in the upper half,
+  labels open towards the middle on portrait. Three small edits in the carousel's own files: `sizes` of its pictures is
+  `(max-aspect-ratio: 6/5) 150vh, 100vw` (phones loaded the 480w file and upscaled it), and `hero-concepts.js` reads the
+  computed object-position percentage instead of only recognising "70" (desktop positions unchanged, checked).
+- **Home hero "Doorstroom" cover** (`.ds`, live since Nov 20 23:05, `mobile.css` section 3c): same cover on portrait
+  screens (< 720px, portrait up to 1100px) with the hero's own animations kept: live granule canvas, SVG streamlines,
+  grain flows of sheets 2-5, grains on the Proceslijn and the play ring. The Proceslijn is the dark index under the
+  thumb; the flow-regime switch (Dichte / Verdunde fase) floats as a glass pill top right on sheet 1 (title + notes
+  hidden there); hotspots only in the upper 42%; per-sheet framing `--px` (transport + wissels .9, others .7); fold on
+  scroll via the hero's own `--sp`; swipe also on the copy (`mobile.js`, skips the stage where `doorstroom.js`
+  already swipes). The hero's own stacked phone layout in `top.css` still applies to landscape tablets 720-899px.
+- **Sub-page heroes** (< 960px): plates are "plotted" in (scan line + clip), copy rises, taller plates on phones,
+  scroll-driven zoom/drift on hero and card photos (CSS `animation-timeline: view()`).
+- **Animations on phones too** (Nov 20, measured with `document.getAnimations()` desktop vs 390px on 10 page types: the
+  site signature was the only desktop-only animation on every page). `signature.js` now draws at every width
+  (`wide = matchMedia('all')`); below 1100px `mobile.css` 5b drops the vertical labels and leaders (no room in the 22px
+  margin), axis + drawn progress + datum crosses + station dots stay. Catalogusbladen on touch: the red cutting line
+  shows when "Doorsnede" is tapped, and each sheet with a section plays the cut once by itself at mid-screen
+  (`.is-demo`, `mobile.js` 2b). Werkwijze: the open step's intro (step-in / clip-in / settle) now replays when the block
+  scrolls into view instead of running unseen at page load (`mobile.js` 2c, all widths).
+- **Details**: one-line scrolling breadcrumbs (scrolled to the current page), 44px hit areas for text links and
+  crumbs, press feedback on cards/plates/tiles/FAQ, button light sweep on tap, contact dock (call + "Stel uw vraag")
+  from the second screen on, hidden near the contact form, footer, menu and while typing. `@keyframes rise` (used by
+  the hero intro but never defined) and a `.sr-only` alias now exist in `mobile.css`.
+- Verified headless (Chromium, 390x844 / 768x1024 / 1440x900): no console errors, no horizontal overflow, menu focus
+  + inert + Escape, VT types (`forward`, `back`, `from-menu`, `morph`), desktop unchanged.

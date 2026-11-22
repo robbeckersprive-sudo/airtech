@@ -6,7 +6,20 @@ from components import breadcrumb, btn, icon, link, pic
 GALLERY_SIZES = '(min-width: 1240px) 620px, (min-width: 900px) 50vw, (min-width: 700px) 470px, 94vw'
 
 
-def component_intro(name, crumbs, lead, facts, views, advice_url):
+# soft hyphen before the second part of a Dutch compound, so narrow view labels break at the word boundary (Nov 22)
+_PARTS = ('aansluitingen', 'aansluiting', 'constructie', 'overdracht', 'aanzicht', 'inlaat', 'afvoer', 'sectie',
+          'flens', 'schijf', 'mantel')
+
+
+def _shy(label):
+    low = label.lower()
+    for part in _PARTS:
+        if ' ' not in label and low.endswith(part) and len(label) > len(part) + 2:
+            return escape(label[:-len(part)]) + '&shy;' + escape(label[-len(part):])
+    return escape(label)
+
+
+def component_intro(name, crumbs, lead, facts, views, advice_url, kicker=''):
     """Render the page opening and the shared keyboard-enabled image viewer."""
     def view_picture(view, sizes, eager=False, decorative=False):
         style = view[3] if len(view) > 3 else ''
@@ -14,7 +27,7 @@ def component_intro(name, crumbs, lead, facts, views, advice_url):
     tabs = ''.join(
         f'<li><button class="detail-view" type="button" data-thumb="gal-{i}"'
         f'{' aria-current="true"' if i == 0 else ''}>'
-        f'{view_picture(view, "72px", decorative=True)}<span>{escape(view[0])}</span></button></li>'
+        f'{view_picture(view, "72px", decorative=True)}<span>{_shy(view[0])}</span></button></li>'
         for i, view in enumerate(views))
     templates = ''.join(
         f'<template id="gal-{i}">{view_picture(view, GALLERY_SIZES)}</template>'
@@ -25,6 +38,7 @@ def component_intro(name, crumbs, lead, facts, views, advice_url):
     <div class="detail-crumbs">{breadcrumb(crumbs)}</div>
     <section class="detail-intro" id="overzicht" aria-labelledby="prod-h1">
       <div class="detail-intro__copy">
+        {f'<p class="pd-kicker"><span class="pd-kicker__dot" aria-hidden="true"></span>{kicker}</p>' if kicker else ''}
         <h1 id="prod-h1" class="h1">{escape(name)}</h1>
         <p class="detail-intro__lead">{escape(lead)}</p>
         <div class="detail-intro__actions">{btn("Vraag technisch advies", advice_url, "lg")}{link("Bekijk de werking", "#werking", "down")}</div>

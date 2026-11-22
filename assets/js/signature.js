@@ -10,7 +10,9 @@
   var root = document.documentElement, V = root.getAttribute('data-sig');
   if (!V || !document.querySelector('main')) return;
   var NS = 'http://www.w3.org/2000/svg';
-  var wide = window.matchMedia('(min-width: 1100px)');
+  // Every width (Nov 20: the user wants the animations on phones too). Below 1100px the line runs in the 22px page
+  // margin; mobile.css drops the vertical labels and leaders there, the axis, datum points and progress stay.
+  var wide = window.matchMedia('all');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var el = function (tag, attrs, parent) {
@@ -58,6 +60,13 @@
 
   /* origin: the hero's tab rule (home) or the bottom of the page hero */
   function origin(sx) {
+    // home hero "Doorstroom": the line starts at the Proceslijn's datum mark and turns down into block 2
+    var dsO = document.querySelector('[data-sig-origin]');
+    if (dsO && dsO.offsetParent) {
+      var orr = dsO.getBoundingClientRect(), oy = docY(orr) + orr.height / 2;
+      var S0 = root.getAttribute('data-sig-start');
+      return { x: orr.left + orr.width / 2, y: oy, bottom: oy - (S0 === 'source' ? 8 : 48), label: 'Proceslijn', tabs: true };
+    }
     var track = document.querySelector('[data-hero-track]'), tab = document.querySelector('.hero-tab');
     if (track && tab && tab.offsetParent) {
       var hero = track.querySelector('.hero');
@@ -69,11 +78,14 @@
     var h1 = document.querySelector('main h1'), blk = h1 || document.querySelector('main > *');
 
     while (blk.parentElement && !/^(MAIN|ARTICLE)$/.test(blk.parentElement.tagName)) blk = blk.parentElement;
+    // closed dialogs / templates take no space: skip them; a page subnav belongs to the opening (product pages)
     var nx = blk.nextElementSibling;
+    while (nx && !nx.getBoundingClientRect().height && nx.nextElementSibling) nx = nx.nextElementSibling;
     if (nx && !nx.querySelector('h2') && nx.getBoundingClientRect().height > 0) blk = nx;
     var r = blk.getBoundingClientRect();
     var lab = h1 ? (h1.querySelector('.ln__in') || h1).textContent.trim() : '';
-    return { x: sx, y: docY(r) + r.height - 8, label: lab.length > 20 ? lab.slice(0, 19) + '…' : lab, tabs: false };
+    // the datum sits clear of the opening's edge (its border / the subnav bar), never on it (Nov 22)
+    return { x: sx, y: docY(r) + r.height + 36, label: lab.length > 20 ? lab.slice(0, 19) + '…' : lab, tabs: false };
   }
 
   function collect(o) {

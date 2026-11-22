@@ -937,5 +937,77 @@
       1536
     ],
     "alpha": false
+  },
+  "13-cycloon-doorsnede-reg": {
+    "w": 826,
+    "h": 1473,
+    "widths": [
+      480,
+      800,
+      826
+    ],
+    "alpha": true
+  },
+  "15-doseersluis-doorsnede-reg": {
+    "w": 1439,
+    "h": 984,
+    "widths": [
+      480,
+      800,
+      1200,
+      1439
+    ],
+    "alpha": true
+  },
+  "14-blower-doorsnede-reg": {
+    "w": 1265,
+    "h": 990,
+    "widths": [
+      480,
+      800,
+      1200,
+      1265
+    ],
+    "alpha": true
+  },
+  "22-proces-analyse-tekening": {
+    "w": 1200,
+    "h": 675,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "alpha": false
+  },
+  "23-proces-engineering-tekening": {
+    "w": 1200,
+    "h": 675,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "alpha": false
+  },
+  "24-proces-realisatie-tekening": {
+    "w": 1200,
+    "h": 675,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "alpha": false
+  },
+  "25-proces-inbedrijfstelling-tekening": {
+    "w": 1200,
+    "h": 675,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "alpha": false
   }
 }

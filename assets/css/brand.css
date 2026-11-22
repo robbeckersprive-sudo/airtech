@@ -1,0 +1,98 @@
+/* Real RGBA artwork: transparency is part of the file, never an external SVG filter.
+   Full lockup crop: x=63 y=126 w=2028 h=510. Mobile header uses wordmark only.
+   Explicit surface states keep the identity readable without sampling the hero image. */
+.address-route { text-decoration: none; }
+.address-route:hover { text-decoration: underline; text-underline-offset: 4px; }
+.address-route:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.ct-addr.address-route { width: fit-content; min-height: 44px; color: var(--sky); }
+.af address .address-route { gap: 12px; font-size: inherit; }
+.af address .address-route .i { width: 16px; height: 16px; flex: none; }
+.logo.logo--airtechnic {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 178px;
+  min-height: 48px;
+  flex: 0 0 auto;
+  gap: 0;
+  color: var(--cobalt);
+}
+.logo--airtechnic .logo__art {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2028 / 510;
+  overflow: hidden;
+  filter: none;
+}
+.logo__art img {
+  position: absolute;
+  width: 107.297830%;
+  max-width: none;
+  height: auto;
+  left: -3.106509%;
+  top: -24.705882%;
+}
+.logo.logo--airtechnic .logo__flow {
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 8px;
+  overflow: visible;
+  transform: none;
+  transition: none;
+  pointer-events: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+}
+.logo__flow path { stroke-dasharray: 18 118; stroke-dashoffset: 20; opacity: 0; }
+.logo--airtechnic:focus-visible { outline: 2px solid currentColor; outline-offset: 8px; border-radius: 2px; }
+@keyframes brand-airflow {
+  0% { stroke-dashoffset: 20; opacity: 0; }
+  15% { opacity: .65; }
+  75% { opacity: .65; }
+  100% { stroke-dashoffset: -100; opacity: 0; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .logo--airtechnic:hover .logo__flow path { animation: brand-airflow 700ms cubic-bezier(.16, 1, .3, 1) both; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .logo--airtechnic:focus-visible .logo__flow path { animation: brand-airflow 700ms cubic-bezier(.16, 1, .3, 1) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo--airtechnic:is(:hover, :focus-visible) .logo__flow path { stroke-dashoffset: 0; opacity: .65; }
+}
+.hx.is-mnav .logo--airtechnic,
+.af--steel .logo--airtechnic,
+.logo--on-dark.logo--airtechnic { color: var(--white); }
+.hx.is-mnav .logo__art,
+.af--steel .logo__art,
+.logo--on-dark .logo__art { filter: brightness(0) invert(1); }
+@media (max-width: 1199px) {
+  .hx .logo--airtechnic { width: 160px; }
+}
+@media (max-width: 359px) {
+  .hx .logo--airtechnic { width: 148px; }
+}
+@media (max-width: 1039px) {
+  /* Switch the surface and logo together: no blue-on-dark intermediate state. */
+  .hx--b .hxb-bar { transition: box-shadow .25s ease; }
+  .hx .logo__art { aspect-ratio: 2028 / 340; }
+  .hx .logo__art img { top: -37.058824%; }
+  .hx .logo__flow { bottom: 0; }
+  /* A restrained dark header surface anchors the white wordmark over moving photography. */
+  .hx--b.hx--overlay:not(.is-scrolled):not(.is-menu):not(.is-mnav) .hxb-bar {
+    background: rgba(8, 24, 42, .78);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+  .hx--overlay:not(.is-scrolled):not(.is-menu) .logo--airtechnic { color: var(--white); }
+  .hx--overlay:not(.is-scrolled):not(.is-menu) .logo__art { filter: brightness(0) invert(1); }
+  .hx--overlay:not(.is-scrolled):not(.is-menu) .hx-burger {
+    background: rgba(255, 255, 255, .08);
+    border-color: rgba(255, 255, 255, .28);
+  }
+  .hx--overlay:not(.is-scrolled):not(.is-menu) .hx-burger span { background: var(--white); }
+}

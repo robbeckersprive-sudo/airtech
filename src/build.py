@@ -23,8 +23,8 @@ from about_page import about_page
 from project_data import PROJECTS
 from project_page import project_index, project_page
 
-FAVICON = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#0E2A47"/>'
-           '<path fill="#D21F26" d="M5 29.5c6.4-5.2 12.2-15 16.5-28.5h6.3C23.8 16.2 15.9 26.4 7.5 30.4z"/></svg>')
+FAVICON = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#22498C"/>'
+           '<path fill="#fff" fill-rule="evenodd" d="M4 26 13 6h6l9 20h-6l-2-5h-8l-2 5zm10-10h4l-2-5z"/></svg>')
 
 
 def main():

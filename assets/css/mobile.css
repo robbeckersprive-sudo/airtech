@@ -18,6 +18,9 @@
   --plot-ease: cubic-bezier(.7, 0, .2, 1);
 }
 
+/* hero_concepts.py marks the home H1 "sr-only"; the site's helper is .visually-hidden, so alias it (else the H1 shows). */
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
 /* The hero intro (eyebrow, lead, actions) always referred to "rise"; it was never defined. */
 @keyframes rise { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
 
@@ -221,8 +224,15 @@ html:active-view-transition-type(from-menu)::view-transition-new(root) { animati
 }
 .mnav__quick a:active { background: rgba(255, 255, 255, .1); scale: .97; }
 .mnav__quick .i { width: 17px; height: 17px; color: var(--red-on-dark); }
-.mnav__addr { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font: 500 12px/1.4 var(--font-mono); letter-spacing: .04em; color: var(--white-60); }
-@media (max-height: 640px) { .mnav__addr { display: none; } .mnav__item { min-height: 54px; } }
+.mnav__location { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 6px 2px; color: var(--white); text-decoration: none; border-radius: 4px; }
+.mnav__location > .i { width: 19px; height: 19px; flex: none; color: var(--sky); }
+.mnav__location-address { font: 550 14px/1.4 var(--font-body); }
+.mnav__location-address > span { display: block; color: var(--sky); font-size: 12px; font-weight: 400; }
+.mnav__location-action { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; font: 550 13px/1.4 var(--font-body); color: var(--sky); }
+.mnav__location-action .i { width: 16px; height: 16px; }
+.mnav__location:hover, .mnav__location:active { background: rgba(255, 255, 255, .06); }
+.mnav__location:focus-visible { outline: 2px solid var(--sky); outline-offset: 3px; }
+@media (max-height: 640px) { .mnav__location { min-height: 44px; padding-block: 2px; } .mnav__item { min-height: 54px; } }
 @media (min-width: 1040px) { .mnav { display: none !important; } }
 
 
@@ -277,6 +287,163 @@ html:active-view-transition-type(from-menu)::view-transition-new(root) { animati
 @media (max-width: 719px) and (max-height: 700px), (max-aspect-ratio: 6/5) and (max-height: 700px) {
   .hero__sub { font-size: 16px; margin-bottom: 16px; }
   .hero .btn--lg { min-height: 50px; }
+}
+
+
+/* -----------------------------------------------------------------
+   3b. The live home hero is now the ".hc--cinema" carousel (hero_concepts.py / hero-concepts.css / hero-concepts.js,
+   another session's work; those files are not touched here). Same cover idea on portrait screens: the photo runs
+   full-screen under the transparent header, the statement sits on a steel fade, a one-row sheet index under the thumb,
+   hotspots only in the open upper half, swipe between sheets and a fold into a plate on scroll (--p from mobile.js).
+   object-position is set per sheet (the sharp part of each photo); hero-concepts.js reads the computed percentage
+   to keep the hotspots on their pixels.
+   ----------------------------------------------------------------- */
+@media (max-width: 719px), (max-aspect-ratio: 6/5) and (max-width: 1100px) {
+  .hc.hc--cinema {
+    --hc-bar: calc(66px + env(safe-area-inset-bottom));
+    margin-top: calc(var(--header-total) * -1); background: var(--steel-950); touch-action: pan-y;
+  }
+  .hc--cinema .hc-stage { height: 100svh; min-height: 600px; max-height: 1100px; }
+  .hc--cinema .hc-slide .hc-visual {
+    inset: 0; border-radius: 0; background: var(--steel-950);
+    clip-path: inset(calc(var(--p, 0) * 22px) calc(var(--p, 0) * 16px) round calc(var(--p, 0) * 36px));
+  }
+  .hc--cinema .hc-slide .hc-visual img { object-position: 70% center; translate: 0 calc(var(--p, 0) * 9%); }
+  /* transport: the granule-filled bend; wissels: valve + actuator */
+  .hc--cinema .hc-slide:nth-child(1) .hc-visual img, .hc--cinema .hc-slide:nth-child(3) .hc-visual img { object-position: 90% center; }
+  .hc--cinema .hc-slide.is-active .hc-visual img { animation: hc-settle 2.2s var(--ease-expo) both; }
+  .hc--cinema .hc-slide .hc-visual::after {
+    display: block;
+    background:
+      linear-gradient(180deg, rgba(243, 241, 236, .82) 0, rgba(243, 241, 236, .34) var(--header-total), rgba(243, 241, 236, 0) calc(var(--header-total) + 70px)),
+      linear-gradient(0deg, rgba(8, 24, 42, .97) 0%, rgba(8, 24, 42, .92) 38%, rgba(8, 24, 42, .74) 54%, rgba(8, 24, 42, .3) 68%, rgba(8, 24, 42, 0) 80%);
+  }
+  /* hotspots live in the open upper part of the photo, never under the copy */
+  .hc--cinema .hc-spots {
+    bottom: 50%; overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 50px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 50px), transparent);
+  }
+  .hc--cinema .hc-tip { font-size: 12.5px; padding: 9px 12px; min-width: 0; white-space: nowrap; }
+  .hc--cinema .hc-slide .hc-copy {
+    top: auto; left: var(--pad); right: var(--pad); bottom: calc(var(--hc-bar) + 14px); width: auto; max-width: 620px;
+    transform: translateY(18px); color: var(--white);
+  }
+  .hc--cinema .hc-slide.is-active .hc-copy { transform: none; }
+  .hc--cinema .hc-kicker { margin-bottom: 14px; color: var(--sky); font-size: 12px; }
+  .hc--cinema .hc-copy .h1 {
+    color: var(--white); font-size: min(clamp(46px, 13vw, 80px), 8.6svh); line-height: .96; margin-bottom: 16px;
+    text-shadow: 0 2px 30px rgba(8, 24, 42, .35);
+  }
+  .hc--cinema .hc-copy .h1 em { color: var(--sky); }
+  .hc--cinema .hc-description { color: var(--white-80); font-size: 17px; line-height: 1.5; }
+  .hc--cinema .hc-actions { margin-top: 22px; gap: 12px 22px; }
+  .hc--cinema .hc-actions .link { color: var(--white); min-height: 44px; }
+  /* one-row sheet index on the steel, under the thumb */
+  .hc--cinema .hc-bottom {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; display: flex; flex-wrap: nowrap; align-items: center; gap: 10px;
+    padding: 8px var(--pad) calc(10px + env(safe-area-inset-bottom)); background: none; border: 0; border-top: 1px solid rgba(255, 255, 255, .12);
+  }
+  .hc--cinema .hc-index { display: none; }
+  .hc--cinema .hc-tabs { order: 0; flex: 1 1 auto; min-width: 0; display: flex; gap: 6px; justify-content: stretch; }
+  .hc--cinema .hc-tabs button {
+    flex: 1 1 0; min-width: 0; min-height: 44px; padding: 10px 0 0; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: clip;
+    color: var(--white); font: 600 0/1 var(--font-body); transition: flex-grow .7s var(--ease-expo);
+  }
+  .hc--cinema .hc-tabs button[aria-pressed="true"] { flex-grow: 3.4; font-size: 13px; color: var(--white); }
+  .hc--cinema .hc-tabs button span { display: inline; margin-right: 8px; font: 500 12px/1 var(--font-mono); color: var(--red-on-dark); }
+  .hc--cinema .hc-tabs button::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: rgba(255, 255, 255, .24); }
+  .hc--cinema .hc-tabs i { top: -.5px; bottom: auto; }
+  .hc--cinema .hc-play { flex: none; width: 44px; padding: 0; justify-content: center; margin-left: 0; color: var(--white); border-color: rgba(255, 255, 255, .24); }
+  .hc--cinema .hc-play span { display: none; }
+  .hc--cinema + .hc-hint, .hc--cinema .hc-hint { display: none; }
+}
+@keyframes hc-settle { from { scale: 1.08; } to { scale: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .hc--cinema .hc-slide .hc-visual { clip-path: none; }
+  .hc--cinema .hc-slide .hc-visual img { translate: none; animation: none; }
+}
+
+
+/* -----------------------------------------------------------------
+   3c. Home hero "Doorstroom" (.ds: hero_doorstroom.py / top.css / doorstroom.js, the other session's live hero since
+   Nov 20 23:05). Same cover on portrait screens as 3/3b: the photo with its live granule canvas, SVG streamlines and
+   grain flows runs full-screen under the transparent header; statement on a steel fade; the Proceslijn (stations,
+   travelling grains, play ring) becomes the dark index under the thumb; the flow-regime switch (sheet 1) floats as a
+   glass pill on the photo. Per-sheet framing via --px (share of the photo's spare width left of the screen, like
+   object-position): the transport bend and the diverter's actuator sit at .9. Fold into a plate on scroll uses the
+   hero's own --sp (doorstroom.js). Hotspots only in the open upper half.
+   ----------------------------------------------------------------- */
+@media (max-width: 719px), (max-aspect-ratio: 6/5) and (max-width: 1100px) {
+  main > .ds {
+    --lz: 86px;
+    display: flex; flex-direction: column; justify-content: flex-end; grid-template-areas: none;
+    height: 100svh; min-height: 620px; max-height: 1100px;
+    background: var(--steel-950); touch-action: pan-y;
+  }
+  main > .ds .ds-grid { display: none; }
+  main > .ds .ds-stage {
+    position: absolute; inset: 0; height: auto; min-height: 0; z-index: -2;
+    -webkit-mask-image: none; mask-image: none;
+    clip-path: inset(calc(var(--sp, 0) * 22px) calc(var(--sp, 0) * 16px) round calc(var(--sp, 0) * 36px));
+  }
+  main > .ds .ds-box {
+    --px: .7;
+    left: calc((100cqw - var(--W)) * var(--px)); top: clamp(calc(100cqh - var(--H)), calc(-.02 * var(--H)), 0px);
+  }
+  main > .ds .ds-slide:nth-of-type(1) .ds-box, main > .ds .ds-slide:nth-of-type(3) .ds-box { --px: .9; }
+  main > .ds .ds-spots { clip-path: inset(0 0 58% 0); }
+  main > .ds .ds-veil {
+    display: block; z-index: -1;
+    background:
+      linear-gradient(180deg, rgba(243, 241, 236, .82) 0, rgba(243, 241, 236, .34) var(--header-total), rgba(243, 241, 236, 0) calc(var(--header-total) + 70px)),
+      linear-gradient(0deg, rgba(8, 24, 42, .97) 0%, rgba(8, 24, 42, .93) 40%, rgba(8, 24, 42, .74) 56%, rgba(8, 24, 42, .3) 70%, rgba(8, 24, 42, 0) 82%);
+  }
+  /* type on the steel */
+  /* static: the flow-regime pill positions against the hero, not against the type block */
+  main > .ds .ds-in { position: static; display: block; flex: none; padding: 0; grid-template-columns: none; translate: none; opacity: 1; }
+  main > .ds .ds-text { width: 100%; max-width: 680px; margin: 0; padding: 0 var(--pad) 8px; }
+  main > .ds .ds-kicker { color: var(--white-80); font-size: 11.5px; letter-spacing: .1em; margin-bottom: 14px; }
+  main > .ds .ds-kicker__pulse::after { border-color: var(--red-on-dark); }
+  main > .ds .ds-statement { color: var(--white); font-size: min(clamp(46px, 13vw, 84px), 8.6svh); line-height: .95; text-shadow: 0 2px 30px rgba(8, 24, 42, .35); }
+  main > .ds .ds-statement em { color: var(--sky); }
+  main > .ds .ds-lead { color: var(--white-80); font-size: 17px; line-height: 1.5; margin-top: 14px; }
+  main > .ds .ds-actions { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 20px; }
+  main > .ds .ds-actions .btn { justify-content: space-between; }
+  main > .ds .ds-mores { justify-items: start; }
+  main > .ds .ds-link { color: var(--white); min-height: 44px; }
+  /* flow-regime switch: a glass pill on the photo (sheet 1 only, as before) */
+  main > .ds .ds-mode {
+    position: absolute; top: calc(var(--header-total) + 14px); right: var(--pad); left: auto; z-index: 3;
+    width: auto; margin: 0; padding: 4px; border-radius: 13px;
+    background: rgba(8, 24, 42, .55); border-color: rgba(255, 255, 255, .18); box-shadow: 0 14px 30px -16px rgba(8, 24, 42, .6);
+  }
+  main > .ds .ds-mode__t, main > .ds .ds-mode__notes { display: none; }
+  main > .ds .ds-mode__seg { background: none; padding: 0; }
+  main > .ds .ds-mode__opt { color: var(--white-80); font-size: 12.5px; min-height: 40px; padding-inline: 10px; }
+  main > .ds .ds-mode__opt[aria-pressed="true"] { color: var(--steel-900); }
+  main > .ds .ds-mode__thumb { top: 0; bottom: 0; left: 0; width: 50%; background: var(--paper); }
+  /* Proceslijn as the dark sheet index */
+  main > .ds .ds-line-wrap { padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid rgba(255, 255, 255, .12); }
+  main > .ds .ds-line__track { background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .34) 0 16px, transparent 0 20px, rgba(255, 255, 255, .34) 0 22px, transparent 0 26px); }
+  main > .ds .ds-line__origin { display: none; }
+  main > .ds .ds-line__track { left: 0; }
+  main > .ds .ds-line__st { overflow: visible; justify-content: space-between; padding-left: 0; }
+  main > .ds .ds-st__btn { color: var(--white-60); padding: 0 6px; font-size: 14px; }
+  main > .ds .ds-st__btn[aria-current] { color: var(--white); }
+  main > .ds .ds-st__btn:not([aria-current]) .ds-st__label { display: none; }
+  main > .ds .ds-st__btn[aria-current] .ds-st__no { display: none; }
+  main > .ds .ds-st__no { color: var(--sky); }
+  main > .ds :is(.ds-st__no, .ds-st__label) { margin-top: 16px; }
+  main > .ds .ds-st__node { background: var(--steel-950); border-color: rgba(255, 255, 255, .45); }
+  main > .ds .ds-st__btn[aria-current] .ds-st__node { border-color: var(--red-on-dark); }
+  main > .ds .ds-play { background: rgba(255, 255, 255, .1); color: var(--white); box-shadow: none; }
+  main > .ds .ds-play__ring circle { stroke: rgba(255, 255, 255, .22); }
+  main > .ds .ds-play__ring .ds-play__clock { stroke: var(--red-on-dark); }
+  /* block 2 starts on paper again: no grid seam from the dark cover */
+  main > .ds ~ section:nth-of-type(2) { padding-top: clamp(40px, 6vh, 64px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  main > .ds .ds-stage { clip-path: none; }
 }
 
 
@@ -355,6 +522,29 @@ main > nav[aria-label="Kruimelpad"] > .breadcrumb { max-width: var(--container);
 }
 @media (max-width: 759px) {
   .hero-tab, .breadcrumb { font-size: 12px; }
+}
+
+
+/* -----------------------------------------------------------------
+   5b. Animations that used to be desktop-only
+   - Site signature "Hartlijn" (signature.js now draws at every width): below 1100px the axis runs in the 22px page
+     margin, so the vertical labels and the leaders go; the dash-dot axis, the red drawn progress, the datum
+     crosses and the station dots that light up as the tip passes all stay.
+   - Catalogusbladen on touch: the red cutting line sweeps when "Doorsnede" is tapped, and each sheet with a
+     cross-section plays the cut once by itself when it reaches the middle of the screen (mobile.js adds .is-demo).
+   ----------------------------------------------------------------- */
+@media (max-width: 1099px) {
+  .sig-st__label, .sig--a .sig-st__leader { display: none; }
+  .sig--a .sig__base { stroke: rgba(14, 42, 71, .26); }
+  .sig--a .sig-st__dot { r: 3.5px; }
+}
+@media (hover: none), (pointer: coarse) {
+  .sheet__cut { display: block; border-right: 2px solid var(--red); box-shadow: 6px 0 14px -6px rgba(210, 31, 38, .55); }
+  .catalog__cell.is-ready.is-demo .sheet__plate { --wipe: 0%; }
+  .catalog__cell.is-ready:is(.is-section, .is-demo) .sheet__cut { opacity: .85; }
+  .catalog__cell.is-ready:is(.is-section, .is-demo) .sheet__dim { opacity: .55; transform: none; }
+  .sheet__img--ext, .sheet__img--sec { transition-duration: .9s; }
+  .sheet__cut { transition: transform .9s var(--ease-in-out), opacity .25s ease; }
 }
 
 

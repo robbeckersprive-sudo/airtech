@@ -3,7 +3,9 @@
    (slow at the bottom, fast on top, with travelling dunes) and loose granules hopping through the air above it.
    Geometry comes from the markup: data-tube = cross-sections [[bottomWall, topWall], ...] and data-box = canvas box,
    both in px of the 1536x1024 photo. The front glass (walls + reflections, data-glass) is drawn over the granules.
-   Respects the hero pause button, pauses off-screen, and draws one still frame under prefers-reduced-motion. */
+   Respects the hero pause button, pauses off-screen, and draws one still frame under prefers-reduced-motion.
+   Optional (Doorstroom hero): data-mode="dense|dilute" on the canvas switches the flow regime (eased), and a pointer
+   over the tube blows an air pulse into it (bed bulges, granules are kicked up and sped up locally). */
 (function () {
   'use strict';
   var cv = document.querySelector('canvas[data-granules]');
@@ -103,7 +105,12 @@
   function dune(u, t) {                                // travelling dunes (dense-phase 'dune flow'), ~1 +/- .16
     return 1 + .11 * Math.sin(6.2832 * (2.1 * u - .7 * t)) + .05 * Math.sin(6.2832 * (5.3 * u - 1.6 * t) + 1.3);
   }
-  function bedH(u, t) { return baseH(u) * dune(u, t); }   // bed height as a fraction of the tube diameter
+  var M = 0, MT = 0, J = 0, JT = 0, UJ = .5;          // regime (0 dense .. 1 dilute) and air pulse, eased
+  function jet(u) { var x = (u - UJ) / .075; return J * Math.exp(-x * x); }
+  function bedH(u, t) {                                // bed height as a fraction of the tube diameter
+    return baseH(u) * dune(u, t) * (1 - .8 * M) + jet(u) * (.2 - .08 * M);
+  }
+  function mult(u) { return (1 + 1.9 * M) * (1 + .8 * jet(u)); }
   // Dense bed = packed rows (hexagonal offset, jittered) in two depth layers. Each row slides at its own speed
   // (shear: slow on the floor, fast on top), so rows pass each other without gaps or clumps.
   var bed = [], air = [], n, NR = 12, PER = Math.round(LEN / (1.72 * R));
@@ -127,8 +134,9 @@
   function blur(p) { p.kx = 1 + p.s * LEN * EXPO / (2 * p.r); }
   bed.forEach(blur);
   function hop(p) { p.k = 1.5 + rnd() * 3.5; p.ph = rnd(); p.a = .18 + rnd() * .55; }
-  for (n = 0; n < 95; n++) {
-    var q = { u: rnd(), r: R * (.75 + .3 * rnd()), s: VTOP * (1.5 + rnd() * 1.1), sp: SPA[3 + (rnd() * 3 | 0)] };
+  for (n = 0; n < 330; n++) {                          // 95 always airborne; the rest only show in the dilute regime
+    var q = { u: rnd(), r: R * (.75 + .3 * rnd()), s: VTOP * (1.5 + rnd() * 1.1), sp: SPA[3 + (rnd() * 3 | 0)],
+      v0: .06 + .86 * rnd(), w0: 1 + rnd() * 2.5, ex: n >= 95 };
     hop(q); blur(q); air.push(q);
   }
 
@@ -157,27 +165,35 @@
     ctx.beginPath();
     for (k = 0; k <= 64; k++) { pos(k / 64, 0); if (k) ctx.lineTo(P[0], P[1]); else ctx.moveTo(P[0], P[1]); }
     for (k = 64; k >= 0; k--) { pos(k / 64, bedH(k / 64, T) * .86); ctx.lineTo(P[0], P[1]); }
-    ctx.closePath(); ctx.fillStyle = '#8E5E14'; ctx.fill();
+    ctx.closePath(); ctx.fillStyle = '#8E5E14'; ctx.globalAlpha = 1 - .9 * M; ctx.fill(); ctx.globalAlpha = 1;
+    var km;
     for (k = 0; k < bed.length; k++) {
       p = bed[k]; h = bedH(p.u, T);
+      if (M > .01 && (k % 3) && (k * .618) % 1 < M * 1.1) continue;   // dilute: the bed thins out gradually to a saltating layer
+      km = Math.min(1 + (p.kx - 1) * mult(p.u), 2.4);
       v = p.b * h + .012 * Math.sin(T * p.w + p.ph);
       // compression wave travelling with the dunes: a displacement (not a velocity) field, so granules surge over a
       // crest and lag in a trough (~ +/-15% speed) without ever clumping or opening holes in the bed
       pos(p.u + .011 * p.b * Math.sin(6.2832 * (2.1 * p.u - .7 * T) - 1.2), Math.max(.015, v)); f = p.r / SR;
-      if (p.kx < 1.08) { ctx.setTransform(scale, 0, 0, scale, ox, oy); ctx.drawImage(p.sp, P[0] - SC * f, P[1] - SC * f, SS * f, SS * f); continue; }
+      if (km < 1.08) { ctx.setTransform(scale, 0, 0, scale, ox, oy); ctx.drawImage(p.sp, P[0] - SC * f, P[1] - SC * f, SS * f, SS * f); continue; }
       an = Math.atan2(A[1], A[0]); cs = Math.cos(an) * scale; sn = Math.sin(an) * scale;
       ctx.setTransform(cs, sn, -sn, cs, ox + P[0] * scale, oy + P[1] * scale);
-      ctx.drawImage(p.sp, -SC * f * p.kx, -SC * f, SS * f * p.kx, SS * f);
+      ctx.drawImage(p.sp, -SC * f * km, -SC * f, SS * f * km, SS * f);
     }
     for (k = 0; k < air.length; k++) {
-      p = air[k]; h = bedH(p.u, T);
-      var fr = (p.u * p.k + p.ph) % 1;
-      v = h + (.9 - h) * p.a * Math.sin(Math.PI * fr);
+      p = air[k];
+      if (p.ex && M < .02) continue;
+      h = bedH(p.u, T);
+      var fr = (p.u * p.k + p.ph) % 1, jt = jet(p.u);
+      v = h + (.9 - h) * Math.min(1, p.a * (1 + 1.3 * jt)) * Math.sin(Math.PI * fr);
+      v = v * (1 - M) + (p.v0 + .035 * Math.sin(T * p.w0 * 2 + p.ph * 6)) * M;
       pos(p.u, v);
-      an = Math.atan2(A[1], A[0]) - Math.cos(Math.PI * fr) * .5 * p.a; cs = Math.cos(an) * scale; sn = Math.sin(an) * scale;
+      an = Math.atan2(A[1], A[0]) - Math.cos(Math.PI * fr) * .5 * p.a * (1 - M); cs = Math.cos(an) * scale; sn = Math.sin(an) * scale;
       ctx.setTransform(cs, sn, -sn, cs, ox + P[0] * scale, oy + P[1] * scale);
-      f = p.r / SR;
-      ctx.drawImage(p.sp, -SC * f * p.kx, -SC * f, SS * f * p.kx, SS * f);
+      f = p.r / SR; km = Math.min(1 + (p.kx - 1) * mult(p.u), 2.6 - .4 * M);
+      if (p.ex) ctx.globalAlpha = M;
+      ctx.drawImage(p.sp, -SC * f * km, -SC * f, SS * f * km, SS * f);
+      ctx.globalAlpha = 1;
     }
     ctx.setTransform(scale, 0, 0, scale, ox, oy);
     shade(0, .07); shade(1, .93);
@@ -194,8 +210,10 @@
   }
   function step(dt) {
     var k, p;
-    for (k = 0; k < bed.length; k++) { p = bed[k]; p.u += p.s * dt; if (p.u > 1) p.u -= 1; }
-    for (k = 0; k < air.length; k++) { p = air[k]; p.u += p.s * dt; if (p.u > 1) { p.u -= 1; hop(p); } }
+    var e = 1 - Math.exp(-dt * 2.6);
+    M += (MT - M) * e; J += (JT - J) * (1 - Math.exp(-dt * (JT > J ? 7 : 2.2)));
+    for (k = 0; k < bed.length; k++) { p = bed[k]; p.u += p.s * dt * mult(p.u); if (p.u > 1) p.u -= 1; }
+    for (k = 0; k < air.length; k++) { p = air[k]; p.u += p.s * dt * mult(p.u) * (1 + .5 * M); if (p.u > 1) { p.u -= 1; hop(p); } }
     T += dt;
   }
 
@@ -212,6 +230,26 @@
     raf = requestAnimationFrame(frame);
   }
   function kick() { if (!raf && running()) raf = requestAnimationFrame(frame); }
+
+  /* regime (data-mode) and pointer air pulse */
+  function readMode() { MT = cv.getAttribute('data-mode') === 'dilute' ? 1 : 0; if (!running()) { M = MT; draw(); } kick(); }
+  readMode();
+  new MutationObserver(readMode).observe(cv, { attributes: true, attributeFilter: ['data-mode'] });
+  if (cv.hasAttribute('data-mode')) {
+    var C = [];
+    for (i = 0; i <= 80; i++) { pos(i / 80, .5); C.push([P[0], P[1]]); }
+    hero.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'touch') return;
+      var r = cv.getBoundingClientRect(); if (!r.width) return;
+      var x = BOX[0] + (e.clientX - r.left) / r.width * BW, y = BOX[1] + (e.clientY - r.top) / r.height * BH, best = 1e9, bu = 0;
+      for (var c = 0; c < C.length; c++) { var dx = C[c][0] - x, dy = C[c][1] - y, d = dx * dx + dy * dy; if (d < best) { best = d; bu = c / 80; } }
+      var on = best < 150 * 150;
+      JT = on ? 1 : 0; if (on) UJ = bu;
+      cv.classList.toggle('is-blowing', on);
+      kick();
+    }, { passive: true });
+    hero.addEventListener('pointerleave', function () { JT = 0; cv.classList.remove('is-blowing'); });
+  }
 
   size(); draw(); kick();
   if ('ResizeObserver' in window) new ResizeObserver(function () { size(); draw(); }).observe(cv);

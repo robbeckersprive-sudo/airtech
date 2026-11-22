@@ -230,8 +230,10 @@ def home(variant=None, footer_variant="stone"):
     if variant:
         hero = home_hero(variant)
     else:
-        from hero_concepts import concept
-        hero = concept("cinema", embedded=True)
+        # Hero "Doorstroom" (Nov 20, top.css + doorstroom.js). The previous "cinema" hero stays as
+        # hero-concept-cinema.html (hero_concepts.py) for comparison.
+        from hero_doorstroom import doorstroom_hero
+        hero = doorstroom_hero()
 
     # Block 2 "Processchema": a process line drops from the hero plate's corner and splits into the two disciplines
     # (geometry + scroll progress in site.js); items swap the discipline's plate figure.
@@ -369,19 +371,27 @@ def home(variant=None, footer_variant="stone"):
         ('Verzorgen jullie ook onderhoud en revisie?', 'Ja. Airtechnic Solutions verzorgt onderhoud, revisie en optimalisatie van bestaande installaties. We bekijken de technische staat en de bedrijfsomstandigheden om te bepalen welke werkzaamheden nodig zijn. Preventief onderhoud helpt slijtage tijdig te signaleren en ondersteunt de bedrijfszekerheid van uw pneumatisch transport, stofafzuiging of bulkverwerking.'),
         ('Hoe verloopt een project van ontwerp tot oplevering?', 'We starten met een analyse van uw proces, product en capaciteitsvraag. Daarna werken we het installatieontwerp en de componentselectie uit. Na afstemming volgen de levering en montage. Bij de inbedrijfstelling stellen we de installatie af, controleren we de werking aan de hand van de afgesproken eisen en dragen we de installatie over aan uw team.'),
     ]
+    # Blocks 2 + 3 (Nov 20): "Processchema" two-line schema and "Röntgen" catalogue (src/home_blocks.py).
+    # The previous `specs` / `carousel` markup above is kept for reference but no longer rendered.
+    from home_blocks import schema_block, catalog_block
+    specs, carousel = schema_block(), catalog_block()
+    # Blocks 4 + 5 (Nov 21): "Projectdossier" (all five projects + facts) and "Van tekening tot installatie"
+    # (src/home_practice.py); the previous `case` / `werkwijze` markup above is no longer rendered.
+    from home_practice import dossier_block, werkwijze_block
+    case, werkwijze = dossier_block(), werkwijze_block(steps)
+    # Blocks 6 + 7 (Nov 21): "Vraagbaak" (all nine articles, topic filter) and the FAQ index (src/home_knowledge.py).
+    from home_knowledge import kennis_block, faq_block
+    kennis = kennis_block()
     body = '\n'.join([
         hero, specs, carousel, case, werkwijze, kennis,
-        f'''<section class="section--home faq-home" aria-labelledby="faq-title" data-reveal>
-  <div class="container">{section_head("Veelgestelde vragen over<br><em>uw procesinstallatie.</em>", "faq-title", "Veelgestelde vragen", plain=True)}<div class="faq--home">{faq(faq_items, True)}</div></div>
-</section>''',
+        faq_block(faq_items),
         contact('Wat wilt u<br><em>verbeteren</em><br>aan uw proces?', 'Vertel ons wat u verwerkt en wat u wilt bereiken.', deco=True, topics=('installatieontwerp', 'druk-of-vacuumtransport', 'cyclonen')),
     ])
     return page(PAGES['home'], 'Pneumatisch transport &amp; industriële luchttechniek | Airtechnic Solutions',
                 'Pneumatisch transport, filtratie, cyclonen, wissels en doseersluizen voor poeders en granulaten: van losse component tot complete procesinstallatie.',
-                'og-01-hero-pijpleiding.jpg', body, [org_jsonld(), faq_jsonld(faq_items)], overlay=bool(variant),
-                stylesheet=None if variant else "assets/css/hero-concepts.css",
-                preload_img=(HALL_IMAGE if variant else '01-hero-pijpleiding', HALL_SIZES), footer_variant=footer_variant,
-                preview=variant is not None or footer_variant != "stone")
+                'og-01-hero-pijpleiding.jpg', body, [org_jsonld(), faq_jsonld(faq_items)], overlay=True,
+                preload_img=(HALL_IMAGE if variant else '01-hero-pijpleiding-leeg', HALL_SIZES), footer_variant=footer_variant,
+                preview=variant is not None or footer_variant != "stone", stylesheet='assets/css/home-blocks.css')
 
 
 # =====================================================================  2. KENNISARTIKEL

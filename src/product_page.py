@@ -1,7 +1,9 @@
 """The cycloonafscheider structure, shared verbatim by all product pages."""
 from html import escape
-from components import (SITE, ORG, pic, media, link, contact, contact_url, page,
+from components import (SITE, ORG, pic, media, link, contact, contact_url, page, icon, COMPONENTEN, _v,
                         breadcrumb_jsonld, faq_jsonld, faq_section)
+from home_knowledge import faq_block
+from product_routes import PRODUCT_ROUTES
 from component_detail import GALLERY_SIZES, component_intro, component_nav, component_principle
 
 
@@ -9,9 +11,14 @@ def product_page(d):
     name, slug = d['name'], d['slug']
     filename = slug+'.html'
     category_url = 'componenten-'+d['category']+'.html'
-    crumbs = [('Home','index.html'),('Componenten','index.html#comp-title'),
+    crumbs = [('Home','index.html'),('Componenten','componenten.html'),
               (d['family_name'],category_url),(name,filename)]
-    hero = component_intro(name, crumbs, d['lead'], d['facts'], d['views'], contact_url(d['topic']))
+    hrefs = [h for _t, h, _i in COMPONENTEN]
+    g = hrefs.index(category_url) + 1 if category_url in hrefs else 0
+    family = list(PRODUCT_ROUTES.get(d['category'], {}).values())
+    k = family.index(slug) + 1 if slug in family else 0
+    kicker = f"{escape(d['family_name'])}" + (f" · {g}.{k}" if g and k else '')
+    hero = component_intro(name, crumbs, d['lead'], d['facts'], d['views'], contact_url(d['topic']), kicker=kicker)
     subnav = component_nav([('overzicht','Overzicht'),('werking','Werking'),('uitvoering','Selectie'),
                            ('toepassingen','Toepassingen'),('faq-title','Vragen')])
     werking = component_principle(d['principle_title'], d['principle_intro'], d['cutaway'],
@@ -52,19 +59,21 @@ def product_page(d):
     <p class="detail-sectors"><strong>{'Sectoren' if slug=='cycloonafscheider' else 'Toepasbaarheid'}</strong> <span>{escape(d['sectors'])}</span></p>
   </div>
 </section>'''
-    related_cards=''.join(f'<li><article>{media(image,"","ar-16-10",True)}<h3 class="h3">{link(escape(label),href)}</h3><p>{escape(text)}</p></article></li>'
-                          for label,image,text,href in d['related'])
+    related_cards=''.join(f'''<li style="--i:{i}"><a class="pd-rel" href="{href}">
+          <span class="pd-rel__plate">{pic(image,"","(min-width: 900px) 30vw, 88vw")}</span>
+          <span class="pd-rel__name" data-eq>{escape(label)}{icon("ur")}</span><span class="pd-rel__text" data-eq>{escape(text)}</span></a></li>'''
+                          for i,(label,image,text,href) in enumerate(d['related']))
     related=f'''<section class="detail-related" aria-labelledby="relc-title">
   <div class="container">
     <header class="detail-section__head">
       <h2 id="relc-title" class="h2">{d['related_title']}</h2>
-      {link('Componentenoverzicht','index.html#comp-title')}
+      {link('Alle '+escape(d['family_name']).lower(), category_url)}
     </header>
     <ul class="detail-related__grid">{related_cards}</ul>
   </div>
 </section>'''
     body='\n'.join([hero,subnav,werking,uitvoering,toepassingen,related,
-        faq_section('Veelgestelde vragen',d['faq_items'],'faq-title'),
+        faq_block(d['faq_items'], f"Veelgestelde vragen over<br><em>{escape(name).lower()}.</em>", card=False, cls='section'),
         contact(d['contact_title'],d['contact_intro'],topic=d['topic'],topics=(d['documentation_topic'],))])
     url=SITE+'/'+filename
     og='og-product-'+slug+'.jpg'
@@ -73,4 +82,4 @@ def product_page(d):
     return page(filename,name+' op maat | Airtechnic Solutions',d['lead'],og,body,
                 [product,breadcrumb_jsonld(crumbs,url),faq_jsonld(d['faq_items'])],
                 preload_img=(d['image'],GALLERY_SIZES),html_cls='has-subnav component-detail',
-                nav_current=d['nav'],stylesheet='assets/css/component-detail.css')
+                nav_current=d['nav'],stylesheet='assets/css/component-detail.css').replace('</main>', '<script src="'+_v('assets/js/home-knowledge.js')+'" defer></script>\n<script src="'+_v('assets/js/subnav.js')+'" defer></script>\n</main>', 1)

@@ -382,3 +382,112 @@ html:not(.js) .detail-marker { display: none; }
   .detail-plate__image img { animation: none; }
   .detail-marker span, .detail-view { transition: none; }
 }
+
+/* =====================================================================================================================
+   PRODUCT TEMPLATE UPGRADE (Nov 22, product_page.py): kicker with family number, section nav as a process line,
+   lighter spec table head, related uitvoeringen as light catalogue plates. The FAQ is the shared .fq index (top.css).
+   ===================================================================================================================== */
+.pd-kicker { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 16px; font: 500 12px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--steel-700); }
+.pd-kicker__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 4px rgba(210, 31, 38, .14); }
+
+/* section nav: stations on a dash-dot line, the current one red */
+.detail-nav .subnav__list { position: relative; display: flex; justify-content: space-between; gap: 8px; }
+.detail-nav .subnav__list::before { content: ""; position: absolute; left: 24px; right: 24px; top: 50%; height: 1px; background: repeating-linear-gradient(90deg, var(--line-strong) 0 12px, transparent 0 16px, var(--line-strong) 0 18px, transparent 0 22px); pointer-events: none; }
+.detail-nav .subnav__list li { position: relative; flex: 0 1 auto; }
+.detail-nav .subnav__list a { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 0 14px; border-radius: 999px; background: rgba(243, 241, 236, .95);
+  border: 1px solid transparent; font-weight: 600; transition: border-color .25s ease, color .25s ease, background .25s ease; }
+.detail-nav .subnav__list a::before { content: ""; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--line-strong); background: var(--paper); transition: background .25s ease, border-color .25s ease, scale .35s var(--ease-spring); }
+.detail-nav .subnav__list a::after { display: none; }
+.detail-nav .subnav__list a:hover { border-color: rgba(14, 42, 71, .2); }
+.detail-nav .subnav__list a[aria-current] { color: var(--red-text); border-color: rgba(210, 31, 38, .3); }
+.detail-nav .subnav__list a[aria-current]::before { background: var(--red); border-color: var(--red); scale: 1.2; }
+
+/* spec table: a calm head, the criteria in mono */
+.detail-specs thead { color: var(--steel-700); background: rgba(14, 42, 71, .05); }
+.detail-specs thead th { font-family: var(--font-mono); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: 10.5px; }
+.detail-specs tbody tr { transition: background .25s ease; }
+.detail-specs tbody tr:hover { background: rgba(14, 42, 71, .03); }
+
+/* related uitvoeringen: light catalogue plates */
+.detail-related__grid .pd-rel { display: grid; gap: 12px; text-decoration: none; color: var(--steel-900); }
+.pd-rel__plate { position: relative; display: block; aspect-ratio: 16 / 11; border-radius: 18px; overflow: hidden;
+  background: linear-gradient(rgba(14, 42, 71, .045) 1px, transparent 1px) 0 0 / 22px 22px, linear-gradient(90deg, rgba(14, 42, 71, .045) 1px, transparent 1px) 0 0 / 22px 22px, radial-gradient(100% 85% at 50% 30%, #fff, #EDF0F3 55%, #DDE4EA);
+  border: 1px solid rgba(255, 255, 255, .85); box-shadow: 0 24px 46px -34px rgba(8, 24, 42, .5); transition: translate .5s var(--ease-expo), box-shadow .5s ease; }
+.pd-rel__plate picture { position: absolute; inset: 0; display: block; }
+.pd-rel__plate img { position: absolute; inset: 8% 10% 10%; width: 80%; height: 82%; object-fit: contain; filter: drop-shadow(0 14px 12px rgba(8, 24, 42, .18)); transition: scale .7s var(--ease-expo); }
+.pd-rel__name { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 720; font-variation-settings: "wdth" 88; font-size: 21px; letter-spacing: -.02em; transition: color .3s ease; }
+.pd-rel__name .i { width: 16px; height: 16px; color: var(--red-text); transition: translate .35s var(--ease-expo); }
+.pd-rel__text { font-size: 14.5px; line-height: 1.5; color: var(--muted); max-width: 38ch; }
+.pd-rel:hover .pd-rel__plate { translate: 0 -4px; box-shadow: 0 34px 60px -30px rgba(8, 24, 42, .55); }
+.pd-rel:hover .pd-rel__plate img { scale: 1.04; }
+.pd-rel:hover .pd-rel__name { color: var(--red-text); }
+.pd-rel:hover .pd-rel__name .i { translate: 2px -2px; }
+.pd-rel:focus-visible { outline: none; }
+.pd-rel:focus-visible .pd-rel__plate { outline: 3px solid var(--red); outline-offset: 4px; }
+@media (max-width: 899px) {
+  .detail-nav .subnav__list::before { display: none; }
+  .detail-nav .subnav__list { justify-content: flex-start; }
+  .detail-related__grid { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(var(--pad) * -1); padding: 0 var(--pad) 6px; gap: 16px; }
+  .detail-related__grid::-webkit-scrollbar { display: none; }
+  .detail-related__grid li { flex: 0 0 78vw; scroll-snap-align: start; }
+}
+@media (max-width: 899px) {
+  .detail-nav .subnav__list { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 4px; }
+  .detail-nav .subnav__list::-webkit-scrollbar { display: none; }
+  .detail-nav .subnav__list li { flex: none; }
+  .detail-nav .subnav__list a { white-space: nowrap; padding: 0 12px; }
+}
+
+/* STICKY NAV "reading line" (Nov 22, assets/js/subnav.js) */
+.detail-nav { transition: background-color .35s ease, box-shadow .35s ease, border-color .35s ease; }
+.detail-nav .subnav__list { transition: padding .35s var(--ease-expo); }
+.detail-nav.is-stuck { background: rgba(243, 241, 236, .78); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom-color: transparent; box-shadow: 0 18px 30px -24px rgba(8, 24, 42, .45); }
+.dn-fill { position: absolute; top: 50%; height: 2px; margin-top: -1px; left: 0; width: 0; background: var(--red); z-index: 0; pointer-events: none; transition: width .25s linear; }
+.dn-fill::after { content: ""; position: absolute; right: -3px; top: -2px; width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 4px rgba(210, 31, 38, .15); }
+.dn-pill { position: absolute; left: 0; top: 50%; height: 40px; margin-top: -20px; border-radius: 999px; background: var(--paper); border: 1px solid rgba(210, 31, 38, .3);
+  box-shadow: 0 8px 18px -10px rgba(8, 24, 42, .35); z-index: 0; pointer-events: none; opacity: 0;
+  transition: transform .55s var(--ease-expo), width .55s var(--ease-expo), opacity .3s ease; }
+.has-pill .dn-pill { opacity: 1; }
+.detail-nav .subnav__list li { z-index: 1; }
+.has-pill a[aria-current] { border-color: transparent !important; background: transparent !important; }
+.detail-nav .subnav__list a { background: transparent; }
+.detail-nav .subnav__list a:not([aria-current]) { background: rgba(243, 241, 236, .95); }
+.detail-nav.is-stuck .subnav__list a:not([aria-current]) { background: rgba(243, 241, 236, .6); }
+@media (prefers-reduced-motion: reduce) { .dn-pill, .dn-fill { transition: none; } }
+
+/* more air between the uitvoeringen index and the sheet's edge below it */
+
+/* reading line v2 (Nov 22): segments live only in the gaps between stations; the old continuous line is gone */
+.detail-nav .subnav__list::before, .dn-fill { display: none !important; }
+.dn-seg { position: absolute; top: 50%; height: 2px; margin-top: -1px; pointer-events: none; z-index: 0;
+  background: repeating-linear-gradient(90deg, var(--line-strong) 0 12px, transparent 0 16px, var(--line-strong) 0 18px, transparent 0 22px); }
+.dn-seg::before, .dn-seg::after { content: ""; position: absolute; top: -3px; width: 1px; height: 8px; background: var(--line-strong); }
+.dn-seg::before { left: 0; } .dn-seg::after { right: 0; }
+.dn-seg__fill { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: var(--red); transform: scaleX(var(--q, 0)); transform-origin: 0 50%; transition: transform .2s linear; }
+.dn-seg__head { position: absolute; top: -3px; left: calc(var(--q, 0) * 100% - 4px); width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff0c8, var(--granulate) 55%, #a66c1f); box-shadow: 0 0 0 3px rgba(217, 164, 65, .2); opacity: 0; transition: opacity .25s ease, left .2s linear; }
+.dn-seg.is-live .dn-seg__head { opacity: 1; }
+.detail-nav .subnav__list a.is-read::before { background: var(--red); border-color: var(--red); }
+.detail-nav .subnav__list a:not([aria-current]) { background: transparent !important; }
+.dn-pill { background: var(--paper); }
+@media (max-width: 899px) { .dn-seg { display: block; } }
+@media (prefers-reduced-motion: reduce) { .dn-seg__fill, .dn-seg__head { transition: none; } }
+@media (max-width: 899px) { .detail-nav .subnav__list { gap: 34px; } }
+@media (max-width: 899px) { .detail-views .detail-view span { font-size: 12px; line-height: 1.2; -webkit-hyphens: auto; hyphens: auto; } }
+
+/* view thumbnails (Nov 22): one frame shape close to the main plate, so close-up views (scaled renders) crop to the
+   same detail as the big image; image centred and whole; small catalogue plates */
+.detail-view { gap: 7px; padding: 6px 6px 8px; min-height: 0; align-content: start; border-color: rgba(14, 42, 71, .18); background: var(--paper);
+  transition: background-color .25s ease, border-color .25s ease, translate .35s var(--ease-expo), box-shadow .35s ease; }
+.detail-view picture { position: relative; width: 100%; height: auto; aspect-ratio: 16 / 11; border-radius: 7px; overflow: hidden;
+  background: radial-gradient(100% 90% at 50% 35%, #fff, #E6EBF0 70%, #DCE3EA); }
+.detail-view img { position: absolute; inset: 6%; width: 88%; height: 88%; object-fit: contain; object-position: 50% 50%; }
+.detail-view span { line-height: 1.2; }
+.detail-view:hover { background: var(--paper); border-color: var(--steel-700); translate: 0 -2px; box-shadow: 0 10px 20px -14px rgba(8, 24, 42, .45); }
+.detail-view[aria-current] { background: var(--paper); border-color: var(--steel-900); box-shadow: inset 0 -3px var(--red), 0 10px 20px -14px rgba(8, 24, 42, .45); }
+/* every tile in a row is as tall as the tallest one; the frame is always the tile's width; long labels break cleanly */
+.detail-views li { display: flex; min-width: 0; }
+.detail-view { height: 100%; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+.detail-view span { align-self: center; max-width: 100%; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; text-wrap: balance; }
+.detail-view span { overflow-wrap: normal; -webkit-hyphens: manual; hyphens: manual; }

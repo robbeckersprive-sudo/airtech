@@ -19,6 +19,7 @@ PHONE_DISPLAY = '+31 (0)85 0660 243'
 PHONE_TEL = '+31850660243'
 PRIVACY_URL = 'https://airtechnicsolutions.nl/airtechnicsolutions.nl/wp-content/uploads/2018/10/Privacyverklaring-klant-en-leveranciersadministratie.pdf'
 ADDRESS = ('Scherpenbeemd 3', 'Beek en Donk')
+MAPS_ROUTE = 'https://www.google.com/maps/dir/?api=1&amp;destination=Scherpenbeemd%203%2C%20Beek%20en%20Donk%2C%20Nederland'
 
 PAGES = {
     'home': 'index.html',
@@ -65,8 +66,12 @@ LOGO_MARK = ('<svg viewBox="0 0 30 34" aria-hidden="true" focusable="false">'
 
 
 def logo(href='index.html'):
-    return (f'<a class="logo" href="{href}" aria-label="{ORG}, naar de homepage">{LOGO_MARK}'
-            f'<span aria-hidden="true">Airtechnic<br>Solutions</span></a>')
+    return (f'<a class="logo logo--airtechnic" href="{href}" aria-label="{ORG}, naar de homepage">'
+            '<span class="logo__art" aria-hidden="true">'
+            '<img src="assets/img/airtechnic-logo-transparent.png" width="2176" height="722" alt="" fetchpriority="high">'
+            '</span><svg class="logo__flow" viewBox="0 0 180 8" fill="none" aria-hidden="true" focusable="false">'
+            '<path pathLength="100" d="M1 6H110C133 6 146 2 179 2"/>'
+            '</svg></a>')
 
 
 def tbd(label='TBD'):
@@ -295,7 +300,7 @@ def _header_sheet(current=None):
         <a href="tel:{PHONE_TEL}">{icon("phone")}<span>Bel ons</span></a>
         <a href="mailto:{EMAIL}">{icon("mail")}<span>Mail ons</span></a>
       </div>
-      <p class="mnav__addr"><span>{ADDRESS[0]}, {ADDRESS[1]}</span><span>{PHONE_DISPLAY}</span></p>
+      <a class="mnav__location" href="https://www.google.com/maps/dir/?api=1&amp;destination=Scherpenbeemd%203%2C%20Beek%20en%20Donk%2C%20Nederland" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic, Scherpenbeemd 3, Beek en Donk in Google Maps">{icon("pin")}<span class="mnav__location-address">{ADDRESS[0]}<span>{ADDRESS[1]}</span></span><span class="mnav__location-action">Route{icon("ur")}</span></a>
     </div>
   </div>'''
 
@@ -324,7 +329,7 @@ def header(overlay=False, current=None):
     <div class="container hxb-rail__in">
       <nav class="hxb-rail__links" aria-label="Service"><a href="kennisbank.html">Kennisbank</a><a href="index.html#contact">Contact</a></nav>
       <ul>
-        <li>{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span></li>
+        <li><a href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span></a></li>
         <li><a href="tel:{PHONE_TEL}">{icon("phone")}<span>{PHONE_DISPLAY}</span></a></li>
         <li><a href="mailto:{EMAIL}">{icon("mail")}<span>{EMAIL}</span></a></li>
       </ul>
@@ -460,88 +465,113 @@ def contact_url(topic):
 
 
 def contact(title, intro, deco=False, topic='algemeen', topics=()):
+    """Contact block (Nov 21 restyle, styles in top.css "CONTACT", behaviour assets/js/contact-plus.js).
+    The real form logic stays in site.js: it needs #contact, .contact__lines a[href^=mailto], [data-contact-topic]
+    (the <select>, still the source of truth) and the [data-validate] fields. The topic chips only drive the select;
+    the progress line (Vraag, Naam, E-mail) shows which required field is still open."""
     naam = _field('naam', 'Naam', required=True, autocomplete='name')
     mail = _field('email', 'E-mailadres', 'email', True, 'email')
     bedrijf = _field('bedrijf', 'Bedrijf (optioneel)', autocomplete='organization')
     telefoon = _field('telefoon', 'Telefoon (optioneel)', 'tel', autocomplete='tel')
     vraag = _field('vraagstuk', 'Uw bericht', required=True, textarea=True, hint=CONTACT_TOPICS[topic][1])
+    # at most two page-specific topics, then the same four intent shortcuts on every page, 'Algemene vraag' last
+    intents = ('installatieontwerp', 'bestaande-installatie', 'onderdelen', 'terugbellen')
+    own = [k for k in dict.fromkeys((topic, *topics)) if k != 'algemeen'][:2]
+    keys = list(dict.fromkeys((*own, *intents))) + ['algemeen']
     options = ''.join(
         f'<option value="{key}" data-hint="{escape(CONTACT_TOPICS[key][1])}"'
-        f'{" selected" if key == topic else ""}>{escape(CONTACT_TOPICS[key][0])}</option>'
-        for key in dict.fromkeys((topic, *topics, 'algemeen'))
-    )
+        f'{" selected" if key == topic else ""}>{escape(CONTACT_TOPICS[key][0])}</option>' for key in keys)
+    chips = ''.join(
+        f'<button type="button" class="ct-chip" role="radio" aria-checked="{str(key == topic).lower()}" tabindex="{0 if key == topic else -1}" '
+        f'data-ct-topic="{key}">{escape(CONTACT_TOPICS[key][0].split(" · ")[-1])}</button>' for key in keys)
     deco_html = (f'<div class="contact__deco" aria-hidden="true">{pic("02-pijpleiding-contact", "", "45vw")}</div>' if deco else '')
-    return f'''<section data-theme="forest" class="contact{' contact--deco' if deco else ''}" id="contact" aria-labelledby="contact-title" data-reveal data-spotlight>
-  <div class="contact__glow" aria-hidden="true"></div>
+    tips = ('Welk product u verwerkt', 'De gewenste capaciteit', 'Afstand en hoogteverschil van het transport',
+            'Foto&rsquo;s of tekeningen van de huidige situatie')
+    helpers = ''.join(f'<button type="button" class="ct-helper" data-ct-add="{t}: ">+ {t}</button>'
+                      for t in ('Product', 'Capaciteit', 'Afstand', 'Huidige situatie'))
+    tip_items = ''.join(f'<li>{icon("check")}<span>{t}</span></li>' for t in tips)
+    steps = ''.join(f'<li data-ct-step="{k}"><i></i><span>{t}</span></li>' for k, t in (('vraagstuk', 'Vraag'), ('naam', 'Naam'), ('email', 'E-mail')))
+    deco_cls = ' contact--deco' if deco else ''
+    return f'''<section data-theme="forest" class="contact ct{deco_cls}" id="contact" aria-labelledby="contact-title" data-reveal>
+  <div class="ct-grid-bg" aria-hidden="true"></div>
   {deco_html}
-  <div class="container contact__grid">
-    <div class="contact__intro">
+  <div class="container ct-in">
+    <div class="ct-intro">
+      <p class="ct-kicker"><span class="ct-kicker__dot" aria-hidden="true"></span>Contact</p>
       <h2 id="contact-title" class="h2" data-split>{split_lines(title)}</h2>
-      <p>{intro}</p>
-      <ul class="contact__lines">
-        <li>{icon("phone")}<a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></li>
-        <li>{icon("mail")}<a href="mailto:{EMAIL}">{EMAIL}</a></li>
+      <p class="ct-lead">{intro}</p>
+      <div class="ct-tips"><p class="ct-tips__t">Handig om te noemen</p><ul>{tip_items}</ul></div>
+      <ul class="contact__lines ct-lines">
+        <li><a href="tel:{PHONE_TEL}"><span class="ct-lines__ico">{icon("phone")}</span><span class="ct-lines__txt"><small>Bellen</small>{PHONE_DISPLAY}</span>{icon("ur")}</a></li>
+        <li><a href="mailto:{EMAIL}"><span class="ct-lines__ico">{icon("mail")}</span><span class="ct-lines__txt"><small>Mailen</small>{EMAIL}</span>{icon("ur")}</a></li>
       </ul>
+      <a class="ct-addr address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span>{icon("ur")}</a>
     </div>
-    <div class="contact__card-wrap">
-      <div class="contact__card" data-theme="light">
+    <div class="ct-card-wrap">
+      <div class="contact__card ct-card" data-theme="light">
+        <ol class="ct-progress" aria-hidden="true" data-ct-progress><span class="ct-progress__line"><b data-ct-fill></b></span>{steps}</ol>
         <form class="form" action="{CONTACT_PATH}" method="post" novalidate data-form aria-labelledby="contact-form-title">
           <div class="form__heading">
             <h3 class="h3" id="contact-form-title" tabindex="-1">Stel uw vraag</h3>
             <p class="form__note">Velden met * zijn verplicht.</p>
           </div>
-          <div class="field">
-            <label for="f-onderwerp">Onderwerp</label>
+          <div class="field ct-topic">
+            <label for="f-onderwerp" id="f-onderwerp-label">Onderwerp</label>
+            <div class="ct-chips" role="radiogroup" aria-labelledby="f-onderwerp-label" data-ct-chips hidden>{chips}</div>
             <select id="f-onderwerp" name="onderwerp" data-contact-topic>{options}</select>
           </div>
           {vraag}
+          <div class="ct-helpers" data-ct-helpers hidden><span class="ct-helpers__t">Snel aanvullen</span>{helpers}</div>
           <div class="form__row form__row--2">{naam}{mail}</div>
           <div class="form__row form__row--2">{bedrijf}{telefoon}</div>
-          <div class="form__actions">
+          <div class="form__actions ct-actions">
             <button class="btn btn--lg" type="submit" disabled><span class="btn__label">Verstuur uw aanvraag</span>{btn_icon()}</button>
+            <p class="form__privacy"><span class="ct-reassure">{icon("check")}Vrijblijvend</span><a href="{PRIVACY_URL}">Privacyverklaring</a></p>
           </div>
           <p class="form__feedback" role="status" tabindex="-1" data-contact-feedback></p>
           <noscript><p class="form__note">Mail rechtstreeks naar <a href="mailto:{EMAIL}">{EMAIL}</a> of bel ons.</p></noscript>
-          <p class="form__privacy"><a href="{PRIVACY_URL}">Privacyverklaring</a></p>
         </form>
       </div>
     </div>
   </div>
-</section>'''
+</section>
+<script src="{_v("assets/js/contact-plus.js")}" defer></script>'''
 
 
 # ---------------------------------------------------------------- footer
-def footer(variant="stone"):
-    return f'''<footer class="af af--{variant}" id="footer">
+def _sheet_name(title):
+    """Page name for the footer title block: the <title> before ' | ', tags and entities resolved."""
+    from html import unescape
+    return escape(unescape(re.sub(r'<[^>]+>', '', title)).split(' | ')[0])
+
+
+def footer(variant="stone", sheet=''):
+    """Footer "Titelblok" (Nov 21, styles in top.css "FOOTER"): the site's drawing sheet ends in a title block, a
+    framed grid of cells (brand, motto, links, contact) with the current page as "Blad". `variant` kept for callers."""
+    sheet = sheet or 'Airtechnic Solutions'
+    tech = ('<nav aria-label="Techniek"><h2 class="ft-h">Techniek</h2>'
+            '<a href="index.html#specialisaties">Onze specialisaties</a><a href="componenten.html">Componenten</a>'
+            f'<a href="{PAGES["categorie"]}">Cyclonen &amp; afscheiders</a><a href="kennisbank.html">Kennisbank</a></nav>')
+    org = ('<nav aria-label="Airtechnic"><h2 class="ft-h">Airtechnic</h2>'
+           '<a href="over-ons.html">Over ons</a><a href="index.html#steps-title">Onze werkwijze</a>'
+           '<a href="projecten.html">Projecten</a><a href="index.html#contact">Stel uw vraag</a></nav>')
+    direct = (f'<div><h2 class="ft-h">Direct contact</h2><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>'
+              f'<a href="mailto:{EMAIL}">{EMAIL}</a><address><a class="address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps"><span>{ADDRESS[0]}<br>5741 TX {ADDRESS[1]}</span>{icon("ur")}</a></address></div>')
+    return f'''<footer class="af ft af--{variant}" id="footer">
   <div class="container">
-    <div class="af-layout">
-      <div class="af-brand">{logo()}<p class="af-motto">Grip op <em>elke stroom.</em></p></div>
-      <div class="af-cols">
-        <nav class="af-col" aria-label="Techniek">
-          <h2>Techniek</h2>
-          <a href="index.html#specialisaties">Onze specialisaties</a>
-          <a href="componenten.html">Componenten</a>
-          <a href="{PAGES['categorie']}">Cyclonen &amp; afscheiders</a>
-        </nav>
-        <nav class="af-col" aria-label="Airtechnic">
-          <h2>Airtechnic</h2>
-          <a href="over-ons.html">Over ons</a>
-          <a href="index.html#steps-title">Onze werkwijze</a>
-          <a href="projecten.html">Projecten</a>
-          <a href="kennisbank.html">Kennisbank</a>
-          <a href="index.html#contact">Stel uw vraag</a>
-        </nav>
-        <div class="af-col">
-          <h2>Direct contact</h2>
-          <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>
-          <a href="mailto:{EMAIL}">{EMAIL}</a>
-          <address>{ADDRESS[0]}<br>5741 TX {ADDRESS[1]}</address>
-        </div>
+    <div class="ft-block">
+      <div class="ft-cell ft-cell--brand">{logo()}<p class="ft-k ft-k--mute">Industriële luchttechniek &amp; solids processing</p></div>
+      <div class="ft-cell ft-cell--motto"><p class="ft-motto">Grip op <em>elke stroom.</em></p></div>
+      <div class="ft-cell"><p class="ft-k">01</p>{tech}</div>
+      <div class="ft-cell"><p class="ft-k">02</p>{org}</div>
+      <div class="ft-cell ft-cell--contact"><p class="ft-k">03</p>{direct}</div>
+      <div class="ft-cell ft-cell--sheet">
+        <dl class="ft-meta"><div><dt>Blad</dt><dd>{sheet}</dd></div><div><dt>Schaal</dt><dd>1 : 1</dd></div><div><dt>Rev.</dt><dd>2026</dd></div></dl>
+        <a class="ft-top" href="#main">{icon("ur")}<span>Naar boven</span></a>
       </div>
     </div>
-    <div class="af-base"><span>&copy; Airtechnic Solutions BV</span>
-      <a href="{PRIVACY_URL}">Privacyverklaring</a>
-      <a href="https://nl.linkedin.com/company/airtechnic-solutions">LinkedIn {icon("ur")}</a>
+    <div class="ft-base"><span>&copy; Airtechnic Solutions BV</span>
+      <span class="ft-base__links"><a href="{PRIVACY_URL}">Privacyverklaring</a><a href="https://nl.linkedin.com/company/airtechnic-solutions">LinkedIn {icon("ur")}</a></span>
     </div>
   </div>
 </footer>'''
@@ -611,12 +641,15 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 <link rel="stylesheet" href="{_v('assets/css/site.css')}">
 <link rel="stylesheet" href="{_v('assets/css/signature.css')}">
 <link rel="stylesheet" href="{_v('assets/css/airtechnic-footer.css')}">
+<link rel="stylesheet" href="{_v('assets/css/top.css')}">
 {extra_style}<link rel="stylesheet" href="{_v('assets/css/mobile.css')}">
+<link rel="stylesheet" href="{_v('assets/css/brand.css')}">
 <script src="{_v('assets/js/page-transitions.js')}"></script>
 <link rel="expect" href="#main" blocking="render">
 <script src="{_v('assets/js/site.js')}" defer></script>
 <script src="{_v('assets/js/signature.js')}" defer></script>
 <script src="{_v('assets/js/mobile.js')}" defer></script>
+<script src="{_v('assets/js/equalize.js')}" defer></script>
 {ld}</head>
 <body>
 <a class="skip-link" href="#main">Direct naar de inhoud</a>
@@ -624,7 +657,7 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 <main id="main" tabindex="-1">
 {body}
 </main>
-{footer(footer_variant)}
+{footer(footer_variant, _sheet_name(title))}
 </body>
 </html>
 '''
@@ -632,7 +665,7 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 
 def org_jsonld():
     return {'@context': 'https://schema.org', '@type': 'Organization', 'name': ORG, 'url': SITE + '/',
-            'logo': SITE + '/' + FAVICON, 'email': EMAIL, 'telephone': PHONE_TEL,
+            'logo': SITE + '/assets/img/airtechnic-logo-transparent.png', 'email': EMAIL, 'telephone': PHONE_TEL,
             'address': {'@type': 'PostalAddress', 'streetAddress': ADDRESS[0], 'addressLocality': ADDRESS[1], 'addressCountry': 'NL'}}
 
 
