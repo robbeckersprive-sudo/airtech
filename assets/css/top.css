@@ -630,3 +630,30 @@ main > .ds ~ section:nth-of-type(2)::before { left: 0; right: 0; top: 0; height:
 .ct-reassure .i { width: 15px; height: 15px; color: var(--red); }
 @media (max-width: 899px) { .ct-helper { min-height: 40px; } }
 @media (prefers-reduced-motion: reduce) { .ct-veil { display: none; } .ct.is-arrived .ct-card { animation: none; } }
+
+/* dosing sheet: real-time 3D rotor (Nov 22, assets/js/rotor3d.js). Photo, canvas and front rim share the 3:2 box. */
+.dr3d { position: absolute; inset: 0; z-index: 1; opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+.dr3d__photo, .dr3d__gl, .dr3d__front { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dr3d__photo picture { position: absolute; inset: 0; display: block; }
+.dr3d__photo img { width: 100%; height: 100%; object-fit: cover; }
+.dr3d__gl canvas { display: block; width: 100%; height: 100%; }
+.ds-box.has-rotor3d .dr3d { opacity: 1; }
+.ds-box.has-rotor3d .ds-rotor { opacity: 0; }
+
+/* =====================================================================================================================
+   MOBILE STICKY BARS (Nov 22): no strip above the header, opaque enough to never show content through it, and once
+   the page scrolls both the header and a page's section nav get compact for more screen space
+   ===================================================================================================================== */
+@media (max-width: 899px) {
+  .hxb-rail { display: none; }                                  /* 0px tall on phones, but its border left a 1px strip */
+  .hxb-bar { transition: height .35s var(--ease-expo), background-color .3s ease, box-shadow .3s ease; }
+  .hx.is-scrolled .hxb-bar { background: rgba(251, 250, 247, .96); }
+  :root:has(.hx.is-scrolled) { --header-h: 56px; }              /* the bar and every sticky offset below it follow */
+  .hx .logo { transition: scale .35s var(--ease-expo); transform-origin: 0 50%; }
+  .hx.is-scrolled .logo { scale: .84; }
+  .hx.is-scrolled .hx-burger { scale: .88; }
+  .detail-nav.is-stuck { background: rgba(243, 241, 236, .96); }
+  .detail-nav .subnav__list a { transition: min-height .3s var(--ease-expo), font-size .3s ease; }
+  .detail-nav.is-stuck .subnav__list a { min-height: 36px; font-size: 13.5px; }
+  .detail-nav.is-stuck .dn-pill { height: 34px; margin-top: -17px; }
+}
