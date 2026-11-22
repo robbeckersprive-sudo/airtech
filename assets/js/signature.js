@@ -159,7 +159,10 @@
     heads.forEach(function (h) { h.p.setAttribute('d', d); });
     total = done.getTotalLength();
     table = [];
-    for (var L = 0; L <= total; L += 6) table.push([done.getPointAtLength(L).y, L]);
+    // The production signature is a vertical line: its arc length is its y distance.
+    // Avoid thousands of synchronous SVG geometry queries on every layout.
+    if (V === 'a' && S && S !== 'inlet') table.push([startY, 0]);
+    else for (var L = 0; L <= total; L += 6) table.push([done.getPointAtLength(L).y, L]);
     table.push([endY, total]);
 
     gLine.removeAttribute('mask');
@@ -237,6 +240,7 @@
 
   function lengthAt(y) {
     if (y <= table[0][0]) return 0;
+    if (V === 'a' && root.getAttribute('data-sig-start') === 'origin') return Math.min(total, y - startY);
     var lo = 0, hi = table.length - 1;
     while (hi - lo > 1) { var m = (lo + hi) >> 1; if (table[m][0] < y) lo = m; else hi = m; }
     // the first rows share one y (the run along the tab rule): take the last of them

@@ -55,6 +55,8 @@ def _pipe():
 def _equipment(s):
     effects = dict(EFFECTS, **{'31-hero-wissel': diverter_flow})   # filter / cyclone / dosing: switchable (hero_modes.py)
     overlay = hero_traces(s['image']) + (effects[s['image']]() if s['image'] in effects else '')
+    # SVG image elements have no native lazy loading. Request these when their sheet is selected.
+    overlay = overlay.replace('<image href=', '<image data-sheet-href=')
     spots = [(x, y, t, sub, href, 'l') for x, y, t, sub, href, _side in s['spots']]
     return f'<div class="ds-media">{pic(s["image"], s["alt"], SIZES)}</div>{overlay}{_spots(spots)}'
 
@@ -107,14 +109,15 @@ def doorstroom_hero():
     for i, s in enumerate(HERO_SLIDES):
         inner = _pipe() if i == 0 else _equipment(s)
         mode = f' data-mode="{SHEET_MODES[i][2][0][0]}"' if i in SHEET_MODES else ''
-        slides.append(f'<div class="ds-slide{" is-on" if i == 0 else ""}" data-slide="{i}"{mode}{_off(i)}><div class="ds-box">{inner}</div></div>')
+        hidden = '' if i == 0 else ' hidden'
+        slides.append(f'<div class="ds-slide{" is-on" if i == 0 else ""}" data-slide="{i}"{mode}{_off(i)}{hidden}><div class="ds-box">{inner}</div></div>')
         copies.append(f'''<div class="ds-copy{" is-on" if i == 0 else ""}" id="ds-slide-{i}" role="group" aria-roledescription="dia" aria-label="{i + 1} van {n}: {s['discipline']}" data-ds-copy{_off(i)}>
           <p class="ds-statement">{split_lines(s['title'])}</p>
           <p class="ds-lead">{s['sub']}</p>
         </div>''')
         text, href = s['link'] if i else ('Meer over pneumatisch transport', 'oplossingen-pneumatisch-transport.html')
         mores.append(f'<span class="ds-more{" is-on" if i == 0 else ""}" data-ds-more{_off(i)}>{link(text, href, "right", "ds-link")}</span>')
-        stations.append(f'<li class="ds-st" style="--i:{i}"><button type="button" class="ds-st__btn" data-ds-tab="{i}" aria-controls="ds-slide-{i}"'
+        stations.append(f'<li class="ds-st" style="--i:{i}"><button type="button" class="ds-st__btn" data-ds-tab="{i}" aria-controls="ds-slide-{i}" aria-label="{s["tab"]} (dia {i + 1} van {n})"'
                         f'{" aria-current=" + chr(34) + "true" + chr(34) if i == 0 else ""}>'
                         f'<span class="ds-st__thumb" aria-hidden="true"><img src="images/{s["image"]}-480.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></span>'
                         f'<span class="ds-st__node" aria-hidden="true"><i></i></span>'
@@ -150,4 +153,4 @@ def doorstroom_hero():
 </section>
 <script src="{_v("assets/js/granule-flow.js")}" defer></script>
 <script src="{_v("assets/js/doorstroom.js")}" defer></script>
-<script src="{_v("assets/js/rotor3d.js")}" defer></script>'''
+<script src="{_v("assets/js/rotor-loader.js")}" data-rotor-src="{_v("assets/js/rotor3d.js")}" defer></script>'''

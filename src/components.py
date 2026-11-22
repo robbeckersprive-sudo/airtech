@@ -3,9 +3,11 @@
 Every function returns an HTML string. Pages (see pages.py) only compose these.
 """
 import json
+import hashlib
 import os
 import random
 import re
+from functools import lru_cache
 from html import escape
 
 from contact_delivery import CONTACT_PATH, CONTACT_TOPICS, FIELD_LIMITS, RECIPIENT as EMAIL
@@ -13,7 +15,7 @@ from contact_delivery import CONTACT_PATH, CONTACT_TOPICS, FIELD_LIMITS, RECIPIE
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFEST = json.load(open(os.path.join(ROOT, 'images', 'manifest.json'), encoding='utf-8'))
 
-SITE = 'https://www.airtechnicsolutions.nl'  # [TBD] confirm production domain
+SITE = os.environ.get('SITE_URL', 'https://airtechnology.vercel.app').rstrip('/')
 ORG = 'Airtechnic Solutions'
 PHONE_DISPLAY = '+31 (0)85 0660 243'
 PHONE_TEL = '+31850660243'
@@ -68,7 +70,7 @@ LOGO_MARK = ('<svg viewBox="0 0 30 34" aria-hidden="true" focusable="false">'
 def logo(href='index.html'):
     return (f'<a class="logo logo--airtechnic" href="{href}" aria-label="{ORG}, naar de homepage">'
             '<span class="logo__art" aria-hidden="true">'
-            '<img src="assets/img/airtechnic-logo-transparent.png" width="2176" height="722" alt="" fetchpriority="high">'
+            '<img src="assets/img/airtechnic-logo-320.webp" srcset="assets/img/airtechnic-logo-320.webp 320w, assets/img/airtechnic-logo-640.webp 640w" sizes="(max-width: 719px) 180px, 240px" width="2176" height="722" alt="" decoding="async">'
             '</span><svg class="logo__flow" viewBox="0 0 180 8" fill="none" aria-hidden="true" focusable="false">'
             '<path pathLength="100" d="M1 6H110C133 6 146 2 179 2"/>'
             '</svg></a>')
@@ -329,7 +331,7 @@ def header(overlay=False, current=None):
     <div class="container hxb-rail__in">
       <nav class="hxb-rail__links" aria-label="Service"><a href="kennisbank.html">Kennisbank</a><a href="index.html#contact">Contact</a></nav>
       <ul>
-        <li><a href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span></a></li>
+        <li><a href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="{ADDRESS[0]}, {ADDRESS[1]}: route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span></a></li>
         <li><a href="tel:{PHONE_TEL}">{icon("phone")}<span>{PHONE_DISPLAY}</span></a></li>
         <li><a href="mailto:{EMAIL}">{icon("mail")}<span>{EMAIL}</span></a></li>
       </ul>
@@ -505,7 +507,7 @@ def contact(title, intro, deco=False, topic='algemeen', topics=()):
         <li><a href="tel:{PHONE_TEL}"><span class="ct-lines__ico">{icon("phone")}</span><span class="ct-lines__txt"><small>Bellen</small>{PHONE_DISPLAY}</span>{icon("ur")}</a></li>
         <li><a href="mailto:{EMAIL}"><span class="ct-lines__ico">{icon("mail")}</span><span class="ct-lines__txt"><small>Mailen</small>{EMAIL}</span>{icon("ur")}</a></li>
       </ul>
-      <a class="ct-addr address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span>{icon("ur")}</a>
+      <a class="ct-addr address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="{ADDRESS[0]}, {ADDRESS[1]}: route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span>{icon("ur")}</a>
     </div>
     <div class="ct-card-wrap">
       <div class="contact__card ct-card" data-theme="light">
@@ -556,7 +558,7 @@ def footer(variant="stone", sheet=''):
            '<a href="over-ons.html">Over ons</a><a href="index.html#steps-title">Onze werkwijze</a>'
            '<a href="projecten.html">Projecten</a><a href="index.html#contact">Stel uw vraag</a></nav>')
     direct = (f'<div><h2 class="ft-h">Direct contact</h2><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>'
-              f'<a href="mailto:{EMAIL}">{EMAIL}</a><address><a class="address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="Route naar Airtechnic in Google Maps"><span>{ADDRESS[0]}<br>5741 TX {ADDRESS[1]}</span>{icon("ur")}</a></address></div>')
+              f'<a href="mailto:{EMAIL}">{EMAIL}</a><address><a class="address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="{ADDRESS[0]}, 5741 TX {ADDRESS[1]}: route naar Airtechnic in Google Maps"><span>{ADDRESS[0]}<br>5741 TX {ADDRESS[1]}</span>{icon("ur")}</a></address></div>')
     return f'''<footer class="af ft af--{variant}" id="footer">
   <div class="container">
     <div class="ft-block">
@@ -579,14 +581,12 @@ def footer(variant="stone", sheet=''):
 
 # ---------------------------------------------------------------- page shell
 FAVICON = 'assets/img/favicon.svg'
-# [TBD] self-host these for production (privacy): download the woff2 files and replace with @font-face in tokens.css.
-FONTS = ('https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900'
-         '&family=IBM+Plex+Mono:wght@400;500&display=swap')
-
-
+@lru_cache(maxsize=None)
 def _v(rel):
-    """Cache-busting version string from the asset's mtime."""
-    return f'{rel}?v={int(os.path.getmtime(os.path.join(ROOT, rel)))}'
+    """Stable content version: builds do not depend on checkout timestamps."""
+    with open(os.path.join(ROOT, rel), 'rb') as asset:
+        version = hashlib.sha256(asset.read()).hexdigest()[:12]
+    return f'{rel}?v={version}'
 
 
 # Site signature "Hartlijn" (signature.js): short station labels per section heading id
@@ -633,9 +633,12 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{FAVICON}" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{FONTS}">
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-normal-site.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-italic-300-112-site.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-italic-300-100-site.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/ibm-plex-mono-normal-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/ibm-plex-mono-normal-500-latin.woff2" crossorigin>
+<link rel="stylesheet" href="{_v('assets/css/fonts.css')}">
 {pre}
 <link rel="stylesheet" href="{_v('assets/css/tokens.css')}">
 <link rel="stylesheet" href="{_v('assets/css/site.css')}">
@@ -645,7 +648,6 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 {extra_style}<link rel="stylesheet" href="{_v('assets/css/mobile.css')}">
 <link rel="stylesheet" href="{_v('assets/css/brand.css')}">
 <script src="{_v('assets/js/page-transitions.js')}"></script>
-<link rel="expect" href="#main" blocking="render">
 <script src="{_v('assets/js/site.js')}" defer></script>
 <script src="{_v('assets/js/signature.js')}" defer></script>
 <script src="{_v('assets/js/mobile.js')}" defer></script>

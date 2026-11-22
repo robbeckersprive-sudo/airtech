@@ -26,9 +26,9 @@ def component_index():
                        for k, slug in enumerate(PRODUCT_ROUTES[family].values()))
         reg = ''.join(f'<i class="cx-reg cx-reg--{c}"></i>' for c in ('tl', 'tr', 'bl', 'br'))
         cards.append(f'''<article class="co-card" id="{family}" style="--i:{i}">
-      <a class="cx-link co-plate" href="{href}" data-cx-card data-scan="{mode}" aria-label="{title}: alle uitvoeringen">
+      <a class="cx-link co-plate" href="{href}" data-cx-card data-scan="{mode}" aria-label="{title}: alle uitvoeringen — Doorsnede {i + 1:02d}/{len(COMPONENTEN):02d}">
         <span class="cx-plate" aria-hidden="true">
-          <span class="cx-img cx-img--ext">{pic(image, "", sizes)}</span>
+          <span class="cx-img cx-img--ext">{pic(image, "", sizes, eager=i == 0)}</span>
           <span class="cx-img cx-img--sec">{pic(sec, "", sizes)}</span>
           <i class="cx-scan"><b>Doorsnede</b></i>{reg}
           <span class="cx-no">{i + 1:02d}<small>/{len(COMPONENTEN):02d}</small></span>

@@ -531,7 +531,7 @@
 .co-rows { list-style: none; margin: 18px 0 0; padding: 0; border-top: 1px solid rgba(14, 42, 71, .16); }
 .co-rows a { display: grid; grid-template-columns: 34px minmax(0, 1fr) 16px; align-items: center; gap: 8px; padding: 11px 2px; border-bottom: 1px solid rgba(14, 42, 71, .12);
   font-size: 15px; font-weight: 600; color: var(--steel-900); text-decoration: none; transition: color .25s ease, padding .35s var(--ease-expo); }
-.co-row__no { font: 500 11px/1 var(--font-mono); color: var(--steel-400); }
+.co-row__no { font: 500 11px/1 var(--font-mono); color: var(--steel-700); }
 .co-rows .i { width: 15px; height: 15px; color: var(--steel-400); transition: color .25s ease, translate .35s var(--ease-expo); }
 .co-rows a:hover { color: var(--red-text); padding-left: 8px; }
 .co-rows a:hover .i { color: var(--red-text); translate: 2px -2px; }

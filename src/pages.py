@@ -390,7 +390,7 @@ def home(variant=None, footer_variant="stone"):
     return page(PAGES['home'], 'Pneumatisch transport &amp; industriële luchttechniek | Airtechnic Solutions',
                 'Pneumatisch transport, filtratie, cyclonen, wissels en doseersluizen voor poeders en granulaten: van losse component tot complete procesinstallatie.',
                 'og-01-hero-pijpleiding.jpg', body, [org_jsonld(), faq_jsonld(faq_items)], overlay=True,
-                preload_img=(HALL_IMAGE if variant else '01-hero-pijpleiding-leeg', HALL_SIZES), footer_variant=footer_variant,
+                preload_img=(HALL_IMAGE if variant else '01-hero-pijpleiding-leeg', HALL_SIZES if variant else '100vw'), footer_variant=footer_variant,
                 preview=variant is not None or footer_variant != "stone", stylesheet='assets/css/home-blocks.css')
 
 
