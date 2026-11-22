@@ -1,8 +1,8 @@
 /* The same particle model runs in a worker where OffscreenCanvas is supported.
    Main-thread fallback retains the animation, pause, pointer and reduced-motion controls. */
 function createGranuleEngine(cv, config) {
-  // Rasterize the many tiny sprites in the worker; submit one completed canvas to the compositor.
-  // This avoids thousands of GPU commands competing with the page's first frame.
+  // Rasterize cached, pixel-aligned grain textures in the worker and submit one
+  // completed canvas, keeping thousands of GPU commands away from page rendering.
   var ctx = cv.getContext('2d', { desynchronized: true, willReadFrequently: true });
   var SEC = config.sections, BOX = config.box;
   var BW = BOX[2] - BOX[0], BH = BOX[3] - BOX[1];
@@ -101,11 +101,11 @@ function createGranuleEngine(cv, config) {
     return baseH(u) * dune(u, t) * (1 - .8 * M) + jet(u) * (.2 - .08 * M);
   }
   function mult(u) { return (1 + 1.9 * M) * (1 + .8 * jet(u)); }
-  // Dense bed = packed rows (hexagonal offset, jittered) in two depth layers. Each row slides at its own speed
+  // Dense bed = packed rows (hexagonal offset, jittered). Each row slides at its own speed
   // (shear: slow on the floor, fast on top), so rows pass each other without gaps or clumps.
   var bed = [], air = [], n, NR = 12, PER = Math.round(LEN / (1.72 * R));
   function sprite(b, z) { return SPR[Math.max(0, Math.min(5, Math.round((.32 * b + .5 * z + .18 * rnd()) * 5)))]; }
-  for (var layer = 0; layer < 2; layer++) {
+  for (var layer = 0; layer < (config.fast ? 1 : 2); layer++) {
     for (var row = 0; row < NR; row++) {
       var b = (row + .5) / NR, rs = VTOP * (.2 + .8 * Math.pow(b, 1.25));
       for (n = 0; n < PER; n++) {
@@ -132,14 +132,47 @@ function createGranuleEngine(cv, config) {
 
   /* ---------- rendering ---------- */
   var glass, glassOk = false, scale = 1;
+  var stamps = new Map();
+  function grain(p, km, angle) {
+    // Keep the existing phone renderer and its image quality unchanged.
+    if (!config.fast) {
+      var f=p.r/SR, cs=Math.cos(angle)*scale, sn=Math.sin(angle)*scale;
+      ctx.setTransform(cs,sn,-sn,cs,(P[0]-BOX[0])*scale,(P[1]-BOX[1])*scale);
+      ctx.drawImage(p.sp,-SC*f*km,-SC*f,SS*f*km,SS*f);
+      return;
+    }
+    // Bake tiny rotated/blurred grains once. Repeated software scaling and rotation
+    // of thousands of 64px source sprites was the dominant per-frame cost.
+    var radius = Math.max(1, Math.round(p.r * scale)), stretch = Math.round(km * 2) / 2;
+    var turn = Math.round(angle * 8 / Math.PI), sprite = SPR.indexOf(p.sp);
+    if (sprite < 0) sprite = 6 + SPA.indexOf(p.sp);
+    var key = sprite + ':' + radius + ':' + stretch + ':' + turn;
+    var stamp = stamps.get(key);
+    if (!stamp) {
+      var extent = Math.ceil(SS / SR * radius * stretch * 1.5);
+      var canvas = makeCanvas(); canvas.width = canvas.height = extent;
+      var g = canvas.getContext('2d', {willReadFrequently:true});
+      g.translate(extent / 2, extent / 2); g.rotate(turn * Math.PI / 8);
+      var f = radius / SR;
+      g.drawImage(p.sp, -SC * f * stretch, -SC * f, SS * f * stretch, SS * f);
+      stamp = canvas.transferToImageBitmap ? canvas.transferToImageBitmap() : canvas; stamps.set(key, stamp);
+    }
+    // Integer destinations avoid resampling each tiny texture on every frame.
+    ctx.drawImage(stamp, Math.round(P[0] * scale - BOX[0] * scale - stamp.width / 2),
+      Math.round(P[1] * scale - BOX[1] * scale - stamp.height / 2));
+  }
   function size(w, h, dpr) {
     // Fine grains are motion blurred already; cap backing pixels rather than repainting a 2x full photo.
-    cv.width = Math.max(1, Math.round(w * Math.min(dpr, 1.25)));
-    cv.height = Math.max(1, Math.round(h * Math.min(dpr, 1.25)));
+    var width = Math.max(1, Math.round(w * Math.min(dpr, config.fast ? 1 : 1.25)));
+    var height = Math.max(1, Math.round(h * Math.min(dpr, config.fast ? 1 : 1.25)));
+    if (cv.width === width && cv.height === height) return;
+    cv.width = width; cv.height = height;
     scale = cv.width / BW;
+    stamps.forEach(function (stamp) { if (stamp.close) stamp.close(); });
+    stamps.clear();
     draw();
   }
-  fetch(config.glass).then(function (r) { return r.blob(); }).then(createImageBitmap).then(function (bitmap) {
+  Promise.resolve(config.glassBlob || fetch(config.glass).then(function (r) { return r.blob(); })).then(createImageBitmap).then(function (bitmap) {
     glass = bitmap; glassOk = true; draw();
   }).catch(function () {});
   var T = 0;
@@ -158,6 +191,7 @@ function createGranuleEngine(cv, config) {
     for (k = 64; k >= 0; k--) { pos(k / 64, bedH(k / 64, T) * .86); ctx.lineTo(P[0], P[1]); }
     ctx.closePath(); ctx.fillStyle = '#8E5E14'; ctx.globalAlpha = 1 - .9 * M; ctx.fill(); ctx.globalAlpha = 1;
     var km;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     for (k = 0; k < bed.length; k++) {
       p = bed[k]; h = bedH(p.u, T);
       if (M > .01 && (k % 3) && (k * .618) % 1 < M * 1.1) continue;   // dilute: the bed thins out gradually to a saltating layer
@@ -166,10 +200,7 @@ function createGranuleEngine(cv, config) {
       // compression wave travelling with the dunes: a displacement (not a velocity) field, so granules surge over a
       // crest and lag in a trough (~ +/-15% speed) without ever clumping or opening holes in the bed
       pos(p.u + .011 * p.b * Math.sin(6.2832 * (2.1 * p.u - .7 * T) - 1.2), Math.max(.015, v)); f = p.r / SR;
-      if (km < 1.08) { ctx.setTransform(scale, 0, 0, scale, ox, oy); ctx.drawImage(p.sp, P[0] - SC * f, P[1] - SC * f, SS * f, SS * f); continue; }
-      an = Math.atan2(A[1], A[0]); cs = Math.cos(an) * scale; sn = Math.sin(an) * scale;
-      ctx.setTransform(cs, sn, -sn, cs, ox + P[0] * scale, oy + P[1] * scale);
-      ctx.drawImage(p.sp, -SC * f * km, -SC * f, SS * f * km, SS * f);
+      grain(p, km < 1.08 ? 1 : km, km < 1.08 ? 0 : Math.atan2(A[1], A[0]));
     }
     for (k = 0; k < air.length; k++) {
       p = air[k];
@@ -179,11 +210,10 @@ function createGranuleEngine(cv, config) {
       v = h + (.9 - h) * Math.min(1, p.a * (1 + 1.3 * jt)) * Math.sin(Math.PI * fr);
       v = v * (1 - M) + (p.v0 + .035 * Math.sin(T * p.w0 * 2 + p.ph * 6)) * M;
       pos(p.u, v);
-      an = Math.atan2(A[1], A[0]) - Math.cos(Math.PI * fr) * .5 * p.a * (1 - M); cs = Math.cos(an) * scale; sn = Math.sin(an) * scale;
-      ctx.setTransform(cs, sn, -sn, cs, ox + P[0] * scale, oy + P[1] * scale);
+      an = Math.atan2(A[1], A[0]) - Math.cos(Math.PI * fr) * .5 * p.a * (1 - M);
       f = p.r / SR; km = Math.min(1 + (p.kx - 1) * mult(p.u), 2.6 - .4 * M);
       if (p.ex) ctx.globalAlpha = M;
-      ctx.drawImage(p.sp, -SC * f * km, -SC * f, SS * f * km, SS * f);
+      grain(p, km, an);
       ctx.globalAlpha = 1;
     }
     ctx.setTransform(scale, 0, 0, scale, ox, oy);
@@ -215,40 +245,58 @@ function createGranuleEngine(cv, config) {
 }
 
 function granuleWorker() {
-  var engine, timer = 0, last = 0, running = false;
+  var engine, timer = 0, last = 0, running = false, interval = 1000 / 60, fast = false;
+  // Follow presentation frames; timer fallback subtracts drawing time.
+  var useRAF = typeof self.requestAnimationFrame === 'function';
+  function schedule(start) {
+    timer = useRAF ? self.requestAnimationFrame(frame) : setTimeout(frame, fast ? Math.max(0, interval - (performance.now() - start)) : 1000 / 30);
+  }
   function frame() {
     timer = 0;
     if (!running) { last = 0; return; }
     var now = performance.now();
+    if (last && now - last < interval - 1) { schedule(now); return; }
     engine.step(last ? Math.min((now - last) / 1000, .1) : 0); last = now; engine.draw();
-    timer = setTimeout(frame, 1000 / 30);
+    schedule(now);
   }
   self.onmessage = function (event) {
     var m = event.data;
-    if (m.type === 'init') { engine = createGranuleEngine(m.canvas, m.config); engine.size(m.width,m.height,m.dpr); return; }
-    if (m.type === 'size') engine.size(m.width,m.height,m.dpr);
+    if (m.type === 'init') { fast=m.config.fast; useRAF=useRAF && fast; interval=m.config.interval; engine = createGranuleEngine(m.canvas, m.config); engine.size(m.width,m.height,m.dpr); return; }
+    if (m.type === 'size') { interval=m.interval; engine.size(m.width,m.height,m.dpr); }
     if (m.type === 'mode') engine.mode(m.mode, !running);
     if (m.type === 'jet') engine.jet(m.u,m.active);
-    if (m.type === 'run') { running=m.value; if (!running) { clearTimeout(timer); timer=0; last=0; } else if (!timer) frame(); }
+    if (m.type === 'run') {
+      running=m.value;
+      if (!running) { if (useRAF) self.cancelAnimationFrame(timer); else clearTimeout(timer); timer=0; last=0; }
+      else if (!timer) schedule(performance.now());
+    }
   };
 }
 (function () {
   'use strict';
   var cv=document.querySelector('canvas[data-granules]');
   if (!cv) return;
+  // Fetch the glass alongside the photo, rather than chaining another download
+  // after the photo's decode. The Blob is cheaply cloned into the worker.
+  var smoothDesktop=matchMedia('(min-width: 760px)').matches;
+  var glassReady=smoothDesktop ? fetch(new URL(cv.dataset.glass,document.baseURI).href).then(function(r){return r.blob();}).catch(function(){return null;}) : null;
+  function start(glassBlob) {
   var hero=cv.closest('[data-hero]') || document.body, slide=cv.closest('[data-slide]');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)'), onScreen=true, worker, engine;
-  var config={sections:JSON.parse(cv.dataset.tube),box:cv.dataset.box.split(',').map(Number),glass:new URL(cv.dataset.glass,document.baseURI).href};
+  // Preserve the phone's 30fps budget; desktop motion follows a 60fps cadence.
+  function frameInterval() { return 1000 / (matchMedia('(max-width: 759px)').matches ? 30 : 60); }
+  var config={sections:JSON.parse(cv.dataset.tube),box:cv.dataset.box.split(',').map(Number),glass:new URL(cv.dataset.glass,document.baseURI).href,glassBlob:glassBlob,interval:frameInterval(),fast:smoothDesktop};
   var rect=cv.getBoundingClientRect(), raf=0,last=0,active=false;
   var sizeObserver;
   function running() { return onScreen && (!slide || slide.classList.contains('is-on') || slide.classList.contains('is-leaving')) && !reduce.matches && !hero.classList.contains('is-paused') && !document.hidden; }
   function frame(now) {
     raf=0; if (!running()) {last=0; return;}
-    if (!last || now-last >= 1000/30) {engine.step(last ? Math.min((now-last)/1000,.1):0);last=now;engine.draw();}
+    if (last && now-last < config.interval-1) { raf=requestAnimationFrame(frame); return; }
+    engine.step(last ? Math.min((now-last)/1000,.1):0);last=now;engine.draw();
     raf=requestAnimationFrame(frame);
   }
   function sync() { active=running(); if(worker) worker.postMessage({type:'run',value:active}); else if(active && !raf) raf=requestAnimationFrame(frame); }
-  function size() {var r=cv.getBoundingClientRect(),m={type:'size',width:r.width,height:r.height,dpr:devicePixelRatio||1}; if(worker) worker.postMessage(m); else engine.size(m.width,m.height,m.dpr);}
+  function size() {config.interval=frameInterval();var r=cv.getBoundingClientRect(),m={type:'size',width:r.width,height:r.height,dpr:devicePixelRatio||1,interval:config.interval}; if(worker) worker.postMessage(m); else engine.size(m.width,m.height,m.dpr);}
   function mode() {var value=cv.dataset.mode; if(worker) worker.postMessage({type:'mode',mode:value}); else engine.mode(value,!running());sync();}
   function fallback() {engine=createGranuleEngine(cv,config);size();mode();}
   var transferred=false;
@@ -301,4 +349,11 @@ function granuleWorker() {
   },{passive:true});
   hero.addEventListener('pointerleave',function(){cv.classList.remove('is-blowing');if(worker)worker.postMessage({type:'jet',u:.5,active:false});else engine.jet(.5,false);});
   sync();
+  }
+  if (!smoothDesktop) { start(null); return; }
+  // Let the actual hero photo decode and paint before allocating particle textures.
+  // Reuse its existing request; the animation must not delay the page's largest image.
+  var slide = cv.closest('[data-slide]'), photo = slide && slide.querySelector('img');
+  function afterPaint(values) { requestAnimationFrame(function () { requestAnimationFrame(function(){start(values[1]);}); }); }
+  Promise.all([photo && photo.decode ? photo.decode().catch(function(){}) : Promise.resolve(),glassReady]).then(afterPaint);
 })();

@@ -505,7 +505,7 @@ def contact(title, intro, deco=False, topic='algemeen', topics=()):
       <div class="ct-tips"><p class="ct-tips__t">Handig om te noemen</p><ul>{tip_items}</ul></div>
       <ul class="contact__lines ct-lines">
         <li><a href="tel:{PHONE_TEL}"><span class="ct-lines__ico">{icon("phone")}</span><span class="ct-lines__txt"><small>Bellen</small>{PHONE_DISPLAY}</span>{icon("ur")}</a></li>
-        <li><a href="mailto:{EMAIL}"><span class="ct-lines__ico">{icon("mail")}</span><span class="ct-lines__txt"><small>Mailen</small>{EMAIL}</span>{icon("ur")}</a></li>
+        <li><a href="mailto:{EMAIL}"><span class="ct-lines__ico">{icon("mail")}</span><span class="ct-lines__txt"><small>Mailen</small><span class="ct-lines__value">{escape(EMAIL).replace('@', '@<wbr>')}</span></span>{icon("ur")}</a></li>
       </ul>
       <a class="ct-addr address-route" href="{MAPS_ROUTE}" target="_blank" rel="noopener noreferrer" aria-label="{ADDRESS[0]}, {ADDRESS[1]}: route naar Airtechnic in Google Maps">{icon("pin")}<span>{ADDRESS[0]}, {ADDRESS[1]}</span>{icon("ur")}</a>
     </div>

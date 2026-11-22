@@ -388,6 +388,16 @@ main > .ds ~ section:nth-of-type(2)::before { left: 0; right: 0; top: 0; height:
 .ct .ct-lines .ct-lines__ico { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: rgba(255, 122, 112, .14); }
 .ct .ct-lines .ct-lines__ico .i { width: 18px; height: 18px; padding: 0; background: none; box-shadow: none; color: var(--red-on-dark); }
 .ct .ct-lines__txt { display: grid; gap: 3px; min-width: 0; overflow-wrap: anywhere; }
+.ct .ct-lines__value { overflow-wrap: normal; word-break: normal; }
+@media (max-width: 479px) {
+  .ct .ct-lines a { grid-template-columns: 32px minmax(0, 1fr) 14px; gap: 8px; }
+  .ct .ct-lines a[href^="mailto:"] { font-size: 14px; }
+  .ct .ct-lines .ct-lines__ico { width: 32px; height: 44px; }
+}
+@media (max-width: 359px) {
+  .ct .ct-lines a { grid-template-columns: 28px minmax(0, 1fr) 12px; gap: 6px; }
+  .ct .ct-lines .ct-lines__ico { width: 28px; }
+}
 .ct .ct-lines__txt small { font: 500 10px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--sky); }
 .ct .ct-lines a > .i { width: 18px; height: 18px; padding: 0; background: none; box-shadow: none; color: rgba(255, 255, 255, .5); transform: none; }
 .ct-addr { display: flex; align-items: center; gap: 10px; margin: 18px 0 0; font: 500 12.5px var(--font-mono); color: rgba(255, 255, 255, .55); }
