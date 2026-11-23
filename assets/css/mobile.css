@@ -402,7 +402,7 @@ html:active-view-transition-type(from-menu)::view-transition-new(root) { animati
   /* static: the flow-regime pill positions against the hero, not against the type block */
   main > .ds .ds-in { position: static; display: block; flex: none; padding: 0; grid-template-columns: none; translate: none; opacity: 1; }
   main > .ds .ds-text { width: 100%; max-width: 680px; margin: 0; padding: 0 var(--pad) 8px; }
-  main > .ds .ds-kicker { color: var(--white-80); font-size: 11.5px; letter-spacing: .1em; margin-bottom: 14px; }
+  main > .ds .ds-kicker { color: var(--white-80); font-size: 12px; letter-spacing: .1em; margin-bottom: 14px; }
   main > .ds .ds-kicker__pulse::after { border-color: var(--red-on-dark); }
   main > .ds .ds-statement { color: var(--white); font-size: min(clamp(46px, 13vw, 84px), 8.6svh); line-height: .95; text-shadow: 0 2px 30px rgba(8, 24, 42, .35); }
   main > .ds .ds-statement em { color: var(--sky); }

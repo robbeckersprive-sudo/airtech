@@ -693,3 +693,19 @@ wederkerige hreflang, canonical, lang/og:locale, taalwisselaar, kapotte relatiev
 product en kennisartikel per taal op 1440×900 en 390×844, geen console- of paginafouten, wisselaar naar elke taal).
 Resultaat Nov 22: 3.094 segmenten per taal vertaald, 0 ontbrekend; check_i18n 198 pagina's 0 problemen;
 browsercheck 12 pagina's × 2 viewports 0 problemen.
+
+## UX polish pass (2026-11-23)
+
+Na een desktop/mobiel-review van de live site. Grotendeels in `assets/css/polish.css` + `assets/js/polish.js`
+(laden als laatste via `components.page()`), plus:
+- alle tekst onder 12px opgehoogd naar 12px in site/top/home-blocks/mobile/category-overview/component-detail/lang.css
+  (decoratieve Hartlijn-labels in signature.css bewust ongemoeid);
+- `mobile.js`: contactdock verdwijnt bij omlaag lezen en komt terug bij omhoog scrollen;
+- `components.contact()`: honeypotveld `website` (de API wees het al af, het veld ontbrak).
+
+Inhoud polish.css/js: dichte header bij scrollen; rood alleen voor actie en signatuurlijn (links `--link` staal,
+vinkjes, werkwijze-nodes, FAQ-open, carrousel-stip); werkwijze compacter op desktop en als tab-stapper op telefoons
+(één stap tegelijk, details ingeklapt, swipe, "Volgende: …"); kennislijst op telefoons 3 + "Toon alle 9 vragen";
+footer op telefoons twee kolommen; hero op telefoons met uitleg onder de switch en de volgende dia bij naam;
+44px-tikvlakken op touch; blok 2 lijn B tekent samen met lijn A; servicebalk alleen nog telefoon; FAQ-kop zonder
+afbreekstreepje. Mobiele homepage 14.445 → ~10.950 px.

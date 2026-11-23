@@ -406,7 +406,7 @@ html:not(.js) .detail-marker { display: none; }
 
 /* spec table: a calm head, the criteria in mono */
 .detail-specs thead { color: var(--steel-700); background: rgba(14, 42, 71, .05); }
-.detail-specs thead th { font-family: var(--font-mono); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: 10.5px; }
+.detail-specs thead th { font-family: var(--font-mono); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
 .detail-specs tbody tr { transition: background .25s ease; }
 .detail-specs tbody tr:hover { background: rgba(14, 42, 71, .03); }
 

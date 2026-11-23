@@ -520,6 +520,7 @@ def contact(title, intro, deco=False, topic='algemeen', topics=()):
       <div class="contact__card ct-card" data-theme="light">
         <ol class="ct-progress" aria-hidden="true" data-ct-progress><span class="ct-progress__line"><b data-ct-fill></b></span>{steps}</ol>
         <form class="form" action="{CONTACT_PATH}" method="post" novalidate data-form aria-labelledby="contact-form-title">
+          <div class="hp-field" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
           <div class="form__heading">
             <h3 class="h3" id="contact-form-title" tabindex="-1">{t("ct.form_title")}</h3>
             <p class="form__note">{t("ct.required")}</p>
@@ -686,11 +687,13 @@ def page(filename, title, description, og_image, body, jsonld=(), overlay=False,
 {extra_style}<link rel="stylesheet" href="{_v('assets/css/mobile.css')}">
 <link rel="stylesheet" href="{_v('assets/css/brand.css')}">
 <link rel="stylesheet" href="{_v('assets/css/lang.css')}">
+<link rel="stylesheet" href="{_v('assets/css/polish.css')}">
 <script src="{_v('assets/js/page-transitions.js')}"></script>
 <script src="{_v('assets/js/site.js')}" defer></script>
 <script src="{_v('assets/js/signature.js')}" defer></script>
 <script src="{_v('assets/js/mobile.js')}" defer></script>
 <script src="{_v('assets/js/equalize.js')}" defer></script>
+<script src="{_v('assets/js/polish.js')}" defer></script>
 {ld}</head>
 <body>
 <a class="skip-link" href="#main">{t("skip")}</a>
