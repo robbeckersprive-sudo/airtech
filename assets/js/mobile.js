@@ -232,8 +232,12 @@
     document.body.appendChild(dock);
     var blockers = new Set();
     var typing = false;
+    // Polish: the dock steps aside while reading down and returns on the first scroll up (never covers running text)
+    var lastY = window.scrollY, reading = false;
     var update = function () {
-      var show = phone.matches && window.scrollY > window.innerHeight * 0.85 && !blockers.size && !typing && !menuApi.isOpen();
+      var y = window.scrollY, dy = y - lastY;
+      if (Math.abs(dy) > 6) { reading = dy > 0; lastY = y; }
+      var show = phone.matches && y > window.innerHeight * 0.85 && !reading && !blockers.size && !typing && !menuApi.isOpen();
       dock.classList.toggle('is-on', show);
       if (show) { dock.removeAttribute('inert'); dock.removeAttribute('aria-hidden'); }
       else { dock.setAttribute('inert', ''); dock.setAttribute('aria-hidden', 'true'); }
