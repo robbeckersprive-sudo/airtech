@@ -304,8 +304,8 @@ def _header_sheet(current=None):
         <a href="tel:{PHONE_TEL}">{icon("phone")}<span>{t("nav.call")}</span></a>
         <a href="mailto:{EMAIL}">{icon("mail")}<span>{t("nav.mail")}</span></a>
       </div>
-      <a class="mnav__location" href="https://www.google.com/maps/dir/?api=1&amp;destination=Scherpenbeemd%203%2C%20Beek%20en%20Donk%2C%20Nederland" target="_blank" rel="noopener noreferrer" aria-label="{t('route.menu_aria', address=ADDRESS[0] + ', ' + ADDRESS[1])}">{icon("pin")}<span class="mnav__location-address">{ADDRESS[0]}<span>{ADDRESS[1]}</span></span><span class="mnav__location-action">{t("nav.route")}{icon("ur")}</span></a>
-      {lang_switch('sheet')}
+      <div class="mnav__meta"><a class="mnav__location" href="https://www.google.com/maps/dir/?api=1&amp;destination=Scherpenbeemd%203%2C%20Beek%20en%20Donk%2C%20Nederland" target="_blank" rel="noopener noreferrer" aria-label="{t('route.menu_aria', address=ADDRESS[0] + ', ' + ADDRESS[1])}">{icon("pin")}<span class="mnav__location-address">{ADDRESS[0]}<span>{ADDRESS[1]}</span></span><span class="mnav__location-action"><span class="mnav__location-label">{t("nav.route")}</span>{icon("ur")}</span></a>
+      {lang_switch('sheet')}</div>
     </div>
   </div>'''
 

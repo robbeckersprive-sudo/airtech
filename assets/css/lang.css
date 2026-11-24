@@ -19,12 +19,21 @@
 .hxb-rail .lsw a:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
 .hxb-rail__in { align-items: center; }
 
-/* mobile sheet: a full-width segmented row under the route line */
-.mnav__foot .lsw ul { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid rgba(255, 255, 255, .22); border-radius: var(--r-control, 8px); overflow: hidden; }
+/* mobile sheet: a compact segmented control on the same line as the address (Nov 24: no extra row, the menu
+   must stay readable in one glance on short phones). 3 x 44px tap targets, right-aligned in .mnav__meta. */
+.mnav__meta { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.mnav__meta .mnav__location { flex: 1; min-width: 0; gap: 10px; }
+.mnav__meta .mnav__location-address { min-width: 0; white-space: nowrap; }
+.mnav__foot .lsw { flex: none; }
+.mnav__foot .lsw ul { display: flex; border: 1px solid rgba(255, 255, 255, .22); border-radius: var(--r-control, 8px); overflow: hidden; }
 .mnav__foot .lsw li + li { border-left: 1px solid rgba(255, 255, 255, .16); }
-.mnav__foot .lsw a { min-height: 44px; color: var(--sky); -webkit-tap-highlight-color: transparent; }
-.mnav__foot .lsw abbr { font-size: 13px; }
+.mnav__foot .lsw a { min-width: 40px; min-height: 44px; color: var(--sky); -webkit-tap-highlight-color: transparent; }
+.mnav__foot .lsw abbr { font-size: 12px; }
 .mnav__foot .lsw a[aria-current] { color: var(--white); background: rgba(255, 255, 255, .08); box-shadow: inset 0 -2px 0 var(--red-on-dark, var(--red)); }
 .mnav__foot .lsw a:active { background: rgba(255, 255, 255, .12); }
 .mnav__foot .lsw a:focus-visible { outline: 2px solid var(--sky); outline-offset: -3px; }
-@media (max-height: 640px) { .mnav__foot .lsw a { min-height: 40px; } }
+/* the route arrow alone carries the action (the link's aria-label still says "Route naar …"); short screens trim the
+   index's bottom padding so all six items plus the foot fit without scrolling */
+@media (max-height: 700px) { .mnav__body { padding-bottom: 6px; } .mnav__list { padding-top: 0; } }
+@media (max-height: 640px) { .mnav .mnav__item { min-height: 52px; padding-block: 9px; } }
+.mnav__meta .mnav__location-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
