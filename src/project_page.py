@@ -3,6 +3,15 @@ from html import escape as e
 from components import SITE, page, pic, link, btn, icon, breadcrumb, breadcrumb_jsonld, contact, contact_url
 from knowledge_article import knowledge_intro, HERO_SIZES
 from project_data import PROJECTS
+from sector_data import SECTORS, sector_file
+
+SECTOR_OF = {v['project_sector']: k for k, v in SECTORS.items() if v['project_sector']}
+ATEX_ARTICLE = 'kennis-atex-explosieveiligheid.html'
+
+
+def _atex_link(html):
+    """Link the first ATEX mention in already-escaped project copy to the explosion safety article."""
+    return html.replace('ATEX-', f'<a href="{ATEX_ARTICLE}">ATEX</a>-', 1)
 
 
 def project_card(slug, d):
@@ -49,8 +58,10 @@ def project_page(slug,d):
     facts='<section class="project-facts" aria-label="Project in cijfers"><div class="container"><dl>'+''.join(f'<div><dt>{e(label)}</dt><dd>{e(value)}</dd></div>' for value,label in d['facts'])+'</dl></div></section>'
     nav='<nav class="solution-nav" aria-label="In dit project" data-scrollspy="145"><div class="container">'+''.join(f'<a href="#{id}">{label}</a>' for id,label in [('vraagstuk','De vraag'),('oplossing','De oplossing'),('uitvoering','Technische keuzes'),('projectbeelden','Projectbeelden'),('resultaat','Het resultaat')])+'</div></nav>'
     brief=''.join(f'<div><dt>{label}</dt><dd>{e(value)}</dd></div>' for label,value in [('Opdrachtgever',d['client']),('Materiaal',d['material']),('Onze rol',d['scope'])])
+    if d['sector'] in SECTOR_OF:
+        brief+=f'<div><dt>Sector</dt><dd><a href="{sector_file(SECTOR_OF[d["sector"]])}">{e(d["sector"])}</a></dd></div>'
     intro=f'''<section class="solution-section"><div class="container solution-two"><div><p class="project-label">01 / Het vertrekpunt</p><h2 id="vraagstuk" class="h2" tabindex="-1">Een concrete vraag.<br><em>Een passend ontwerp.</em></h2><p>{e(d['challenge'])}</p></div><dl class="project-brief">{brief}</dl></div></section>'''
-    stages=''.join(f'<li><span class="solution-step">{i:02d}</span><h3 class="h3">{e(title)}</h3><p>{e(text)}</p></li>' for i,(title,text) in enumerate(d['steps'],1))
+    stages=''.join(f'<li><span class="solution-step">{i:02d}</span><h3 class="h3">{e(title)}</h3><p>{_atex_link(e(text))}</p></li>' for i,(title,text) in enumerate(d['steps'],1))
     route=f'''<section class="solution-section solution-route"><div class="container"><div class="solution-heading"><div><p class="project-label">02 / De oplossing</p><h2 id="oplossing" class="h2" tabindex="-1">De onderdelen.<br><em>Het geheel.</em></h2></div><p>{e(d['solution'])}</p></div><ol class="solution-stages">{stages}</ol><p class="project-route-note">De belangrijkste functies in dit project, vereenvoudigd weergegeven.</p></div></section>'''
     decisions=''.join(f'<div><dt>{e(title)}</dt><dd>{e(text)}</dd></div>' for title,text in d['decisions'])
     engineering=f'''<section class="solution-section"><div class="container solution-two"><div><p class="project-label">03 / De uitwerking</p><h2 id="uitvoering" class="h2" tabindex="-1">De keuzes<br><em>achter de installatie.</em></h2><p>Een installatie werkt als de onderdelen op elkaar én op het proces zijn afgestemd. Deze punten waren bepalend in dit project.</p>{link(*d['solution_link'])}</div><dl class="solution-criteria">{decisions}</dl></div></section>'''

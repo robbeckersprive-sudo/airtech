@@ -5,6 +5,8 @@ from urllib.parse import urlsplit,unquote
 import sys,json
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
+sys.path.insert(0,str(ROOT/'tools'))
+from structure_norm import normalize, count_faq
 from product_data import PRODUCTS
 from product_routes import PRODUCT_ROUTES
 from components import MANIFEST
@@ -32,6 +34,7 @@ class Document(HTMLParser):
 documents={}
 for filename in [*(s+'.html' for s in PRODUCTS),*('componenten-'+c+'.html' for c in PRODUCT_ROUTES)]:
     p=Document();p.feed((ROOT/filename).read_text(encoding='utf-8'));documents[filename]=p
+    s=Document();s.feed(normalize((ROOT/filename).read_text(encoding='utf-8')));p.shape=s.shape
 reference=documents['cycloonafscheider.html'].shape
 for slug,data in PRODUCTS.items():
     p=documents[slug+'.html']

@@ -64,7 +64,7 @@ for category, family in {'cyclonen': CYCLONES, **CATEGORIES}.items():
         d = dict(slug=slug, name=name, category=category, family_name=family['name'], nav=family['nav'],
                  image=item['image'], cutaway=cutaway, context_image=family['hero'],
                  context_caption='Voorbeeldopstelling binnen deze productfamilie',
-                 topic=slug, documentation_topic=slug+'-documentatie')
+                 topic=slug, documentation_topic=slug+'-documentatie', variant=item['variant'])
         if slug == 'cycloonafscheider':
             d.update(CYCLONE)
             d.update(step_heading='Volg de lucht en de deeltjes',

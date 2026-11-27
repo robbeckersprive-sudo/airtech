@@ -2,6 +2,7 @@
 from knowledge_handling import ARTICLES as HANDLING
 from knowledge_separation import ARTICLES as SEPARATION
 from knowledge_transport import ARTICLES as TRANSPORT
+from knowledge_safety import ARTICLES as SAFETY
 ARTICLES = {
  'wanneer-filters-vervangen': dict(
   name='Wanneer vervangt u uw filters?', title='Wanneer vervangt u<br><em>uw filters?</em>',
@@ -62,4 +63,4 @@ ARTICLES = {
   related=[('Blowers & ventilatoren','Vergelijk de uitvoeringen','componenten-blowers-ventilatoren.html','18-blower-macro',False,'Bekijk de verschillende principes voor uw proceslucht.'),('Draaizuigerblower','Bekijk de werking','draaizuigerblower.html','cat-draaizuigerblower',True,'Ontdek hoe de rotoren lucht verplaatsen en welke selectiegegevens nodig zijn.')],
   sources=[('CAGI · Blower selector en werkingsprincipes','https://www.cagi.org/blower-guide'),('Busch · Selectie van industriële blowers','https://www.buschvacuum.com/uk/en/products/blowers/blowers-overview/')])
 }
-ARTICLES.update(TRANSPORT | SEPARATION | HANDLING)
+ARTICLES.update(TRANSPORT | SEPARATION | HANDLING | SAFETY)

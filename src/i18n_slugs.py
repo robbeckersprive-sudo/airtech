@@ -65,6 +65,7 @@ _PAGES = [
     ('kennis-controlezeef-of-fractioneerzeef.html', 'knowledge-check-screening-or-grading.html', 'wissen-kontrollsieb-oder-klassiersieb.html'),
     ('kennis-bigbag-lossen-onregelmatige-productstroom.html', 'knowledge-big-bag-discharge-irregular-flow.html', 'wissen-big-bag-entleerung-ungleichmaessiger-produktfluss.html'),
     ('kennis-silo-ontluchting-pneumatisch-vullen.html', 'knowledge-silo-venting-pneumatic-filling.html', 'wissen-siloentlueftung-pneumatische-befuellung.html'),
+    ('kennis-atex-explosieveiligheid.html', 'knowledge-atex-explosion-safety.html', 'wissen-atex-explosionsschutz.html'),
     # solutions
     ('oplossingen-stofafzuiging.html', 'solutions-dust-extraction.html', 'loesungen-staubabsaugung.html'),
     ('oplossingen-filtratie.html', 'solutions-filtration.html', 'loesungen-filtration.html'),
@@ -73,6 +74,13 @@ _PAGES = [
     ('oplossingen-doseren.html', 'solutions-dosing.html', 'loesungen-dosieren.html'),
     ('oplossingen-zeven-en-scheiden.html', 'solutions-screening-and-separating.html', 'loesungen-sieben-und-trennen.html'),
     ('oplossingen-opslaan.html', 'solutions-storage.html', 'loesungen-lagern.html'),
+    # sectors
+    ('sectoren.html', 'industries.html', 'branchen.html'),
+    ('sectoren-food.html', 'industries-food.html', 'branchen-lebensmittel.html'),
+    ('sectoren-feed.html', 'industries-animal-feed.html', 'branchen-futtermittel.html'),
+    ('sectoren-recycling.html', 'industries-recycling.html', 'branchen-recycling.html'),
+    ('sectoren-chemie.html', 'industries-chemicals.html', 'branchen-chemie.html'),
+    ('sectoren-hout.html', 'industries-wood-processing.html', 'branchen-holzverarbeitung.html'),
     # projects
     ('project-pet-recycling.html', 'project-pet-recycling.html', 'projekt-pet-recycling.html'),
     ('project-eischaalverwerking.html', 'project-eggshell-processing.html', 'projekt-eierschalenverarbeitung.html'),

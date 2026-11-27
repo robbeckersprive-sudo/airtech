@@ -1,0 +1,33 @@
+categorie,uitvoering,variant,atex,food,opmerking
+cyclonen,Enkelvoudige cycloon,enkelvoudig,?,?,"ATEX-uitvoeringen (aarding, ontlasting) en RVS-uitvoeringen voor food zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en materialen."
+cyclonen,Multicycloon,multi,?,?,"ATEX-uitvoeringen (aarding, ontlasting) en RVS-uitvoeringen voor food zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en materialen."
+cyclonen,Cycloon op maat,maatwerk,?,?,"ATEX-uitvoeringen (aarding, ontlasting) en RVS-uitvoeringen voor food zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en materialen."
+cyclonen,Transportafscheider,transport,?,?,"ATEX-uitvoeringen (aarding, ontlasting) en RVS-uitvoeringen voor food zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en materialen."
+blowers-ventilatoren,Centrifugaalventilator,centrifugaal,?,?,"ATEX-uitvoeringen van ventilatoren en blowers zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en of het om de stof- of schone zijde gaat."
+blowers-ventilatoren,Draaizuigerblower,draaizuiger,?,?,"ATEX-uitvoeringen van ventilatoren en blowers zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en of het om de stof- of schone zijde gaat."
+blowers-ventilatoren,Zijkanaalblower,zijkanaal,?,?,"ATEX-uitvoeringen van ventilatoren en blowers zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en of het om de stof- of schone zijde gaat."
+blowers-ventilatoren,Ventilatorunit,unit,?,?,"ATEX-uitvoeringen van ventilatoren en blowers zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en of het om de stof- of schone zijde gaat."
+filters,Patroonfilter,patroon,?,?,"ATEX-uitvoeringen (o.a. antistatisch medium, ontlasting) en food-uitvoeringen zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en materialen."
+filters,Zakkenfilter,zakken,?,?,"ATEX-uitvoeringen (o.a. antistatisch medium, ontlasting) en food-uitvoeringen zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en materialen."
+filters,Ontluchtingsfilter,ontluchting,?,?,"ATEX-uitvoeringen (o.a. antistatisch medium, ontlasting) en food-uitvoeringen zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en materialen."
+filters,Filterelement,element,?,?,"ATEX-uitvoeringen (o.a. antistatisch medium, ontlasting) en food-uitvoeringen zijn bij fabrikanten gangbaar; bevestig leverbaarheid, categorie en materialen."
+doseersluizen,Doorvalsluis,doorval,?,?,"ATEX-uitvoeringen van doseersluizen zijn bij fabrikanten gangbaar, soms ook als beproefde ontkoppeling; bevestig leverbaarheid en categorie."
+doseersluizen,Doorblaassluis,doorblaas,?,?,"ATEX-uitvoeringen van doseersluizen zijn bij fabrikanten gangbaar, soms ook als beproefde ontkoppeling; bevestig leverbaarheid en categorie."
+doseersluizen,Uitneembare rotor,uitneembaar,?,?,"ATEX-uitvoeringen van doseersluizen zijn bij fabrikanten gangbaar, soms ook als beproefde ontkoppeling; bevestig leverbaarheid en categorie."
+doseersluizen,Sluis op maat,maatwerk,?,?,"ATEX-uitvoeringen van doseersluizen zijn bij fabrikanten gangbaar, soms ook als beproefde ontkoppeling; bevestig leverbaarheid en categorie."
+leidingwerk-koppelingen,Leidingdelen,recht,?,?,"Leidingwerk is meestal geen ATEX-apparatuur, wel moet het geaard en doorverbonden zijn. Food: RVS gangbaar; bevestig materiaal en afwerking."
+leidingwerk-koppelingen,Transportbocht,bocht,?,?,"Leidingwerk is meestal geen ATEX-apparatuur, wel moet het geaard en doorverbonden zijn. Food: RVS gangbaar; bevestig materiaal en afwerking."
+leidingwerk-koppelingen,Buiskoppeling,koppeling,?,?,"Leidingwerk is meestal geen ATEX-apparatuur, wel moet het geaard en doorverbonden zijn. Food: RVS gangbaar; bevestig materiaal en afwerking."
+leidingwerk-koppelingen,Leidingwissel,wissel,?,?,"Leidingwerk is meestal geen ATEX-apparatuur, wel moet het geaard en doorverbonden zijn. Food: RVS gangbaar; bevestig materiaal en afwerking."
+bigbag-stations,Losstation,lossen,?,?,"ATEX- en hygiënische uitvoeringen van big-bagstations zijn gangbaar; bevestig leverbaarheid, categorie en materialen."
+bigbag-stations,Vulstation,vullen,?,?,"ATEX- en hygiënische uitvoeringen van big-bagstations zijn gangbaar; bevestig leverbaarheid, categorie en materialen."
+bigbag-stations,Losframe met aansluiting,losframe,?,?,"ATEX- en hygiënische uitvoeringen van big-bagstations zijn gangbaar; bevestig leverbaarheid, categorie en materialen."
+bigbag-stations,Los- en doseerstation,doseren,?,?,"ATEX- en hygiënische uitvoeringen van big-bagstations zijn gangbaar; bevestig leverbaarheid, categorie en materialen."
+afsluiters,Schuifafsluiter,schuif,?,?,"ATEX- en food-uitvoeringen van afsluiters zijn gangbaar; bevestig leverbaarheid, categorie en afdichtingsmaterialen."
+afsluiters,Vlinderklep,vlinder,?,?,"ATEX- en food-uitvoeringen van afsluiters zijn gangbaar; bevestig leverbaarheid, categorie en afdichtingsmaterialen."
+afsluiters,Manchetafsluiter,manchet,?,?,"ATEX- en food-uitvoeringen van afsluiters zijn gangbaar; bevestig leverbaarheid, categorie en afdichtingsmaterialen."
+afsluiters,Afsluiter op maat,maatwerk,?,?,"ATEX- en food-uitvoeringen van afsluiters zijn gangbaar; bevestig leverbaarheid, categorie en afdichtingsmaterialen."
+zeven,Trilzeef,tril,?,?,ATEX- en food-uitvoeringen van zeven zijn gangbaar; bevestig leverbaarheid en categorie.
+zeven,Controlezeef,controle,?,?,ATEX- en food-uitvoeringen van zeven zijn gangbaar; bevestig leverbaarheid en categorie.
+zeven,Trommelzeef,trommel,?,?,ATEX- en food-uitvoeringen van zeven zijn gangbaar; bevestig leverbaarheid en categorie.
+zeven,Meerdekszeef,meerdeks,?,?,ATEX- en food-uitvoeringen van zeven zijn gangbaar; bevestig leverbaarheid en categorie.

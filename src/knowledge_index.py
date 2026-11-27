@@ -16,6 +16,8 @@ GROUPS = (
         'wanneer-filters-vervangen', 'cycloon-als-voorafscheider', 'controlezeef-of-fractioneerzeef')),
     ('bulkhandling', 'Opslag en dosering', (
         'bigbag-lossen-onregelmatige-productstroom', 'silo-ontluchting-pneumatisch-vullen', 'doorvalsluis-of-doorblaassluis')),
+    ('veiligheid', 'Veiligheid en hygiëne', (
+        'atex-explosieveiligheid',)),
 )
 PRESSURE_ARTICLE = dict(name='Druk- of vacuümtransport?', image='01-hero-pijpleiding',
     description='Volg het poeder van afnamepunt tot bestemming en vergelijk de rol van overdruk en onderdruk in uw leidingtracé.')

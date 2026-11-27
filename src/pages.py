@@ -371,6 +371,20 @@ def home(variant=None, footer_variant="stone"):
         ('Verzorgen jullie ook onderhoud en revisie?', 'Ja. Airtechnic Solutions verzorgt onderhoud, revisie en optimalisatie van bestaande installaties. We bekijken de technische staat en de bedrijfsomstandigheden om te bepalen welke werkzaamheden nodig zijn. Preventief onderhoud helpt slijtage tijdig te signaleren en ondersteunt de bedrijfszekerheid van uw pneumatisch transport, stofafzuiging of bulkverwerking.'),
         ('Hoe verloopt een project van ontwerp tot oplevering?', 'We starten met een analyse van uw proces, product en capaciteitsvraag. Daarna werken we het installatieontwerp en de componentselectie uit. Na afstemming volgen de levering en montage. Bij de inbedrijfstelling stellen we de installatie af, controleren we de werking aan de hand van de afgesproken eisen en dragen we de installatie over aan uw team.'),
     ]
+    # Nov 27: unanswered until Airtechnic confirms -> shows [TBD], stays out of the FAQPage JSON-LD (empty answer)
+    faq_items.insert(4, ('Leveren jullie installaties voor ATEX-zones?', ''))
+    # Display copy links the industries to the sector pages; the JSON-LD keeps the plain answer text.
+    _sector_links = (('voedingsmiddelenindustrie', 'sectoren-food.html'), ('diervoederindustrie', 'sectoren-feed.html'),
+                     ('chemie', 'sectoren-chemie.html'), ('recycling', 'sectoren-recycling.html'), ('houtverwerking', 'sectoren-hout.html'))
+    faq_display = []
+    for q, a in faq_items:
+        if q == 'Voor welke industrieën werken jullie?':
+            for word, href in _sector_links:
+                a = a.replace(word, f'<a href="{href}">{word}</a>', 1)
+            a += ' <a href="sectoren.html">Bekijk alle sectoren</a>.'
+        elif q == 'Leveren jullie installaties voor ATEX-zones?':
+            a = tbd('TBD: bevestigen door Airtechnic')
+        faq_display.append((q, a))
     # Blocks 2 + 3 (Nov 20): "Processchema" two-line schema and "Röntgen" catalogue (src/home_blocks.py).
     # The previous `specs` / `carousel` markup above is kept for reference but no longer rendered.
     from home_blocks import schema_block, catalog_block
@@ -384,7 +398,7 @@ def home(variant=None, footer_variant="stone"):
     kennis = kennis_block()
     body = '\n'.join([
         hero, specs, carousel, case, werkwijze, kennis,
-        faq_block(faq_items),
+        faq_block(faq_display),
         contact('Wat wilt u<br><em>verbeteren</em><br>aan uw proces?', 'Vertel ons wat u verwerkt en wat u wilt bereiken.', deco=True, topics=('installatieontwerp', 'druk-of-vacuumtransport', 'cyclonen')),
     ])
     return page(PAGES['home'], 'Pneumatisch transport &amp; industriële luchttechniek | Airtechnic Solutions',

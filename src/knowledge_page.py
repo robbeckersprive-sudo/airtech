@@ -16,7 +16,16 @@ def knowledge_page(slug, d):
     sections = [('het-principe','Het uitgangspunt',knowledge_section('het-principe',d['principle_title'],paragraphs(d['principle'])+legend))]
     for i, path in enumerate(d['paths']):
         flow = knowledge_flow(path['nav'],path['stages'],i==0,path['caption'])
-        sections.append((path['id'],path['nav'],knowledge_section(path['id'],path['title'],paragraphs([path['before']])+flow+paragraphs([path['after']]))))
+        # optional per section (ATEX article): a schematic figure, a marked note (may hold a tbd()), and onward links
+        figure = path.get('figure', '')
+        note = '<p class="knowledge-note">'+path['note']+'</p>' if path.get('note') else ''
+        links = ('<ul class="knowledge-links">'+''.join('<li>'+link(escape(t),h)+'</li>' for t,h in path['links'])+'</ul>') if path.get('links') else ''
+        sections.append((path['id'],path['nav'],knowledge_section(path['id'],path['title'],paragraphs([path['before']])+flow+figure+paragraphs([path['after']])+note+links)))
+    if d.get('practice'):
+        # "Uit eigen werk": verified project wording only (project_data.py), linked to the project pages
+        items = ''.join('<li><strong>'+link(escape(t),h)+'</strong><span>'+escape(x)+'</span></li>' for t,h,x in d['practice'])
+        sections[-1] = (sections[-1][0], sections[-1][1], sections[-1][2].replace('</section>',
+            '<div class="knowledge-practice"><h3 class="h3">Uit eigen werk</h3><ul>'+items+'</ul></div></section>'))
     sections.append(('vergelijking','Vergelijking',knowledge_section('vergelijking',d['comparison_title'],
         paragraphs([d['comparison_intro']])+knowledge_comparison(d['name'],d['headings'],d['rows']))))
     sections.append(('uw-situatie','Praktijksituaties',knowledge_section('uw-situatie','Van inzicht <em>naar uw situatie</em>',
@@ -34,6 +43,6 @@ def knowledge_page(slug, d):
           'image':SITE+'/images/'+og,'inLanguage':'nl-NL','mainEntityOfPage':url,
           'author':{'@type':'Organization','name':ORG},
           'publisher':{'@type':'Organization','name':ORG,'logo':{'@type':'ImageObject','url':SITE+'/assets/img/favicon.svg'}}}
-    return page(filename,d['name']+' | Airtechnic Solutions',d['description'],og,body,
+    return page(filename,d.get('seo_title',d['name'])+' | Airtechnic Solutions',d['description'],og,body,
                 [ld,breadcrumb_jsonld(crumbs,url)],preload_img=(d['image'],HERO_SIZES),
                 html_cls='knowledge-page',stylesheet='assets/css/knowledge-article.css')

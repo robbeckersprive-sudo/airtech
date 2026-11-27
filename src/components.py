@@ -241,6 +241,11 @@ SOL_IMG = {
 }
 SOLUTIONS_HREF = PAGES['home'] + '#specialisaties'
 
+# Sectoren (Nov 27): third drawer, a photo per sector like SOL_IMG. Data and order come from sector_data.
+from sector_data import SECTORS as _SECTORS, ORDER as _SECTOR_ORDER, INDEX_FILE as SECTORS_HREF, sector_file as _sector_file
+SECTOREN = [(_SECTORS[k]['name'], _sector_file(k)) for k in _SECTOR_ORDER]
+SECTOR_IMG = {_SECTORS[k]['name']: _SECTORS[k]['image'] for k in _SECTOR_ORDER}
+
 
 def _slug(s):
     return re.sub(r'[^a-z0-9]+', '-', s.lower().replace('&amp;', 'en').replace('ü', 'u')).strip('-')
@@ -257,12 +262,15 @@ def _header_sheet(current=None):
         + ''.join(f'<li><a class="mnav__row" href="{href}"><span class="mnav__thumb">{pic(SOL_IMG[label], "", "64px")}</span>'
                   f'<span>{tr(label)}</span>{icon("ur")}</a></li>' for label, href in items)
         + '</ul></div>' for group, items in OPLOSSINGEN)
+    secs = ''.join(f'<li><a class="mnav__row" href="{href}"{cur_attr(current == "Sectoren" and i18n.current_page() == href)}><span class="mnav__thumb mnav__thumb--photo">{pic(SECTOR_IMG[label], "", "64px")}</span>'
+                   f'<span>{tr(label)}</span>{icon("ur")}</a></li>' for label, href in SECTOREN)
     tiles = ''.join(f'<li style="--i:{i}"><a class="mnav__tile" href="{h}"{cur_attr(c == current)}>'
                     f'<span class="mnav__tile-img">{pic(img, "", "45vw")}</span><span class="mnav__tile-t">{tr(c)}</span></a></li>'
                     for i, (c, h, img) in enumerate(COMPONENTEN))
     root = [
         ('button', 'opl', t('nav.solutions'), False),
         ('button', 'comp', t('nav.components'), current in comp_names),
+        ('button', 'sec', t('nav.sectors'), current == 'Sectoren'),
         ('projecten.html', None, t('nav.projects'), current == 'Projecten'),
         ('index.html#steps-title', None, t('nav.approach'), False),
         ('over-ons.html', None, t('nav.about'), current == 'Over ons'),
@@ -296,6 +304,11 @@ def _header_sheet(current=None):
           <ul class="mnav__tiles">{tiles}</ul>
           <a class="mnav__all" href="componenten.html">{t("nav.all_components")}{icon("ur")}</a>
         </div>
+        <div class="mnav__pane mnav__pane--sub" id="mnav-sec" data-mnav-pane="sec" hidden>
+          {back}<p class="mnav__kicker"><span>03</span>{t("nav.sectors")}</p>
+          <div class="mnav__group"><ul>{secs}</ul></div>
+          <a class="mnav__all" href="{SECTORS_HREF}">{t("nav.all_sectors")}{icon("ur")}</a>
+        </div>
       </nav>
     </div>
     <div class="mnav__foot">
@@ -327,7 +340,12 @@ def header(overlay=False, current=None):
     cfigs = ''.join(f'<div class="hxb-fig__img hxb-fig__img--cut{" is-on" if i == 0 else ""}" data-fig-img="{_slug(c)}" '
                     f'data-cap="{tr(c)}" data-grp="{t("nav.components")}">{pic(img, "", "(min-width: 1040px) 30vw, 1px")}</div>'
                     for i, (c, _h, img) in enumerate(COMPONENTEN))
+    slist = ''.join(f'<li><a href="{h}" data-fig="sec-{_slug(n)}"><span class="hxb-thumb hxb-thumb--photo">{pic(SECTOR_IMG[n], "", "56px")}</span>'
+                    f'<span>{tr(n)}</span>{icon("ur")}</a></li>' for n, h in SECTOREN)
+    sfigs = ''.join(f'<div class="hxb-fig__img{" is-on" if i == 0 else ""}" data-fig-img="sec-{_slug(n)}" data-cap="{tr(n)}" data-grp="{t("nav.sectors")}">'
+                    f'{pic(SECTOR_IMG[n], "", "(min-width: 1040px) 30vw, 1px")}</div>' for i, (n, _h) in enumerate(SECTOREN))
     comp_on = ' is-current' if current in {item[0] for item in COMPONENTEN} else ''
+    sec_on = ' is-current' if current == 'Sectoren' else ''
     ov = ' hx--overlay' if overlay else ''
     return f'''<header class="hx hx--b{ov}" data-site-header>
   <div class="hxb-rail">
@@ -348,6 +366,7 @@ def header(overlay=False, current=None):
         <ul>
           <li><button class="hxb-link" type="button" data-hx-tab="opl" aria-expanded="false" aria-controls="hxb-opl">{t("nav.solutions")}{icon("chev-down")}</button></li>
           <li><button class="hxb-link{comp_on}" type="button" data-hx-tab="comp" aria-expanded="false" aria-controls="hxb-comp">{t("nav.components")}{icon("chev-down")}</button></li>
+          <li><button class="hxb-link{sec_on}" type="button" data-hx-tab="sec" aria-expanded="false" aria-controls="hxb-sec">{t("nav.sectors")}{icon("chev-down")}</button></li>
           <li><a class="hxb-link{' is-current' if current == 'Projecten' else ''}" href="projecten.html"{' aria-current="true"' if current == 'Projecten' else ''}>{t("nav.projects")}</a></li>
           <li><a class="hxb-link" href="index.html#steps-title">{t("nav.approach")}</a></li>
           <li><a class="hxb-link{' is-current' if current == 'Over ons' else ''}" href="over-ons.html"{' aria-current="page"' if current == 'Over ons' else ''}>{t("nav.about")}</a></li>
@@ -375,6 +394,16 @@ def header(overlay=False, current=None):
       </div>
       <figure class="hxb-fig hxb-fig--cut" data-fig-frame>{cfigs}{marks}
         <figcaption><span data-fig-cap>{tr(COMPONENTEN[0][0])}</span><span data-fig-grp>{t("nav.components")}</span></figcaption>
+      </figure>
+    </div>
+  </div>
+  <div class="hxb-drawer" id="hxb-sec" data-hx-panel="sec" role="region" aria-label="{t("nav.sectors")}" inert>
+    <div class="container hxb-drawer__in hxb-drawer__in--comp">
+      <div class="hxb-drawer__nav"><ul class="hxb-clist">{slist}</ul>
+        <a class="link hxb-drawer__all" href="{SECTORS_HREF}">{t("nav.all_sectors")}{icon("ur")}</a>
+      </div>
+      <figure class="hxb-fig" data-fig-frame>{sfigs}{marks}
+        <figcaption><span data-fig-cap>{tr(SECTOREN[0][0])}</span><span data-fig-grp>{t("nav.sectors")}</span></figcaption>
       </figure>
     </div>
   </div>
@@ -561,7 +590,7 @@ def footer(variant="stone", sheet=''):
     sheet = sheet or 'Airtechnic Solutions'
     tech = (f'<nav aria-label="{t("ft.tech")}"><h2 class="ft-h">{t("ft.tech")}</h2>'
             f'<a href="index.html#specialisaties">{t("ft.specialisms")}</a><a href="componenten.html">{t("nav.components")}</a>'
-            f'<a href="{PAGES["categorie"]}">{t("ft.cyclones")}</a><a href="kennisbank.html">{t("nav.knowledge")}</a></nav>')
+            f'<a href="{PAGES["categorie"]}">{t("ft.cyclones")}</a><a href="{SECTORS_HREF}">{t("nav.sectors")}</a><a href="kennisbank.html">{t("nav.knowledge")}</a></nav>')
     org = ('<nav aria-label="Airtechnic"><h2 class="ft-h">Airtechnic</h2>'
            f'<a href="over-ons.html">{t("nav.about")}</a><a href="index.html#steps-title">{t("ft.approach")}</a>'
            f'<a href="projecten.html">{t("nav.projects")}</a><a href="index.html#contact">{t("ft.ask")}</a></nav>')

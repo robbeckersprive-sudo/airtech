@@ -39,6 +39,13 @@ def _value(value):
     return f'{pre}<span data-pd-num>{m.group(2)}</span>{suf}'
 
 
+def _sector_chip(sector):
+    """Sector label links to its sector page (Nov 27) when one exists; same chip markup otherwise."""
+    from sector_data import SECTORS, sector_file
+    slug = next((k for k, v in SECTORS.items() if v['project_sector'] == sector), None)
+    return f'<a class="pd-sector__link" href="{sector_file(slug)}"><span>{sector}</span></a>' if slug else f'<span>{sector}</span>'
+
+
 def dossier_block():
     n = len(ORDER)
     imgs, copies, tabs = [], [], []
@@ -49,7 +56,7 @@ def dossier_block():
         imgs.append(f'<div class="pd-img{" is-on" if on else ""}" data-pd-img>{pic(p["image"], "", "(min-width: 900px) 64vw, 100vw", eager=False)}</div>')
         facts = ''.join(f'<div class="pd-fact"><dt>{label}</dt><dd{_count_attrs(val)}>{_value(val)}</dd></div>' for val, label in p['facts'][:4])
         copies.append(f'''<div class="pd-copy{" is-on" if on else ""}" id="pd-{slug}" role="tabpanel" aria-labelledby="pd-tab-{i}" data-pd-copy{off}>
-          <p class="pd-sector"><span>{p["sector"]}</span>{p["category"]}</p>
+          <p class="pd-sector">{_sector_chip(p["sector"])}{p["category"]}</p>
           <h3 class="pd-title">{split_lines(p["title"])}</h3>
           <p class="pd-lead">{p["lead"]}</p>
           <dl class="pd-facts" style="--n:{len(p["facts"][:4])}">{facts}</dl>

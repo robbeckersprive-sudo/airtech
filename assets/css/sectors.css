@@ -1,0 +1,110 @@
+/* Airtechnic "Flow" — sector pages (src/sector_page.py). Built on the solution template; only sector pieces here.
+   Tokens only (tokens.css); red stays reserved for actions and the signature line. */
+@import url('solutions.css');
+
+/* 01 · Vraagstukken: numbered issues, problem + consequence for the design */
+.sector-issues { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line-strong); }
+.sector-issues > li { padding: 28px clamp(0px, 2.4vw, 32px) 32px 0; border-bottom: 1px solid var(--line); }
+.sector-issues > li:nth-child(2n) { padding-left: clamp(20px, 2.4vw, 32px); border-left: 1px solid var(--line); }
+.sector-issues .solution-step { color: var(--steel-700); margin-bottom: 14px; }
+.sector-issues .h3 { font-size: clamp(20px, 1.8vw, 24px); margin-bottom: 10px; }
+.sector-issues p { max-width: 52ch; }
+.solution-section .sector-issue__design { margin-top: 12px; color: var(--steel-800); }
+.sector-issue__design strong { display: block; font: 500 12px/1.5 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--steel-700); margin-bottom: 2px; }
+
+/* 02 · Productroute: the solution stages, any count, each station links to its solution */
+.solution-stages.sector-route { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
+.sector-route li { display: flex; flex-direction: column; }
+.sector-route p { font-size: 15px; }
+.sector-route__link { margin-top: auto; padding-top: 18px; min-height: 44px; display: inline-flex; align-items: center; gap: 6px; color: var(--white); font-weight: 650; text-decoration: underline; text-decoration-color: var(--white-20); text-underline-offset: 4px; transition: text-decoration-color var(--t-fast) ease; }
+.sector-route__link:hover { text-decoration-color: var(--white); }
+.sector-route__link:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; border-radius: 2px; }
+.sector-route__link .i { width: 16px; height: 16px; flex: none; }
+
+/* 03 · Oplossingen: rows with the solution's plate image */
+.sector-sols { list-style: none; border-top: 1px solid var(--line-strong); }
+.sector-sol { display: grid; grid-template-columns: 72px minmax(0, 1fr) 20px; gap: 18px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); color: var(--text); text-decoration: none; min-height: 44px; }
+.sector-sol__img { width: 72px; height: 72px; border-radius: var(--r-thumb, 10px); background: radial-gradient(90% 80% at 50% 42%, #f5f8fa, #dce5eb); display: grid; place-items: center; overflow: hidden; }
+.sector-sol__img picture { display: grid; place-items: center; width: 100%; height: 100%; }
+.sector-sol__img img { width: 84%; height: 84%; object-fit: contain; }
+.sector-sol__txt { display: grid; gap: 4px; }
+.sector-sol__name { font-weight: 700; color: var(--steel-900); font-size: 18px; }
+.sector-sol__why { color: var(--text-muted); line-height: 1.55; }
+.sector-sol .i { width: 18px; height: 18px; opacity: .45; transition: opacity var(--t-fast) ease, transform .5s var(--ease-expo); }
+.sector-sol:hover .sector-sol__name, .sector-sol:focus-visible .sector-sol__name { color: var(--link-hover); }
+.sector-sol:hover .i, .sector-sol:focus-visible .i { opacity: 1; transform: translate(2px, -2px); }
+
+/* 06 · Praktijk zonder project: an invitation, never an empty block */
+.sector-invite .h2 { margin-bottom: 0; }
+.solution-section .sector-invite__note { color: var(--text-muted); font-size: 15px; }
+
+/* Sources under the FAQ intro */
+.sector-sources { margin-top: 28px; max-width: 46ch; }
+.sector-sources summary { min-height: 44px; }
+
+/* Overview: five sector cards */
+.sector-cards { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.sector-card { display: flex; }
+.sector-card__link { display: flex; flex-direction: column; width: 100%; color: var(--text); text-decoration: none; background: var(--surface-raised, var(--white)); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-1); transition: box-shadow var(--t-med) ease, transform var(--t-med) var(--ease-out); }
+.sector-card__link:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); }
+.sector-card__link:focus-visible { outline: 2px solid var(--ring, var(--steel-900)); outline-offset: 3px; }
+.sector-card__img { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--cream-2); }
+.sector-card__img picture, .sector-card__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sector-card__body { display: flex; flex-direction: column; gap: 12px; padding: 22px 24px 24px; flex: 1; }
+.sector-card__no { font: 500 12px/1.5 var(--font-mono); color: var(--steel-700); letter-spacing: .04em; }
+.sector-card__name { font-family: var(--font-head); font-size: clamp(24px, 2.2vw, 30px); line-height: 1.1; color: var(--heading); display: grid; gap: 4px; }
+.sector-card__name small { font: 400 15px/1.4 var(--font-body); color: var(--text-muted); }
+.sector-card__points { list-style: none; display: grid; gap: 6px; }
+.sector-card__points li { position: relative; padding-left: 16px; line-height: 1.5; }
+.sector-card__points li::before { content: ''; position: absolute; left: 0; top: .7em; width: 8px; border-top: 1px dashed var(--steel-700); }
+.sector-card__go { margin-top: auto; padding-top: 8px; min-height: 44px; display: inline-flex; align-items: center; gap: 6px; font-weight: 650; color: var(--link); }
+.sector-card__go .i { width: 16px; height: 16px; transition: transform .5s var(--ease-expo); }
+.sector-card__link:hover .sector-card__go .i { transform: translate(2px, -2px); }
+.sector-other { margin-top: 36px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; }
+.solution-section .sector-other .link { margin-top: 0; }
+
+@media (max-width: 1100px) {
+ .solution-stages.sector-route { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ .sector-route li + li { border-left: 1px solid var(--white-20); }
+ .sector-route li:nth-child(3n + 1) { border-left: 0; }
+ .sector-route li:nth-child(n + 4) { border-top: 1px solid var(--white-20); }
+}
+@media (max-width: 960px) {
+ .sector-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .solution-stages.sector-route { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .sector-route li:nth-child(n) { border-left: 0; border-top: 0; }
+ .sector-route li:nth-child(2n) { border-left: 1px solid var(--white-20); }
+ .sector-route li:nth-child(n + 3) { border-top: 1px solid var(--white-20); }
+}
+@media (max-width: 700px) {
+ .sector-issues { grid-template-columns: minmax(0, 1fr); }
+ .sector-issues > li, .sector-issues > li:nth-child(2n) { padding: 22px 0 24px; border-left: 0; }
+ .sector-cards { grid-template-columns: minmax(0, 1fr); }
+ .sector-sol { grid-template-columns: 56px minmax(0, 1fr) 18px; gap: 14px; }
+ .sector-sol__img { width: 56px; height: 56px; }
+}
+@media (max-width: 400px) {
+ .solution-stages.sector-route { grid-template-columns: minmax(0, 1fr); }
+ .sector-route li:nth-child(n) { border-left: 0; }
+ .sector-route li + li { border-top: 1px solid var(--white-20); }
+}
+@media (prefers-reduced-motion: reduce) {
+ .sector-card__link, .sector-card__go .i, .sector-sol .i { transition: none; }
+ .sector-card__link:hover { transform: none; }
+}
+
+/* Criteria labels: Dutch / German compounds ("Explosieveiligheid") need a wider label column */
+.sector-page .solution-criteria > div { grid-template-columns: 172px minmax(0, 1fr); }
+@media (max-width: 700px) { .sector-page .solution-criteria > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+/* Sixth tile on the overview: other sectors */
+.sector-card--other { border: 1px dashed var(--line-strong); border-radius: var(--r-card); background: transparent; }
+.sector-card--other .sector-card__body { justify-content: center; }
+.sector-card--other p { line-height: 1.6; color: var(--text-muted); }
+.sector-card--other .link { align-self: flex-start; }
+/* Section nav: 8 stations; one sideways-scrolling row on phones (right-edge fade, like other sideways rows) */
+@media (max-width: 700px) {
+ .sector-nav .container { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-right: 32px;
+   -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent); }
+ .sector-nav .container::-webkit-scrollbar { display: none; }
+ .sector-nav a { flex: none; min-height: 48px; }
+}

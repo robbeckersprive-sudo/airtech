@@ -1,0 +1,37 @@
+{
+ "generated": "2026-11-27",
+ "note": "Sector pages and the ATEX article reuse existing library images only; no new image was generated. The OG images are 1200x630 centre crops (Pillow, quality 84) of the listed library source. All are illustrations, never presented as real installations.",
+ "pages": {
+  "sectoren.html": {
+   "hero": "29-hero-productiehal",
+   "og": "og-sector-index.jpg"
+  },
+  "sectoren-food.html": {
+   "hero": "21-project-food",
+   "og": "og-sector-food.jpg"
+  },
+  "sectoren-feed.html": {
+   "hero": "project-feed",
+   "og": "og-sector-feed.jpg",
+   "label": "Illustratie · geen projectfoto"
+  },
+  "sectoren-recycling.html": {
+   "hero": "20-project-recycling",
+   "og": "og-sector-recycling.jpg"
+  },
+  "sectoren-chemie.html": {
+   "hero": "19-granulaat-macro",
+   "og": "og-sector-chemie.jpg"
+  },
+  "sectoren-hout.html": {
+   "hero": "32-hero-cycloon",
+   "og": "og-sector-hout.jpg"
+  },
+  "kennis-atex-explosieveiligheid.html": {
+   "hero": "30-hero-filter",
+   "og": "og-knowledge-atex-explosieveiligheid.jpg",
+   "schematic": "inline SVG in src/knowledge_safety.py (ZONE_FIGURE), labelled 'Schematisch, niet op schaal', no image file"
+  }
+ },
+ "header": "SECTOR_IMG in src/components.py points to the same hero images"
+}
