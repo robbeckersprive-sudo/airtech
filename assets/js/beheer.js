@@ -69,8 +69,10 @@
   var form = $('[data-settings]');
   function readForm() {
     var all = $$('input[name="groups"]', form), on = all.filter(function (i) { return i.checked; }).map(function (i) { return i.value; });
+    var secAll = $$('input[name="sectors"]', form), secOn = secAll.filter(function (i) { return i.checked; }).map(function (i) { return i.value; });
     return {
       layout: form.layout.value, groups: on.length === all.length ? null : on, projects: form.projects.checked, steps: form.steps.checked,
+      sectors: secOn.length === secAll.length ? null : secOn, knowledge: form.knowledge.checked, stand: form.stand.value.trim().slice(0, 40),
       tempo: +form.tempo.value, lang: form.elements.namedItem('lang').value
     };
   }
@@ -80,6 +82,8 @@
     $$('input[name="groups"]', form).forEach(function (i) { i.checked = !Array.isArray(c.groups) || c.groups.indexOf(i.value) >= 0; });
     $$('input[name="lang"]', form).forEach(function (i) { i.checked = i.value === (['nl', 'en', 'de'].indexOf(c.lang) >= 0 ? c.lang : uiLang); });
     form.projects.checked = c.projects !== false; form.steps.checked = c.steps !== false;
+    $$('input[name="sectors"]', form).forEach(function (i) { i.checked = !Array.isArray(c.sectors) || c.sectors.indexOf(i.value) >= 0; });
+    form.knowledge.checked = c.knowledge !== false; form.stand.value = typeof c.stand === 'string' ? c.stand.slice(0, 40) : '';
     $$('input[name="tempo"]', form).forEach(function (i) { i.checked = +i.value === (c.tempo === 1.3 ? 1.3 : 1); });
   }
     // Language is part of the saved presentation configuration.
@@ -88,6 +92,9 @@
     if (c.groups) q.set('g', c.groups.join(','));
     if (!c.projects) q.set('p', '0');
     if (!c.steps) q.set('w', '0');
+    if (c.sectors) q.set('sec', c.sectors.length ? c.sectors.join(',') : '0');
+    if (c.knowledge === false) q.set('k', '0');
+    if (c.stand) q.set('stand', c.stand);
     if (c.tempo !== 1) q.set('tempo', c.tempo);
     if (preview) q.set('preview', '1');
     return page('kiosk', c.lang) + '?' + q.toString();
@@ -101,6 +108,11 @@
     var saved = store.setItem(CFG, JSON.stringify(readForm()));
     $('[data-save-status]').textContent = K(saved ? 'Instellingen bewaard op dit apparaat.' : 'Opslaan lukt niet. De instellingen gelden alleen zolang deze pagina open is.');
     clearTimeout(timer); timer = setTimeout(refresh, 250);
+  });
+  // the stand line saves while typing (a text field only fires "change" on blur)
+  form.stand.addEventListener('input', function () {
+    store.setItem(CFG, JSON.stringify(readForm()));
+    clearTimeout(timer); timer = setTimeout(refresh, 700);
   });
 
   /* ---------- live preview ---------- */
@@ -219,7 +231,7 @@
       host.innerHTML = '';
       var root = document.importNode(kioskDoc.querySelector('[data-kiosk-root]'), true);
       root.lang = c.lang; host.appendChild(root);
-      AtKiosk.mount(root, sheets, { role: role, t0: 0, groups: c.groups, projects: c.projects, steps: c.steps, tempo: c.tempo, lang: c.lang }, function () {
+      AtKiosk.mount(root, sheets, { role: role, t0: 0, groups: c.groups, projects: c.projects, steps: c.steps, sectors: c.sectors, knowledge: c.knowledge, stand: c.stand, tempo: c.tempo, lang: c.lang }, function () {
         host.hidden = true; host.innerHTML = '';
         if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
         if (popup && !popup.closed) popup.close();

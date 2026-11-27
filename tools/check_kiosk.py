@@ -54,6 +54,17 @@ for code in ('nl', 'en', 'de'):
                 errors.append(f'{name}: asset not cached {url}')
         if kind == 'kiosk':
             assert parser.templates >= 15 and parser.faces == parser.templates * 3
+            # Nov 27: one sheet per sector, one knowledge sheet, and every QR target is a real page of this language
+            from sector_data import ORDER as _SECTORS
+            assert len(re.findall(r'<template data-sheet="sector-[a-z]+" data-kind="sector"', html)) == len(_SECTORS), name
+            assert html.count('data-kind="knowledge"') == 1, name
+            targets = set(re.findall(r'data-qr="([^"#]+)', html))
+            assert len(targets) >= len(_SECTORS) + 2, (name, targets)
+            for target in targets:
+                if not (SITE_ROOT / target).is_file():
+                    errors.append(f'{name}: QR target missing {target}')
+                if code != 'nl' and not target.startswith(code + '/'):
+                    errors.append(f'{name}: QR target not in /{code}/: {target}')
             print(f'{code}: {parser.templates} sheets, {parser.faces} faces, assets present and cached')
 for url in cache_urls:
     if not (SITE_ROOT / url).is_file():

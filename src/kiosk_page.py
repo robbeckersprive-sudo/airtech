@@ -24,6 +24,8 @@ from category_data import CATEGORIES  # noqa: E402
 from cyclone_category_data import CYCLONES  # noqa: E402
 from project_data import PROJECTS  # noqa: E402
 from home_practice import _count_attrs, ORDER as PROJECT_ORDER  # noqa: E402
+from sector_data import SECTORS, ORDER as SECTOR_ORDER, sector_file  # noqa: E402
+from knowledge_data import ARTICLES  # noqa: E402
 
 KMAN = json.load(open(os.path.join(ROOT, 'images', 'kiosk', 'manifest.json'), encoding='utf-8'))
 DOMAIN = 'airtechnicsolutions.nl'
@@ -186,8 +188,71 @@ def s_project(slug):
     return sheet(f'project-{slug}', 'project', 14, p['name'], [a, b, s], ' data-pool="project"')
 
 
+def qr(target, label, cls='', delay=1.4):
+    """QR plate. `target` is a Dutch site page (+ optional #anchor); main() swaps in the translated file per language.
+    kiosk.js draws the code at run time from location.origin, so it always points at the site the kiosk runs on
+    (also offline) and never at a stale domain."""
+    return (f'<div class="ks-qr ks-rise{(" " + cls) if cls else ""}" style="--d:{delay}s" data-qr="{target}">'
+            f'<div class="ks-qr__code" data-qr-code></div><p class="ks-qr__t"><b>Scan</b><span>{label}</span></p></div>')
+
+
+def s_sector(n, total, slug):
+    """Sector sheet (Nov 27): the sector's own page in one glance. Copy is the site's (sector_data.SECTORS):
+    title, first sentence of the lead, the issue titles and the product route. No claims beyond the page."""
+    d = SECTORS[slug]
+    no = f'{n:02d} / {total:02d}'
+    kicker = mono(f'Sectoren · {no}', 'ks-rise')
+    lead = first_sentence(d['lead'])
+
+    def issues(count, d0=.5):
+        return ''.join(f'<li class="ks-rise" style="--d:{d0 + i * .18:.2f}s"><b>{i + 1:02d}</b>{escape(t)}</li>'
+                       for i, (t, _p, _o) in enumerate(d['issues'][:count]))
+    stations = ''.join(f'<li style="--i:{i}"><i></i><span>{escape(step)}</span></li>' for i, (step, _sol, _t) in enumerate(d['route']))
+    route = (f'<div class="ks-route" style="--n:{len(d["route"])}">{mono("Een typische lijn", "ks-rise ks-route__k")}'
+             f'<ol class="ks-route__line">{stations}</ol></div>')
+    target = sector_file(slug)
+    a = face('a', f'''<div class="ks-hero ks-hero--left">{img(d["image"], "ks-kb")}</div>
+      <div class="ks-copy ks-copy--left ks-copy--low">{kicker}
+        <h2 class="ks-h ks-h--xl ks-rise" style="--d:.2s">{d["title"]}</h2><p class="ks-lead ks-rise" style="--d:.45s">{escape(lead)}</p></div>''')
+    b = face('b', f'''<div class="ks-bg ks-bg--grid"></div><div class="ks-sector">
+        <div class="ks-sector__issues">{mono("Wat speelt er in uw sector?", "ks-rise")}<ol class="ks-line">{issues(4)}</ol></div>
+        {qr(target, "Neem deze pagina mee")}{route}</div>''')
+    s = face('s', f'''<div class="ks-split ks-split--s"><div class="ks-hero ks-hero--panel">{img(d["image"], "ks-kb")}</div>
+      <div class="ks-split__copy ks-split__copy--sector">{kicker}<h2 class="ks-h ks-h--l ks-rise" style="--d:.2s">{d["title"]}</h2>
+        <ol class="ks-line ks-line--s">{issues(3, .6)}</ol>{qr(target, "Neem deze pagina mee", "ks-qr--s")}</div></div>''')
+    return sheet(f'sector-{slug}', 'sector', 14, d['long'], [a, b, s], f' data-sector="{slug}"')
+
+
+# explosion pentagon: (x %, y %) of the figure, label (the five conditions from the ATEX article's intro)
+PENTAGON = [(50, 16, 'Brandbaar stof'), (84, 42, 'Zuurstof'), (71, 82, 'Ontstekingsbron'), (29, 82, 'Stofwolk'), (16, 42, 'Besloten ruimte')]
+
+
+def s_atex():
+    """Knowledge sheet (Nov 27): the explosion pentagon from the ATEX article, its two takeaways and a QR to the article."""
+    d = ARTICLES['atex-explosieveiligheid']
+    pts = ' '.join(f'{x * 4:.0f},{y * 4:.0f}' for x, y, _l in PENTAGON)
+    labels = ''.join(f'<li class="ks-penta__p" style="--x:{x}%;--y:{y}%"><i></i><span class="ks-rise" style="--d:{.9 + i * .45:.2f}s"><b>{i + 1:02d}</b>{lab}</span></li>'
+                     for i, (x, y, lab) in enumerate(PENTAGON))
+    penta = (f'<div class="ks-penta"><div class="ks-penta__fig"><svg viewBox="0 0 400 400" aria-hidden="true">'
+             f'<polygon pathLength="100" points="{pts}"/></svg><ul>{labels}</ul>'
+             f'<p class="ks-penta__c ks-rise" style="--d:3.4s">Neem één zijde weg:<br><em>geen explosie.</em></p></div></div>')
+    kicker = mono('Kennis · Veiligheid en hygiëne', 'ks-rise')
+    take = ''.join(f'<li style="--d:{i * 6}s"><b>{i + 1:02d}</b><span class="ks-rail__n">{escape(t)}</span><span class="ks-rail__t">{escape(x)}</span></li>'
+                   for i, (t, x) in enumerate(d['takeaway']))
+    target = 'kennis-atex-explosieveiligheid.html'
+    a = face('a', f'''<div class="ks-bg ks-bg--grid"></div>{penta}
+      <div class="ks-copy ks-copy--left ks-copy--mid ks-copy--narrow">{kicker}
+        <h2 class="ks-h ks-h--xl ks-rise" style="--d:.2s">{d["title"]}</h2></div>''')
+    b = face('b', f'''<div class="ks-bg ks-bg--grid"></div><ol class="ks-rail ks-rail--know">{take}</ol>
+        {qr(target, "Lees het artikel", "ks-qr--corner", 2)}''')
+    s = face('s', f'''<div class="ks-bg ks-bg--grid"></div>{penta}
+      <div class="ks-copy ks-copy--left ks-copy--mid ks-copy--narrow">{kicker}
+        <h2 class="ks-h ks-h--l ks-rise" style="--d:.2s">{d["title"]}</h2>{qr(target, "Lees het artikel", "ks-qr--inline", 2)}</div>''')
+    return sheet('kennis-atex', 'knowledge', 16, 'Explosieveiligheid', [a, b, s])
+
+
 def s_steps():
-    plates = ''.join(f'''<div class="ks-step-plate" style="--d:{i * 6}s">
+    plates =''.join(f'''<div class="ks-step-plate" style="--d:{i * 6}s">
         <div class="ks-step-plate__dr">{img(f"{im}-tekening")}</div><div class="ks-step-plate__ph">{img(im)}</div>
         <i class="ks-step-plate__scan"></i></div>''' for i, (_n, im, _t) in enumerate(STEPS))
     rail = ''.join(f'<li style="--d:{i * 6}s"><b>{i + 1:02d}</b><span class="ks-rail__n">{n}</span><span class="ks-rail__t">{t}</span></li>'
@@ -227,21 +292,28 @@ def s_contact():
         <div class="ks-rise" style="--d:.3s"><dt>Web</dt><dd>{DOMAIN}</dd></div>
         <div class="ks-rise" style="--d:.5s"><dt>Telefoon</dt><dd>{PHONE_DISPLAY}</dd></div>
         <div class="ks-rise" style="--d:.7s"><dt>E-mail</dt><dd>{EMAIL}</dd></div>
-        <div class="ks-rise" style="--d:.9s"><dt>Adres</dt><dd>{addr}</dd></div></dl></div>''')
+        <div class="ks-rise" style="--d:.9s"><dt>Adres</dt><dd>{addr}</dd></div></dl></div>
+      {qr("index.html#contact", "Stel uw vraag online", "ks-qr--corner", 1.3)}''')
     s = face('s', f'''<div class="ks-bg ks-bg--grid"></div><i class="ks-sweep"></i>
       <div class="ks-copy ks-copy--mid">{mono("Stel uw procesvraag", "ks-rise")}
         <p class="ks-h ks-h--xl ks-rise" style="--d:.2s">Bespreek uw proces.<br><em>Hier op de stand.</em></p>
         <dl class="ks-contact ks-contact--s"><div class="ks-rise" style="--d:.6s"><dt>Web</dt><dd>{DOMAIN}</dd></div>
-        <div class="ks-rise" style="--d:.8s"><dt>Telefoon</dt><dd>{PHONE_DISPLAY}</dd></div></dl></div>''')
+        <div class="ks-rise" style="--d:.8s"><dt>Telefoon</dt><dd>{PHONE_DISPLAY}</dd></div></dl></div>
+      {qr("index.html#contact", "Stel uw vraag online", "ks-qr--corner", 1.3)}''')
     return sheet('contact', 'contact', 14, 'Contact', [a, b, s])
 
 
 def sheets():
     CACHE.clear()
     out = [s_opening(), s_specialisaties()]
-    out += [s_group(i + 1, len(GROUPS), *g) for i, g in enumerate(GROUPS)]
+    # sectors and component groups alternate (one sector, two groups): a passer-by sees a market and a machine
+    groups = [s_group(i + 1, len(GROUPS), *g) for i, g in enumerate(GROUPS)]
+    sectors = [s_sector(i + 1, len(SECTOR_ORDER), k) for i, k in enumerate(SECTOR_ORDER)]
+    while sectors or groups:
+        out += sectors[:1] + groups[:2]
+        sectors, groups = sectors[1:], groups[2:]
     out += [s_project(k) for k in PROJECT_ORDER]
-    out += [s_steps(), s_installatie(), s_contact()]
+    out += [s_steps(), s_installatie(), s_atex(), s_contact()]
     return out
 
 
@@ -275,7 +347,8 @@ def titleblock():
   <div class="ks-tb__cell ks-tb__cell--wide" data-tb="b"><span class="ks-tb__k">Industriële luchttechniek</span><span>&amp; solids processing</span></div>
   <div class="ks-tb__cell" data-tb="b s"><span class="ks-tb__k">Web</span><span>''' + DOMAIN + '''</span></div>
   <div class="ks-tb__cell" data-tb="b"><span class="ks-tb__k">Telefoon</span><span>''' + PHONE_DISPLAY + '''</span></div>
-  <div class="ks-tb__cell" data-tb="a b s"><span class="ks-tb__k">Schaal</span><span>1 : 1</span></div>
+  <div class="ks-tb__cell ks-tb__cell--stand" data-tb="a b s" data-tb-stand><span class="ks-tb__k">Stand</span><span data-stand></span></div>
+  <div class="ks-tb__cell" data-tb="a b s" data-tb-scale><span class="ks-tb__k">Schaal</span><span>1 : 1</span></div>
 </footer>'''
 
 
@@ -310,6 +383,8 @@ def kiosk_html(all_sheets):
 def beheer_html():
     groups = ''.join(f'<label class="bh-chip"><input type="checkbox" name="groups" value="{slug}" checked><span>{(CYCLONES if slug == "cyclonen" else CATEGORIES[slug])["name"]}</span></label>'
                      for slug, *_ in GROUPS)
+    sectors = ''.join(f'<label class="bh-chip"><input type="checkbox" name="sectors" value="{slug}" checked><span>{SECTORS[slug]["name"]}</span></label>'
+                      for slug in SECTOR_ORDER)
     return head('Beheer · Airtechnic Solutions') + f'''<body class="bh-body">
 <a class="bh-skip" href="#bh-main">Direct naar de inhoud</a>
 <header class="bh-top">
@@ -366,12 +441,21 @@ def beheer_html():
           <div class="bh-toggles"><label class="bh-check"><input type="checkbox" name="projects" checked><span>Projecten (twee per ronde, wisselend)</span></label>
             <label class="bh-check"><input type="checkbox" name="steps" checked><span>Werkwijze</span></label></div>
         </fieldset>
-        <fieldset class="bh-set"><legend><b>03</b> Tempo en taal</legend>
+        <fieldset class="bh-set"><legend><b>03</b> Sectoren en kennis</legend>
+          <p class="bh-hint">Kies de sectoren die bij deze beurs passen. Elk sectorblad toont de vraagstukken, de productroute en een QR-code naar de pagina.</p>
+          <div class="bh-chips">{sectors}</div>
+          <div class="bh-toggles"><label class="bh-check"><input type="checkbox" name="knowledge" checked><span>Kennisblad explosieveiligheid (ATEX)</span></label></div>
+        </fieldset>
+        <fieldset class="bh-set"><legend><b>04</b> Beurs en stand</legend>
+          <div class="bh-field"><label for="bh-stand">Regel in het titelblok (optioneel)</label><input id="bh-stand" name="stand" type="text" maxlength="40" autocomplete="off" placeholder="Hal 3 · Stand B12"></div>
+          <p class="bh-hint">Staat onderaan elk scherm. Laat leeg om niets te tonen.</p>
+        </fieldset>
+        <fieldset class="bh-set"><legend><b>05</b> Tempo en taal</legend>
           <div class="bh-seg" role="radiogroup" aria-label="Tempo"><label><input type="radio" name="tempo" value="1" checked><span>Normaal</span></label><label><input type="radio" name="tempo" value="1.3"><span>Rustig</span></label></div>
           <div class="bh-seg" role="radiogroup" aria-label="Taal"><label><input type="radio" name="lang" value="nl" checked><span>NL</span></label><label><input type="radio" name="lang" value="en"><span>EN</span></label><label><input type="radio" name="lang" value="de"><span>DE</span></label></div>
           <p class="bh-hint">De gekozen taal geldt voor beide schermen en wordt op dit apparaat bewaard.</p>
         </fieldset>
-        <fieldset class="bh-set" data-screens-set><legend><b>04</b> Schermen</legend>
+        <fieldset class="bh-set" data-screens-set><legend><b>06</b> Schermen</legend>
           <p class="bh-hint" data-screens-text>Sluit het tweede scherm aan en laat de browser uw schermen zoeken. Scherm B opent dan vanzelf op het tweede scherm.</p>
           <button type="button" class="ks-btn ks-btn--ghost" data-screens-find>Schermen zoeken</button>
           <ol class="bh-screens" data-screens hidden></ol>
@@ -465,6 +549,8 @@ def main():
             html = i18n.localize_html(source, code).replace('<html lang="nl">', f'<html lang="{code}">')
             if code != 'nl':
                 html = html.replace('href="beheer.html" data-gate-login', f'href="beheer{suffix}.html" data-gate-login')
+            # QR targets: the translated page of this language (kiosk-en.html lives in the root, the page in en/)
+            html = re.sub(r'data-qr="([^"#?]+)', lambda m: 'data-qr="' + i18n.DIR[code] + i18n.filename(m.group(1), code), html)
             if code != 'nl':
                 html = re.sub(r'data-suf="([^"]*)"', lambda m: 'data-suf="' + m.group(1).replace('/u', '/h') + '"', html)
             html = html.replace('<script src=', script + '<script src=', 1)
