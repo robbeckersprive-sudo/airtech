@@ -25,6 +25,8 @@ from solution_page import solution_page
 from about_page import about_page
 from project_data import PROJECTS
 from project_page import project_index, project_page
+from sector_data import SECTORS, ORDER as SECTOR_ORDER, sector_file
+from sector_page import sector_index, sector_page
 
 FAVICON = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#22498C"/>'
            '<path fill="#fff" fill-rule="evenodd" d="M4 26 13 6h6l9 20h-6l-2-5h-8l-2 5zm10-10h4l-2-5z"/></svg>')
@@ -44,6 +46,8 @@ def page_builders():
     yield from (('kennis-' + slug + '.html', lambda s=slug, d=data: knowledge_page(s, d)) for slug, data in ARTICLES.items())
     yield from (('oplossingen-' + slug + '.html', lambda s=slug, d=data: solution_page(s, d)) for slug, data in SOLUTIONS.items())
     yield from (('project-' + slug + '.html', lambda s=slug, d=data: project_page(s, d)) for slug, data in PROJECTS.items())
+    yield ('sectoren.html', sector_index)
+    yield from ((sector_file(slug), lambda s=slug: sector_page(s, SECTORS[s])) for slug in SECTOR_ORDER)
 
 
 def write(rel, html):

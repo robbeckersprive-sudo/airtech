@@ -6,6 +6,11 @@ from components import (ROOT, SITE, ORG, pic, media, link, contact, contact_url,
 from home_knowledge import faq_block
 from product_routes import PRODUCT_ROUTES
 from component_detail import GALLERY_SIZES, component_intro, component_nav, component_principle
+from sector_data import SECTORS, SECTORS_OF_PRODUCT, sector_file
+from execution_data import EXECUTIONS, confirmed
+
+
+PLAIN_SECTORS = 'Toepasbaarheid wordt beoordeeld op materiaal, procescondities en producteisen.'
 
 
 def _folder_link(slug, name):
@@ -36,6 +41,12 @@ def product_page(d):
     werking = component_principle(d['principle_title'], d['principle_intro'], d['cutaway'],
         name+' · schematische doorsnede', d['steps'], d['note'], d['step_heading'])
     trs = ''.join(f'<tr><th scope="row">{k}</th><td>{escape(v)}</td></tr>' for k,v in d['spec_rows'])
+    # Uitvoeringen: only what Airtechnic confirmed (execution_data.CONFIRMED); unconfirmed = no row at all
+    shown = confirmed(d['category'], d['variant'])
+    if shown:
+        facts_ex = '<br>'.join(escape(EXECUTIONS[k]['fact']) for k in shown)
+        more = link(escape(EXECUTIONS[shown[0]]['link_text']), EXECUTIONS[shown[0]]['href'])
+        trs += f'<tr data-executions="{" ".join(shown)}"><th scope="row">Uitvoeringen</th><td>{facts_ex}<br>{more}</td></tr>'
     uitvoering = f'''<section class="section detail-selection" id="uitvoering" aria-labelledby="uitv-title">
   <div class="container detail-selection__grid">
     <div>
@@ -55,6 +66,12 @@ def product_page(d):
     </table>
   </div>
 </section>'''
+    in_sectors = SECTORS_OF_PRODUCT.get(slug, [])
+    if in_sectors:   # one source: SECTORS[*]['components'] in sector_data.py
+        chips = ''.join(f'<li><a href="{sector_file(s)}">{escape(SECTORS[s]["name"])}{icon("ur")}</a></li>' for s in in_sectors)
+        sector_line = f'<div class="detail-sectors"><strong>Sectoren</strong> <ul class="detail-sector-chips">{chips}</ul></div>'
+    else:
+        sector_line = f'<p class="detail-sectors"><strong>Toepasbaarheid</strong> <span>{escape(PLAIN_SECTORS)}</span></p>'
     uses=''.join(f'<div><dt>{escape(title)}</dt><dd>{escape(text)}</dd></div>' for title,text in d['applications'])
     toepassingen = f'''<section class="section detail-section" id="toepassingen" aria-labelledby="toep-title">
   <div class="container">
@@ -69,7 +86,7 @@ def product_page(d):
       </figure>
       <dl class="detail-use">{uses}</dl>
     </div>
-    <p class="detail-sectors"><strong>{'Sectoren' if slug=='cycloonafscheider' else 'Toepasbaarheid'}</strong> <span>{escape(d['sectors'])}</span></p>
+    {sector_line}
   </div>
 </section>'''
     related_cards=''.join(f'''<li style="--i:{i}"><a class="pd-rel" href="{href}">

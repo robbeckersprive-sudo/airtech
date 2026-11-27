@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "flow-d",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["src/serve.py", "D:\\websites\\flow", "5183"],
+      "port": 5183
+    }
+  ]
+}

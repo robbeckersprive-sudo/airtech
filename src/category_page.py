@@ -7,6 +7,7 @@ from components import (SITE, PAGES, page, pic, link, contact, contact_url, icon
 from home_knowledge import faq_block
 from components import _v as _vv
 from category_overview import CategoryOption, HERO_SIZES, category_intro, category_catalog
+from execution_data import EXECUTIONS, confirmed, category_has_confirmed
 
 
 # ---------------------------------------------------------------- template v2 (Nov 21): "Catalogusblad"
@@ -53,27 +54,42 @@ def _hero_v2(data, crumbs, items, apps, filename):
 </div>'''
 
 
-def _compare_v2(items, apps):
+def _compare_v2(items, apps, category=''):
     label = dict(apps)
     chips = (f'<button type="button" class="cv-chip" aria-pressed="true" data-cv-app="">Alle toepassingen</button>'
              + ''.join(f'<button type="button" class="cv-chip" aria-pressed="false" data-cv-app="{v}">{t}</button>' for v, t in apps))
+    # Uitvoering (ATEX / food-grade): rendered only when Airtechnic confirmed at least one item in this category
+    # (execution_data.CONFIRMED). Without confirmed data the page is byte-for-byte what it was.
+    with_exec = category_has_confirmed(category)
+    shown = {it.variant: confirmed(category, it.variant) for it in items}
+    exec_keys = [k for k in EXECUTIONS if any(k in v for v in shown.values())]
+    exec_group = ''
+    if with_exec:
+        exec_group = ('<div class="cv-chips cv-chips--exec" role="group" aria-label="Uitvoering"><span class="cv-chips__t" aria-hidden="true">Uitvoering</span>'
+                      '<button type="button" class="cv-chip" aria-pressed="true" data-cv-exec="">Alle</button>'
+                      + ''.join(f'<button type="button" class="cv-chip" aria-pressed="false" data-cv-exec="{k}" title="{escape(EXECUTIONS[k]["explain"])}">{EXECUTIONS[k]["chip"]}</button>' for k in exec_keys)
+                      + '</div>')
+    exec_attr = lambda it: f' data-uitvoering="{" ".join(shown[it.variant])}"' if with_exec else ''
     cards, rows = [], []
     for i, it in enumerate(items):
         tags = ''.join(f'<li>{label[a]}</li>' for a in it.applications.split() if a in label)
         photo = ' cv-card__plate--photo' if it.photo else ''
-        cards.append(f'''<article class="cv-card" id="oplossing-{escape(it.variant)}" data-cv-item data-toepassing="{escape(it.applications)}" style="--i:{i}">
+        exec_tags = ''.join(f'<li>{EXECUTIONS[k]["label"]}</li>' for k in shown[it.variant])
+        exec_html = f'<ul class="cv-card__exec" aria-label="Uitvoeringen">{exec_tags}</ul>' if exec_tags else ''
+        cards.append(f'''<article class="cv-card" id="oplossing-{escape(it.variant)}" data-cv-item data-toepassing="{escape(it.applications)}"{exec_attr(it)} style="--i:{i}">
         <a class="cv-card__link" href="{it.href}">
           <span class="cv-card__plate{photo}">{pic(it.image, it.alt, CARD_V2)}<span class="cv-card__no">{i + 1:02d}<small>/{len(items):02d}</small></span></span>
           <span class="cv-card__body">
             <h3 class="cv-card__name" data-eq>{escape(it.name)}</h3>
             <dl class="cv-card__spec"><div><dt>Kenmerk</dt><dd>{escape(it.feature)}</dd></div><div><dt>Past bij</dt><dd>{escape(it.use)}</dd></div></dl>
-            <ul class="cv-card__tags">{tags}</ul>
+            <ul class="cv-card__tags">{tags}</ul>{exec_html}
             <span class="cv-card__go">{it.action}<span class="visually-hidden"> · {escape(it.name)}</span>{icon("ur")}</span>
           </span>
         </a>
       </article>''')
-        rows.append(f'''<tr data-cv-item data-toepassing="{escape(it.applications)}"><th scope="row"><span class="cv-t__img">{pic(it.image, "", "72px")}</span>{escape(it.name)}</th>
-          <td>{escape(it.feature)}</td><td>{escape(it.use)}</td><td>{", ".join(label[a] for a in it.applications.split() if a in label)}</td>
+        exec_cell = (f'<td>{", ".join(EXECUTIONS[k]["fact"] for k in shown[it.variant]) or "—"}</td>' if with_exec else '')
+        rows.append(f'''<tr data-cv-item data-toepassing="{escape(it.applications)}"{exec_attr(it)}><th scope="row"><span class="cv-t__img">{pic(it.image, "", "72px")}</span>{escape(it.name)}</th>
+          <td>{escape(it.feature)}</td><td>{escape(it.use)}</td><td>{", ".join(label[a] for a in it.applications.split() if a in label)}</td>{exec_cell}
           <td><a href="{it.href}" aria-label="Bekijk {escape(it.name)}">{icon("ur")}</a></td></tr>''')
     return f'''<section class="section category-catalog cv-compare" aria-labelledby="cat-grid-title" data-cv>
   <div class="container">
@@ -82,24 +98,25 @@ def _compare_v2(items, apps):
       <p>Bekijk per uitvoering het belangrijkste kenmerk en waar zij past. Kies uw toepassing: wat erbij past, blijft in beeld.</p>
     </header>
     <div class="cv-bar">
-      <div class="cv-chips" role="group" aria-label="Toepassing">{chips}</div>
+      <div class="cv-chips" role="group" aria-label="Toepassing">{chips}</div>{exec_group}
       <p class="cv-count" role="status" data-cv-count>{len(items)} van {len(items)} uitvoeringen</p>
       <div class="cv-view" role="group" aria-label="Weergave"><button type="button" aria-pressed="true" data-cv-view="cards">Kaarten</button><button type="button" aria-pressed="false" data-cv-view="table">Tabel</button></div>
     </div>
     <div class="cv-cards" id="cat-grid" data-cv-cards>{"".join(cards)}</div>
     <div class="cv-table-wrap" data-cv-table hidden><table class="cv-table"><caption class="visually-hidden">Uitvoeringen vergeleken</caption>
-      <thead><tr><th scope="col">Uitvoering</th><th scope="col">Kenmerk</th><th scope="col">Past bij</th><th scope="col">Toepassing</th><th scope="col"><span class="visually-hidden">Link</span></th></tr></thead>
+      <thead><tr><th scope="col">Uitvoering</th><th scope="col">Kenmerk</th><th scope="col">Past bij</th><th scope="col">Toepassing</th>{'<th scope="col">Uitvoeringen</th>' if with_exec else ''}<th scope="col"><span class="visually-hidden">Link</span></th></tr></thead>
       <tbody>{"".join(rows)}</tbody></table></div>
   </div>
 </section>'''
 
 
-def _related_v2(filename):
+def _related_v2(filename, extra=None):
     others = [(t, h, img) for t, h, img in COMPONENTEN if h != filename]
+    extra_link = link(*extra) if extra else ''
     lis = ''.join(f'<li><a href="{h}"><span class="cv-rel__img">{pic(img, "", "120px")}</span><span class="cv-rel__name" data-eq>{t}</span>{icon("ur")}</a></li>' for t, h, img in others)
     return f'''<section class="cv-related" aria-labelledby="rel-title">
   <div class="container">
-    <div class="cv-related__head"><h2 id="rel-title" class="h3">Verder in de installatie</h2>{link("Druk- of vacuümtransport?", PAGES["artikel"])}{link("Alle componenten", "componenten.html")}</div>
+    <div class="cv-related__head"><h2 id="rel-title" class="h3">Verder in de installatie</h2>{link("Druk- of vacuümtransport?", PAGES["artikel"])}{extra_link}{link("Alle componenten", "componenten.html")}</div>
     <ul class="cv-rel">{lis}</ul>
   </div>
 </section>'''
@@ -120,7 +137,7 @@ def category_page(slug, data):
                                         href=PRODUCT_ROUTES[slug][item['variant']]+'.html',
                                         action='Bekijk de uitvoering'))
     hero = _hero_v2(data, crumbs, items, data['applications'], filename)
-    catalog = _compare_v2(items, data['applications'])
+    catalog = _compare_v2(items, data['applications'], slug)
     criteria = ''.join(f'<div><dt>{escape(title)}</dt><dd>{escape(text)}</dd></div>' for title, text in data['criteria'])
     advice = f'''<section class="section category-advice cv-advice" id="advies" aria-labelledby="advies-title">
   <div class="container">
@@ -164,7 +181,7 @@ def category_page(slug, data):
 </section>'''
     topics = data.get('topics', tuple(topic + '-' + item.variant for item in items))
     faq_title = f"Veelgestelde vragen over<br><em>{data.get('crumb', name).lower()}.</em>"
-    body = '\n'.join([hero, catalog, advice, faq_block(questions, faq_title, card=False, cls='section'), _related_v2(filename),
+    body = '\n'.join([hero, catalog, advice, faq_block(questions, faq_title, card=False, cls='section'), _related_v2(filename, data.get('related_extra')),
         contact(data.get('contact_title', 'Samen de juiste uitvoering kiezen?'), data['request'], topic=topic, topics=topics)])
     url = SITE + '/' + filename
     item_list = {'@context': 'https://schema.org', '@type': 'ItemList', 'name': name,

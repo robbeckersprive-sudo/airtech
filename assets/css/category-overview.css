@@ -377,3 +377,15 @@ html:not(.js) .category-filters { display: none; }
 .cv-rel__name { grid-column: 1; }
 .cv-rel a > .i { position: static; grid-column: 2; align-self: end; margin-bottom: 2px; }
 .cv-index { padding-bottom: clamp(28px, 4vh, 44px); }
+
+/* UITVOERING (ATEX / food-grade, Nov 27): second chip group + a calm label on the card. Rendered only with
+   confirmed data (execution_data.CONFIRMED); same chip look, no red, no new accent. */
+.cv-chips--exec { align-items: center; padding-left: 18px; border-left: 1px solid rgba(14, 42, 71, .14); }
+.cv-chips__t { font: 500 12px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
+.cv-card__exec { list-style: none; display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0 0; padding: 0; }
+.cv-card__exec li { padding: 3px 8px; border-radius: 5px; border: 1px solid rgba(14, 42, 71, .22); font: 500 12px/1.2 var(--font-mono); color: var(--steel-800); }
+@media (max-width: 760px) {
+  .cv-chips--exec { padding-left: var(--pad); border-left: 0; }
+}
+/* 44px touch targets for the comparison chips and view switch on touch screens */
+@media (pointer: coarse) { .cv-chip, .cv-view button { min-height: 44px; } }

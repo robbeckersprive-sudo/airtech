@@ -327,3 +327,34 @@ html:not(.js) .knowledge-share { display: none; }
   .knowledge-checklist li, .knowledge-more__grid { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .knowledge-more__grid { gap: var(--s-5); }
 }
+
+/* ATEX ARTICLE (Nov 27, src/knowledge_safety.py): zone schematic, onward links, marked note, "Uit eigen werk".
+   Steel tints only: zone 20 dense, 21 hatched, 22 dashed outline. No new accent colour. */
+.atex-zones { margin: var(--s-6) 0; border: 1px solid var(--line); border-radius: var(--r-card); padding: clamp(16px, 2.4vw, 28px); background:
+  linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 24px 24px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 24px 24px, var(--paper); }
+.atex-zones svg { display: block; width: 100%; height: auto; max-height: 340px; }
+.atex-zones__floor { fill: var(--steel-700); }
+.atex-zones__steel { fill: #e8edf1; stroke: var(--steel-700); stroke-width: 2; }
+.atex-zones__duct { fill: none; stroke: var(--steel-700); stroke-width: 14; stroke-linejoin: round; opacity: .35; }
+.atex-zones__z20 { fill: var(--steel-700); opacity: .55; }
+.atex-zones__z21 { fill: url(#atex-hatch); stroke: var(--steel-700); stroke-width: 1.5; }
+.atex-zones__hatch { stroke: var(--steel-700); stroke-width: 2; opacity: .5; }
+.atex-zones__z22 { fill: rgba(30, 45, 60, .05); stroke: var(--steel-700); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.atex-zones__mark circle { fill: var(--steel-900); }
+.atex-zones__mark text { fill: var(--white); font: 600 15px/1 var(--font-mono); text-anchor: middle; }
+.atex-zones__legend { list-style: none; display: grid; gap: 8px; margin-top: var(--s-4); }
+.atex-zones__legend li { display: grid; grid-template-columns: 22px minmax(0, 1fr); column-gap: 10px; align-items: start; line-height: 1.5; }
+.atex-zones__legend strong { font: 500 13px/1.5 var(--font-mono); color: var(--steel-900); margin-right: 6px; }
+.atex-zones__key { width: 22px; height: 14px; margin-top: 4px; border: 1.5px solid var(--steel-700); border-radius: 2px; }
+.atex-zones__key--20 { background: var(--steel-700); opacity: .7; }
+.atex-zones__key--21 { background: repeating-linear-gradient(45deg, transparent 0 3px, rgba(60, 80, 100, .55) 3px 5px); }
+.atex-zones__key--22 { border-style: dashed; }
+.atex-zones figcaption { margin-top: var(--s-3); font: 500 12px/1.5 var(--font-mono); color: var(--text-muted); letter-spacing: .02em; }
+.knowledge-note { margin-top: var(--s-4); padding: 12px 16px; border-left: 2px solid var(--steel-700); background: var(--mist); }
+.knowledge-links { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 22px; margin-top: var(--s-5); padding-top: var(--s-4); border-top: 1px solid var(--line); }
+.knowledge-links .link { min-height: 44px; }
+.knowledge-practice { margin-top: var(--s-6); padding: clamp(18px, 2.4vw, 26px); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface-raised, var(--white)); }
+.knowledge-practice .h3 { font-size: 20px; margin-bottom: 10px; }
+.knowledge-practice ul { list-style: none; display: grid; gap: 12px; }
+.knowledge-practice li { display: grid; gap: 2px; }
+.knowledge-practice li strong .link { min-height: 32px; }

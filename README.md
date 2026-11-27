@@ -424,6 +424,12 @@ ground, palette tokens only inside cards that keep their own surface.
 
 ## Decisions worth knowing
 
+- **Template checks normalise optional blocks** (`tools/structure_norm.py`, Nov 27): the "identical structure" checks
+  for categories, products and solutions ignore blocks that differ per page by design (FAQ count, sector chips,
+  confirmed uitvoeringen, solution notes, tags per card, the PDF folder link). `check_categories`, `check_products` and
+  `check_knowledge` already failed at commit dac6dc6 on such content differences and on the root-absolute
+  `/beheer.html` footer link; they pass again and still guard the template skeleton.
+
 - **Cross-section mirrored.** `13-cycloon-doorsnede` has its inlet on the left; on the product page it is mirrored with CSS so the inlet sits on the right, matching the mockup and the callout positions.
 - **Cut-outs trimmed.** Transparent PNGs were trimmed to their visible area (plus 2% margin) so they fill tiles; nothing is cropped by CSS.
 - **Case tabs.** Only Food and Recycling are shown; Feed, Chemie and Hout stay hidden until a case exists. The Food case has an image but no copy, so its title and subline are `[TBD]`.
@@ -503,6 +509,53 @@ Stofafzuiging en hoogvacuüm gebruiken nieuwe illustratieve toepassingsbeelden. 
 
 Controle: `python src/build.py` en `python tools/check_solutions.py`. Browsercontrole omvat 320, 375, 768, 1024 en 1440 pixels, beeldladen, sectielinks en focus, uitklappers, contactselectie, desktop- en mobiele menuroutes, en direct mobiel openen met en zonder JavaScript. Herstart de lokale contactserver na wijzigingen in contactonderwerpen, met behoud van de bestaande configuratie.
 
+## Sectoren
+
+Een derde ingang naast Oplossingen (processtap) en Componenten (product): `sectoren.html` en vijf sectorpagina's
+(`sectoren-food.html`, `-feed`, `-recycling`, `-chemie`, `-hout`; EN `industries-*.html`, DE `branchen-*.html`).
+Eén datafile, één renderer, zoals bij Oplossingen:
+
+| Bestand | Rol |
+|---|---|
+| `src/sector_data.py` | `SECTORS = {slug: dict(...)}`, `ORDER`, `INDEX`; afgeleide relaties `SECTORS_OF_PRODUCT` / `SECTORS_OF_SOLUTION` |
+| `src/sector_page.py` | `sector_page(slug, data)` en `sector_index()`; geregistreerd in `build.page_builders()` |
+| `assets/css/sectors.css` | importeert `solutions.css` en voegt alleen de sectoronderdelen toe (vraagstukken, gelinkte route, oplossingsrijen, overzichtskaarten) |
+| `tools/check_sectors.py` | controle per taal (zie onder) |
+
+**Vaste opbouw** (sectie-ID's in deze volgorde): hero met kruimelpad en actie naar `#contact` (onderwerp
+`sector-<slug>`) · `uitdagingen` (3-4 vraagstukken: probleem + gevolg voor het ontwerp) · `route` (de stapcomponent
+van de oplossingen; elk station linkt naar `oplossingen-*.html`) · `oplossingen` (2-4) · `componenten` (3-6,
+`card()` met sectorspecifieke reden) · `ontwerpeisen` · `praktijk` · `kennis` (2-3 artikelen) · `vragen` (4-6,
+FAQPage alleen voor beantwoorde vragen, plus "Bronnen bij deze pagina") · `contact`.
+**Praktijk** toont alleen echte projecten waarvan `project_data.PROJECTS[*]['sector']` gelijk is aan
+`project_sector`, met een link naar `projecten.html?sector=<waarde>`. Zonder project (nu Chemie en Hout) is het een
+uitnodiging, nooit een leeg blok, met `[TBD: bevestigen door Airtechnic]` bij de ervaring in die sector.
+
+**Eén bron voor relaties.** `SECTORS[slug]['components']` levert de sectorchips op de productpagina's (een product
+zonder sector houdt de neutrale zin); `solutions` + `route` leveren "Toegepast in" op de oplossingspagina's;
+`topic_title` / `topic_help` leveren het contactonderwerp `sector-<slug>` in `contact_delivery.CONTACT_TOPICS`.
+Onderhoud geen tweede lijst. Navigatie: "Sectoren" als derde drawer in de header (`SECTOREN`, `SECTOR_IMG` in
+`components.py`, foto per sector), als derde paneel in het mobiele menu en in de footerkolom Techniek;
+`nav_current='Sectoren'` zet de liniaalmarkering. Homepage: het FAQ-antwoord over industrieën linkt naar de vijf
+pagina's (de FAQPage-JSON-LD houdt platte tekst) en de sectorlabels in het projectdossier linken naar de sectorpagina.
+Projectpagina's: regel "Sector" in de projectbrief.
+
+**Sector toevoegen:** voeg een record toe aan `SECTORS` en de slug aan `ORDER`, zet de drie bestandsnamen in
+`src/i18n_slugs.py`, kies een beeld uit `images/manifest.json`, maak `images/og-sector-<slug>.jpg` (1200 × 630,
+uitsnede van het herobeeld), bouw, vertaal `missing-*.json` en draai de controles. Alleen bestaande
+bibliotheekbeelden; herkomst in `images/generated-sector-assets.json`.
+
+**Inhoud.** Geen verzonnen klanten, cijfers, certificeringen of ervaring. Vakbeweringen zijn getoetst (27-11-2026)
+aan EUR-Lex (Verordening 1935/2004, Richtlijnen 1999/92/EG en 2004/37/EG), wetten.overheid.nl
+(Arbeidsomstandighedenregeling bijlage XIII: hardhoutstof 2 mg/m³ als 8-uursgemiddelde), Arboportaal (Arbobesluit
+art. 3.5c), GMP+ International, EHEDG en IFA GESTIS-STAUB-EX; de bronnen staan per pagina onder "Bronnen bij deze pagina".
+
+**Controle:** `python src/build.py` en `python tools/check_sectors.py` (vaste sectievolgorde, unieke ID's, interne
+links en ankers, geen `href="#"`, lokale en geregistreerde beelden, eigen voorgeselecteerd contactonderwerp, praktijk
+alleen met projecten, metadata, hreflang, JSON-LD, navigatie, afgeleide chips), plus `check_products.py`,
+`check_solutions.py` en `check_i18n.py`. Browsercontrole: 320, 375, 768, 1024 en 1440 px in drie talen, met en zonder
+JavaScript, met reduced motion.
+
 ## Kennisartikelen
 
 De drie aangekondigde kennisartikelen zijn beschikbaar via de homepage. Naast `kennis-druk-of-vacuumtransport.html` zijn dit `kennis-wanneer-filters-vervangen.html` en `kennis-juiste-blower-selecteren.html`. De nieuwe inhoud staat in `src/knowledge_data.py`; `src/knowledge_page.py` gebruikt de bestaande componenten uit `src/knowledge_article.py` en dezelfde stylesheet als het referentieartikel.
@@ -510,6 +563,49 @@ De drie aangekondigde kennisartikelen zijn beschikbaar via de homepage. Naast `k
 De vaste opbouw omvat hero, kort antwoord, inhoudsnavigatie, zes inhoudssecties, twee processchema's, vergelijking, drie praktijksituaties, advieschecklist, technische bronnen, twee relevante componentlinks en contact. Bestaande filter- en ventilatorbeelden worden hergebruikt met specifieke alternatieve teksten, bijschriften en deelafbeeldingen. Er zijn geen onbewezen universele vervangingstermijnen of prestatiegrenzen toegevoegd. Bronverwijzingen van Donaldson, CAGI en Busch staan per artikel onder Technische bronnen.
 
 Controleer na wijzigingen met `python src/build.py` en `python tools/check_knowledge.py`. Browsercontrole: 320, 375, 768, 1024 en 1440 pixels; beelden, inhoudslinks en focus, praktijksituaties, deelknop, contactonderwerp en rechtstreeks mobiel openen met en zonder JavaScript.
+
+**Nieuw (27-11-2026): "Stofexplosiegevaar: waar let u op bij ATEX?"** (`kennis-atex-explosieveiligheid.html`, EN
+`knowledge-atex-explosion-safety.html`, DE `wissen-atex-explosionsschutz.html`), data in `src/knowledge_safety.py`. De
+kennisbank heeft daarvoor een vierde groep **Veiligheid en hygiëne** (sleutel `veiligheid`; `knowledge_index.GROUPS`,
+`home_knowledge.TOPICS` / `TOPIC_OF`). Het artikel heeft zes inhoudssecties in plaats van twee; `knowledge_page`
+rendert per sectie optioneel een schema (`figure`: zones rond filter en stortpunt, inline SVG, "schematisch, niet op
+schaal"), een gemarkeerde noot (`note`, voor een `tbd()`), vervolglinks (`links`) en een blok "Uit eigen werk"
+(`practice`, met de letterlijke projectformulering). Eigen SEO-titel via `seo_title`. Contactonderwerp
+`atex-explosieveiligheid`. Elke zone-definitie, St-klasse, norm en wetsartikel is gecontroleerd aan de bron (EUR-Lex /
+Publicatiebureau, wetten.overheid.nl, Arboportaal, IFA, NEN / BSI / IEC / DIN) en staat onder Technische bronnen. Het
+artikel claimt geen certificering en vervangt geen risicobeoordeling. `check_knowledge.py` telt nu 4 + aantal paden
+secties en controleert de vierde groep op kennisbank en homepage.
+
+
+## Uitvoeringen (ATEX / food-grade)
+
+**Regel: de data bepalen de waarheid.** Het mechanisme staat klaar, maar de site toont pas iets als Airtechnic het
+per uitvoering heeft bevestigd.
+
+- **Datamodel.** `option(..., executions=('atex', 'food'))` in `src/category_data.py` en `executions` op
+  `CategoryOption` (cyclonen): de *kandidaten*, alleen gebruikt als vraag aan Airtechnic. `src/execution_data.py`:
+  `EXECUTIONS` (vaste set met label, chip, feitregel, uitleg en link; uitbreidbaar met bv. `'slijtvast'`, `'rvs'`) en
+  `CONFIRMED`, een set `(categorie, variant, uitvoering)`. **`CONFIRMED` is leeg** en wordt niet met de hand gevuld.
+- **Bevestigen.** `docs/uitvoeringen-matrix.csv` (kolommen `categorie, uitvoering, variant, atex, food, opmerking`,
+  32 regels, alles `?`; de opmerking is marktcontext, geen claim). Airtechnic vult `ja` / `nee` / `?` in; daarna
+  `python tools/import_executions.py` (schrijft `CONFIRMED`; alleen `ja` telt) en `python src/build.py`.
+  `--check` valideert zonder te schrijven, `--template` maakt de CSV opnieuw.
+- **Weergave (alleen met bevestigde data).** Categoriepagina: tweede chipgroep "Uitvoering" (Alle · ATEX ·
+  Food-grade) naast de toepassingschips, zelfde gedrag (dimmen, `aria-pressed`, teller), EN-combinatie met de
+  toepassing, URL `?uitvoering=atex` (te combineren met `?toepassing=`), kolom "Uitvoeringen" in de tabel en een rustig
+  label op de kaart. Productpagina: regel "Uitvoeringen" in de selectietabel met link naar het ATEX-artikel. Zonder
+  bevestiging bestaan deze elementen niet; de pagina's zijn dan byte-gelijk aan de versie zonder dit mechanisme
+  (getest met tijdelijke testdata via de importer, daarna teruggezet).
+- **Terminologie.** Wel: "ATEX-uitvoering mogelijk (categorie in overleg)", "food-grade uitvoering" (materialen
+  geschikt voor contact met levensmiddelen, hygiënisch ontwerp); EN "ATEX version available" / "food-grade version";
+  DE "ATEX-Ausführung möglich" / "lebensmitteltaugliche Ausführung". **Niet:** "ATEX-gecertificeerd",
+  "EHEDG-gecertificeerd" of "FDA-approved", tenzij Airtechnic dat per product bevestigt en onderbouwt.
+- **Controles** (`tools/check_categories.py`): elke `executions`-waarde staat in `EXECUTIONS`; filtergroep en labels
+  verschijnen alleen bij bevestigde data (alle talen); vangnet: geen "gecertificeerd / certified / zertifiziert" naast
+  ATEX, EHEDG, food of FDA in de gegenereerde HTML (bekende uitzondering: de bronvermelding "EX-gecertificeerde VDL
+  draaisluizen" van een derde partij in de dierenvoedingscase).
+- **Voorstel, nog niet gebouwd:** een link "Componenten in ATEX-uitvoering" op `componenten.html` en vanuit het
+  ATEX-artikel naar `componenten-filters.html?uitvoering=atex`, zodra er bevestigde data is.
 
 ## Mobile layer + page transitions (Nov 20)
 

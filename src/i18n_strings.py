@@ -17,6 +17,8 @@ STRINGS = {
     'nav.mobile': {'nl': 'Mobiele navigatie', 'en': 'Mobile navigation', 'de': 'Mobile Navigation'},
     'nav.solutions': {'nl': 'Oplossingen', 'en': 'Solutions', 'de': 'Lösungen'},
     'nav.components': {'nl': 'Componenten', 'en': 'Components', 'de': 'Komponenten'},
+    'nav.sectors': {'nl': 'Sectoren', 'en': 'Industries', 'de': 'Branchen'},
+    'nav.all_sectors': {'nl': 'Alle sectoren', 'en': 'All industries', 'de': 'Alle Branchen'},
     'nav.projects': {'nl': 'Projecten', 'en': 'Projects', 'de': 'Projekte'},
     'nav.approach': {'nl': 'Werkwijze', 'en': 'Approach', 'de': 'Vorgehensweise'},
     'nav.about': {'nl': 'Over ons', 'en': 'About us', 'de': 'Über uns'},

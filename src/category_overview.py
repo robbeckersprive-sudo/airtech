@@ -20,6 +20,7 @@ class CategoryOption:
     applications: str
     variant: str
     photo: bool = False
+    executions: tuple = ()   # candidate uitvoeringen (execution_data.EXECUTIONS); shown only when CONFIRMED
 
 
 def category_intro(title, crumbs, intro, image, alt, caption):

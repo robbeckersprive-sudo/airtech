@@ -53,3 +53,14 @@
  .solution-stages li+li { border-left:0; border-top:1px solid var(--white-20); }
  .solution-step { margin-bottom:12px; }
 }
+
+/* Toegepast in (Nov 27): sectors where this solution occurs, derived from sector_data.py */
+.solution-section .solution-applied { margin-top: 26px; font: 500 var(--fs-label, 12px)/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--steel-900); }
+.solution-applied__list { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.solution-applied__list a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 6px; border: 1px solid rgba(14, 42, 71, .18); background: rgba(255, 255, 255, .5); font: 500 12px/1 var(--font-mono); letter-spacing: .06em; color: var(--steel-800); text-decoration: none; }
+.solution-applied__list a:hover { border-color: var(--steel-700); background: var(--white); }
+.solution-applied__list a:focus-visible { outline: 2px solid var(--steel-900); outline-offset: 2px; }
+.solution-section .solution-note { margin-top: 18px; }
+.solution-two .link + .link { margin-left: 22px; }
+.solution-route .solution-stages a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--white-60); }
+.solution-route .solution-stages a:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }

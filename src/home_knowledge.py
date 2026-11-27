@@ -12,12 +12,13 @@ import re
 from components import pic, icon, link, split_lines, faq, PHONE_TEL, PHONE_DISPLAY, EMAIL, _v
 from knowledge_data import ARTICLES
 
-TOPICS = [('lucht', 'Lucht &amp; filtratie'), ('transport', 'Transport &amp; dosering'), ('bulk', 'Scheiden &amp; lossen')]
+TOPICS = [('lucht', 'Lucht &amp; filtratie'), ('transport', 'Transport &amp; dosering'), ('bulk', 'Scheiden &amp; lossen'),
+          ('veiligheid', 'Veiligheid &amp; hygiëne')]
 TOPIC_OF = {
     'wanneer-filters-vervangen': 'lucht', 'juiste-blower-selecteren': 'lucht', 'cycloon-als-voorafscheider': 'lucht',
     'silo-ontluchting-pneumatisch-vullen': 'lucht', 'slijtage-transportbochten': 'transport',
     'doorvalsluis-of-doorblaassluis': 'transport', 'controlezeef-of-fractioneerzeef': 'bulk',
-    'bigbag-lossen-onregelmatige-productstroom': 'bulk',
+    'bigbag-lossen-onregelmatige-productstroom': 'bulk', 'atex-explosieveiligheid': 'veiligheid',
 }
 # the comparison article lives on its own template (pages.artikel)
 LEAD = ('Druk- of vacuümtransport?', 'kennis-druk-of-vacuumtransport.html', '01-hero-pijpleiding',

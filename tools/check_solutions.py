@@ -5,6 +5,8 @@ from urllib.parse import urlsplit
 import sys
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
+sys.path.insert(0,str(ROOT/'tools'))
+from structure_norm import normalize, count_faq
 from solution_data import SOLUTIONS
 from components import OPLOSSINGEN
 class Document(HTMLParser):
@@ -23,7 +25,9 @@ class Document(HTMLParser):
         if tag=='main':self.main=False
 reference=None
 for slug in SOLUTIONS:
-    filename='oplossingen-'+slug+'.html';d=Document();d.feed((ROOT/filename).read_text(encoding='utf-8'))
+    filename='oplossingen-'+slug+'.html';_html=(ROOT/filename).read_text(encoding='utf-8');d=Document();d.feed(_html)
+    assert count_faq(_html) in (3,4),(slug,'FAQ count')
+    _n=Document();_n.feed(normalize(_html));d.shape=_n.shape
     if reference is None:reference=d.shape
     assert reference==d.shape,(slug,'inconsistent structure')
     assert len(d.ids)==len(set(d.ids)),slug

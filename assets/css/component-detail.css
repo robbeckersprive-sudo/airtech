@@ -493,3 +493,11 @@ html:not(.js) .detail-marker { display: none; }
 .detail-view { height: 100%; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
 .detail-view span { align-self: center; max-width: 100%; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; text-wrap: balance; }
 .detail-view span { overflow-wrap: normal; -webkit-hyphens: manual; hyphens: manual; }
+
+/* SECTOR CHIPS (Nov 27): linked sector chips in the toepassingen section, cv-tags look (category-overview.css) */
+.detail-sector-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.detail-sector-chips a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 6px; border: 1px solid rgba(14, 42, 71, .18); background: rgba(255, 255, 255, .5); font: 500 12px/1 var(--font-mono); letter-spacing: .06em; color: var(--steel-800); text-decoration: none; transition: border-color var(--t-fast) ease, background var(--t-fast) ease; }
+.detail-sector-chips a:hover { border-color: var(--steel-700); background: var(--white); }
+.detail-sector-chips a:focus-visible { outline: 2px solid var(--steel-900); outline-offset: 2px; }
+.detail-sector-chips .i { width: 14px; height: 14px; opacity: .55; }
+.detail-specs a { color: var(--link); }

@@ -31,6 +31,8 @@ CONTACT_TOPICS = {
     'bestaande-installatie': ('Bestaande installatie verbeteren', 'Wat loopt er niet zoals u wilt? Denk aan capaciteit, stof, slijtage of storingen.'),
     'onderdelen': ('Onderdelen of vervanging', 'Om welk onderdeel gaat het? Een foto, maat of de gegevens van het typeplaatje helpen ons verder.'),
     'terugbellen': ('Liever teruggebeld', 'Laat kort weten waarover u wilt praten en vul uw telefoonnummer in. Dan bellen wij u.'),
+    # knowledge article "Stofexplosiegevaar: waar let u op bij ATEX?" (Nov 27)
+    'atex-explosieveiligheid': ('Explosieveiligheid en ATEX', 'Welk product verwerkt u en is er al een zone-indeling of explosieveiligheidsdocument? Stofgegevens helpen ons op weg.'),
 }
 
 
@@ -47,6 +49,11 @@ from product_routes import PRODUCT_ROUTES
 from solution_data import SOLUTIONS
 for _solution in SOLUTIONS.values():
     CONTACT_TOPICS[_solution['topic']] = (_solution['name'], _solution['request'])
+
+# One topic per sector page ('sector-<slug>'), derived from the sector data like the solution topics.
+from sector_data import SECTORS
+for _slug, _sector in SECTORS.items():
+    CONTACT_TOPICS['sector-' + _slug] = (_sector['topic_title'], _sector['topic_help'])
 
 for _category_slug, _routes in PRODUCT_ROUTES.items():
     for _variant, _product_slug in _routes.items():

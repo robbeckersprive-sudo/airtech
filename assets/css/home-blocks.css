@@ -552,3 +552,9 @@
 }
 @media (prefers-reduced-motion: reduce) { .js .co .co-card { opacity: 1; translate: none; transition: none; } }
 @media (max-width: 899px) { .co-head .h1 { font-size: clamp(44px, 12.5vw, 84px); } }
+
+/* Sector chip links to the sector page (Nov 27) */
+.pd-sector__link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+.pd-sector__link span { transition: border-color var(--t-fast) ease, background var(--t-fast) ease; }
+.pd-sector__link:hover span { border-color: rgba(255, 255, 255, .55); background: rgba(255, 255, 255, .16); }
+.pd-sector__link:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 6px; }
