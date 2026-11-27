@@ -457,6 +457,23 @@ ground, palette tokens only inside cards that keep their own surface.
 - Spec table label "Procestemperatuur" is marked `[verify label]`.
 - Real URLs for Projecten, Over ons, Kennis, other components, Privacyverklaring, LinkedIn (now `#`).
 
+## Contentreview door de klant (Word, 2026-11-27)
+
+`python tools/content_review.py` (na `python src/build.py`) zet alle Nederlandse teksten en foto's van de live site
+in Word-documenten voor de klant: `docs/contentreview/<datum>-<hash>/`.
+
+- **Welke pagina's:** de pagina's die vanaf `index.html` bereikbaar zijn (73), plus de kiosk. De ontwerpvarianten
+  (`sig-*`, `hero-*`, `concept-*` …), Beheer en het niet-gelinkte `toepassing-pet-recycling.html` vallen erbuiten.
+- **Documenten:** `00-open-punten` (algemene vragen, `[TBD]`, normen/certificering, claims, getallen),
+  `01`–`05` (teksten per pagina in leesvolgorde; menu en voettekst één keer in deel 01) en `06-fotobijlage`
+  (elk beeld één keer met pagina's, alt-tekst en drie vinkjes).
+- **Eén keer per tekst:** elke tekst staat één keer in de set, bij de eerste pagina waar hij voorkomt.
+- **Vaste ID's:** elke tekst heeft een vast nummer (`T0001` …, bewaard in `docs/contentreview/ids.json`).
+  `manifest.json` koppelt ID → Nederlandse tekst → pagina's, zodat correcties per ID terug kunnen.
+- **Wijzigingen bijhouden:** de documenten openen met Wijzigingen bijhouden aan.
+- **Weergave in Word:** zachte afbreekstreepjes (`&shy;`) en de " · " tussen aangrenzende links zijn alleen
+  weergave. Het terugleesscript moet daar rekening mee houden.
+
 ## Site signature concepts (Nov 20, review pages; live pages untouched)
 
 `python tools/signature_concepts.py` turns the built home, category, product and kennis pages into `sig-{a,b}[-categorie|-product|-kennis].html`
