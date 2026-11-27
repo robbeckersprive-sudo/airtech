@@ -707,6 +707,27 @@ de granulaten bewegen alleen in de glazen bochten (contouren gemeten in `GLASS` 
 `project_data.PROJECTS` (twee per ronde, wisselend), materialen uit de projecten. Alleen de werkwijze-stappen staan
 dubbel (`STEPS` in kiosk_page.py; in `pages.home()` zijn ze lokaal). Nieuwe groep: voeg een regel toe aan `GROUPS`.
 
+**Sectoren, kennis, QR en standregel (27-11-2026).** Zelfde bron, drie nieuwe soorten inhoud:
+- *Sectorbladen* (`s_sector`, vijf bladen uit `sector_data.SECTORS`): scherm A het sectorbeeld met titel en de eerste
+  zin van de lead; scherm B de vier vraagstukken, de productroute als lijn die station voor station oplicht, en een
+  QR-code naar de sectorpagina. Sectoren en componentgroepen wisselen elkaar af (één sector, twee groepen).
+- *Kennisblad* (`s_atex`): de explosievijfhoek uit het ATEX-artikel, de twee kernpunten en een QR-code naar het artikel.
+- *QR-codes* (`qr()` in kiosk_page.py, encoder in kiosk.js): byte-modus, foutcorrectie M, versie 1-10, getekend als SVG
+  op het moment van afspelen vanuit `location.href`. De code wijst dus altijd naar de site waarop de kiosk draait
+  (ook offline) en nooit naar een verouderd domein; per taal naar de vertaalde pagina (`data-qr`). Ook op het
+  contactblad (naar `index.html#contact`). Geen code te maken = geen plaat.
+- *Standregel*: in Beheer een vrije regel (max. 40 tekens, bv. "Hal 3 · Stand B12") die in het titelblok van elk
+  scherm de cel Schaal vervangt.
+Beheer heeft daarvoor twee nieuwe blokken: **03 Sectoren en kennis** (kies per beurs de sectoren; kennisblad aan/uit)
+en **04 Beurs en stand**. URL-parameters: `sec=food,feed` (of `sec=0` voor geen), `k=0`, `stand=…`. Alles aan: 21
+bladen, één ronde 5:03; zonder sectoren en kennisblad de oude 15 bladen, 3:37. Chemie en Hout staan standaard aan,
+net als op de site; zet ze uit zolang Airtechnic die sectoren niet heeft bevestigd.
+Controle: `python tools/check_kiosk.py` (nu ook: één blad per sector, kennisblad, QR-doelen bestaan per taal) en, met
+een draaiende lokale server, `python tools/check_kiosk_qr.py [--4k] [--out map]`: rendert de bladen per taal en
+schermrol, decodeert elke QR-code uit de schermafbeelding (OpenCV) en vergelijkt hem met de doelpagina, en bewaakt
+leesgroottes, overloop, de standregel en de filters. Resultaat: 63 weergaven op 1080p en op 4K, 0 problemen; de
+encoder leest daarnaast schoon terug voor alle versies 1-10 (72 teksten).
+
 **Offline.** `kiosk-sw.js` pre-cachet alle kioskbestanden; versie-hash wisselt bij elke build. Pagina's network-first,
 assets cache-first. Een recente login op het apparaat geldt offline (`at-kiosk-pass` in localStorage).
 
@@ -731,13 +752,13 @@ luisteraars en de scherm-wake-lock op; Esc na het verlaten van fullscreen opent 
 houdt toetsenbordfocus vast. Reduced motion schakelt de panorama-beweging en scanovergang uit.
 
 **Offline voorbereiden.** Open Beheer eerst online en wacht op "Gereed voor offline gebruik". De service worker
-haalt maximaal vier bestanden tegelijk op en controleert de volledige inventaris (115 bronbestanden, plus de
+haalt maximaal vier bestanden tegelijk op en controleert de volledige inventaris (123 bronbestanden, plus de
 gebundelde stylesheet in de publicatiebouw), inclusief de drie talen en beide beeldformaten. Met een geldige recente login kunnen Beheer en de kiosk vervolgens offline worden herladen.
 Twee apparaten hebben elk deze voorbereiding en een gelijke systeemklok nodig. BroadcastChannel stopt alleen
 vensters op hetzelfde apparaat; op een tweede apparaat stopt u de kiosk apart.
 
 **Controle.** `python src/kiosk_page.py` genereert de kiosk en Beheer. Daarna controleert
-`python tools/check_kiosk.py` de volledigheid van vertalingen, 18 bladen × 3 schermrollen per taal, lokale links,
+`python tools/check_kiosk.py` de volledigheid van vertalingen, 24 bladen × 3 schermrollen per taal, lokale links,
 beelden en de offline-inventaris. `npm run build` maakt de publicatiemap; `python tools/check_kiosk.py --dist`
 controleert ook de werkelijk gepubliceerde bestanden en hun offline-cache. Browsercontrole omvat inloggen,
 taal bewaren, preview/pauze, starten/stoppen, twee vensters en offline herladen. Automatische plaatsing op

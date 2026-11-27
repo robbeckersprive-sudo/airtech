@@ -25,6 +25,8 @@
     tpls.forEach(function (t) {
       var g = t.dataset.group;
       if (g && cfg.groups && cfg.groups.indexOf(g) < 0) return;
+      if (t.dataset.sector && cfg.sectors && cfg.sectors.indexOf(t.dataset.sector) < 0) return;   // sectors: null = all, [] = none
+      if (t.dataset.kind === 'knowledge' && cfg.knowledge === false) return;
       if (t.dataset.kind === 'steps' && cfg.steps === false) return;
       if (t.dataset.pool === 'project') {
         if (cfg.projects === false) return;
@@ -119,6 +121,129 @@
     }
   };
 
+  /* ---------------------------------------------------------------- QR codes (Nov 27) */
+  // Byte mode, error correction M, versions 1-10 (up to 213 bytes): enough for a site URL. Drawn at run time from
+  // location.href, so the code points at the site this kiosk runs on (also offline) and never at a stale domain.
+  // Algorithm after ISO/IEC 18004; checked by decoding rendered sheets (tools/check_kiosk_qr.py).
+  var QR_ECC = [0, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26], QR_BLOCKS = [0, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5];
+  function qrRaw(v) { var r = (16 * v + 128) * v + 64; if (v >= 2) { var n = Math.floor(v / 7) + 2; r -= (25 * n - 10) * n - 55; if (v >= 7) r -= 36; } return r; }
+  function qrMul(x, y) { var z = 0; for (var i = 7; i >= 0; i--) { z = (z << 1) ^ ((z >>> 7) * 0x11D); z ^= ((y >>> i) & 1) * x; } return z & 255; }
+  function qrMatrix(text) {
+    var data = unescape(encodeURIComponent(text)).split('').map(function (c) { return c.charCodeAt(0); });
+    var ver = 1, cap, i, j;
+    for (;; ver++) {
+      if (ver > 10) return null;
+      cap = (Math.floor(qrRaw(ver) / 8) - QR_ECC[ver] * QR_BLOCKS[ver]) * 8;
+      if (4 + (ver < 10 ? 8 : 16) + data.length * 8 <= cap) break;
+    }
+    var bits = [];
+    function push(val, len) { for (var b = len - 1; b >= 0; b--) bits.push((val >>> b) & 1); }
+    push(4, 4); push(data.length, ver < 10 ? 8 : 16); data.forEach(function (b) { push(b, 8); });
+    push(0, Math.min(4, cap - bits.length)); push(0, (8 - bits.length % 8) % 8);
+    for (var pad = 0xEC; bits.length < cap; pad ^= 0xEC ^ 0x11) push(pad, 8);
+    var cw = [];
+    for (i = 0; i < bits.length; i += 8) { var byte = 0; for (j = 0; j < 8; j++) byte = (byte << 1) | bits[i + j]; cw.push(byte); }
+    // Reed-Solomon per block, then interleave
+    var nb = QR_BLOCKS[ver], ecl = QR_ECC[ver], raw = Math.floor(qrRaw(ver) / 8), nshort = nb - raw % nb, shortLen = Math.floor(raw / nb);
+    var div = [], root = 1;
+    for (i = 0; i < ecl - 1; i++) div.push(0);
+    div.push(1);
+    for (i = 0; i < ecl; i++) { for (j = 0; j < ecl; j++) { div[j] = qrMul(div[j], root); if (j + 1 < ecl) div[j] ^= div[j + 1]; } root = qrMul(root, 2); }
+    var blocks = [], k = 0;
+    for (i = 0; i < nb; i++) {
+      var dat = cw.slice(k, k + shortLen - ecl + (i < nshort ? 0 : 1)); k += dat.length;
+      var rem = div.map(function () { return 0; });
+      dat.forEach(function (b) { var f = b ^ rem.shift(); rem.push(0); div.forEach(function (c, x) { rem[x] ^= qrMul(c, f); }); });
+      if (i < nshort) dat.push(0);
+      blocks.push(dat.concat(rem));
+    }
+    var out = [];
+    for (i = 0; i < blocks[0].length; i++) blocks.forEach(function (b, x) { if (i !== shortLen - ecl || x >= nshort) out.push(b[i]); });
+    // function patterns
+    var size = ver * 4 + 17, M = [], F = [];
+    for (i = 0; i < size; i++) { M.push([]); F.push([]); for (j = 0; j < size; j++) { M[i].push(false); F[i].push(false); } }
+    function set(x, y, d) { M[y][x] = d; F[y][x] = true; }
+    for (i = 0; i < size; i++) { set(6, i, i % 2 === 0); set(i, 6, i % 2 === 0); }
+    [[3, 3], [size - 4, 3], [3, size - 4]].forEach(function (c) {
+      for (var dy = -4; dy <= 4; dy++) for (var dx = -4; dx <= 4; dx++) {
+        var d = Math.max(Math.abs(dx), Math.abs(dy)), xx = c[0] + dx, yy = c[1] + dy;
+        if (xx >= 0 && xx < size && yy >= 0 && yy < size) set(xx, yy, d !== 2 && d !== 4);
+      }
+    });
+    if (ver > 1) {
+      var na = Math.floor(ver / 7) + 2, step = Math.ceil((ver * 4 + 4) / (na * 2 - 2)) * 2, pos = [6];
+      for (var ap = size - 7; pos.length < na; ap -= step) pos.splice(1, 0, ap);
+      pos.forEach(function (ax, a) { pos.forEach(function (ay, b) {
+        if ((a === 0 && b === 0) || (a === 0 && b === na - 1) || (a === na - 1 && b === 0)) return;
+        for (var dy = -2; dy <= 2; dy++) for (var dx = -2; dx <= 2; dx++) set(ax + dx, ay + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+      }); });
+    }
+    function format(mask) {
+      var r = mask, b;                                   // error correction level M = 0b00
+      for (b = 0; b < 10; b++) r = (r << 1) ^ ((r >>> 9) * 0x537);
+      var fb = ((mask << 10) | r) ^ 0x5412;
+      function bit(n) { return ((fb >>> n) & 1) !== 0; }
+      for (b = 0; b <= 5; b++) set(8, b, bit(b));
+      set(8, 7, bit(6)); set(8, 8, bit(7)); set(7, 8, bit(8));
+      for (b = 9; b < 15; b++) set(14 - b, 8, bit(b));
+      for (b = 0; b < 8; b++) set(size - 1 - b, 8, bit(b));
+      for (b = 8; b < 15; b++) set(8, size - 15 + b, bit(b));
+      set(8, size - 8, true);
+    }
+    format(0);
+    if (ver >= 7) {
+      var vr = ver;
+      for (i = 0; i < 12; i++) vr = (vr << 1) ^ ((vr >>> 11) * 0x1F25);
+      var vb = (ver << 12) | vr;
+      for (i = 0; i < 18; i++) { var on = ((vb >>> i) & 1) !== 0, va = size - 11 + i % 3, vc = Math.floor(i / 3); set(va, vc, on); set(vc, va, on); }
+    }
+    // data: zigzag from the bottom right
+    var n = 0;
+    for (var right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      for (var vert = 0; vert < size; vert++) for (j = 0; j < 2; j++) {
+        var x = right - j, up = ((right + 1) & 2) === 0, y = up ? size - 1 - vert : vert;
+        if (!F[y][x] && n < out.length * 8) { M[y][x] = ((out[n >>> 3] >>> (7 - (n & 7))) & 1) !== 0; n++; }
+      }
+    }
+    // mask: the pattern with the lowest penalty (runs, 2x2 blocks, dark/light balance)
+    function masked(mask, x, y) {
+      switch (mask) {
+        case 0: return (x + y) % 2 === 0; case 1: return y % 2 === 0; case 2: return x % 3 === 0; case 3: return (x + y) % 3 === 0;
+        case 4: return (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0; case 5: return x * y % 2 + x * y % 3 === 0;
+        case 6: return (x * y % 2 + x * y % 3) % 2 === 0; default: return ((x + y) % 2 + x * y % 3) % 2 === 0;
+      }
+    }
+    function apply(mask) { for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) if (!F[y][x] && masked(mask, x, y)) M[y][x] = !M[y][x]; }
+    function penalty() {
+      var p = 0, dark = 0, x, y, run, col;
+      for (y = 0; y < size; y++) {
+        for (x = 0, run = 0, col = null; x < size; x++) { if (M[y][x] === col) { run++; if (run === 5) p += 3; else if (run > 5) p++; } else { col = M[y][x]; run = 1; } if (M[y][x]) dark++; }
+        for (x = 0, run = 0, col = null; x < size; x++) { if (M[x][y] === col) { run++; if (run === 5) p += 3; else if (run > 5) p++; } else { col = M[x][y]; run = 1; } }
+      }
+      for (y = 0; y < size - 1; y++) for (x = 0; x < size - 1; x++) { var c = M[y][x]; if (c === M[y][x + 1] && c === M[y + 1][x] && c === M[y + 1][x + 1]) p += 3; }
+      return p + Math.floor(Math.abs(dark * 20 - size * size * 10) / (size * size)) * 10;
+    }
+    var best = 0, bestP = Infinity;
+    for (var mk = 0; mk < 8; mk++) { apply(mk); format(mk); var pen = penalty(); if (pen < bestP) { bestP = pen; best = mk; } apply(mk); }
+    apply(best); format(best);
+    return M;
+  }
+  function qrSvg(text) {
+    var m = qrMatrix(text);
+    if (!m) return '';
+    var n = m.length, q = 4, d = '';
+    for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) if (m[y][x]) d += 'M' + (x + q) + ' ' + (y + q) + 'h1v1h-1z';
+    return '<svg viewBox="0 0 ' + (n + 2 * q) + ' ' + (n + 2 * q) + '" shape-rendering="crispEdges" role="img" aria-label="QR"><rect width="100%" height="100%" fill="#fff"/><path d="' + d + '" fill="#08182A"/></svg>';
+  }
+  function drawQr(scope) {
+    Array.prototype.forEach.call(scope.querySelectorAll('[data-qr]'), function (el) {
+      var box = el.querySelector('[data-qr-code]'), svg = '';
+      try { svg = qrSvg(new URL(el.dataset.qr, location.href).href.replace(/[?&](role|t0|g|p|w|k|sec|stand|tempo|preview)=[^&#]*/g, '')); } catch (e) { svg = ''; }
+      if (svg && box) box.innerHTML = svg; else el.hidden = true;          // no code: no plate (never an empty frame)
+    });
+  }
+
   /* ---------------------------------------------------------------- player */
   function Player(root, sheetsRoot, cfg) {
     this.root = root; this.cfg = cfg; this.role = cfg.role || 's';
@@ -132,6 +257,9 @@
     this.cur = null; this.next = null; this.old = null; this.flows = [];
     var role = this.role;
     Array.prototype.forEach.call(root.querySelectorAll('[data-tb]'), function (el) { el.hidden = el.dataset.tb.split(' ').indexOf(role) < 0; });
+    // optional stand line from Beheer ("Hal 3 · Stand B12"): takes the place of the scale cell
+    var stand = (cfg.stand || '').trim().slice(0, 40), standCell = root.querySelector('[data-tb-stand]'), scaleCell = root.querySelector('[data-tb-scale]');
+    if (standCell) { standCell.hidden = !stand; standCell.querySelector('[data-stand]').textContent = stand; if (stand && scaleCell) scaleCell.hidden = true; }
     root.classList.add('is-running');
     var self = this;
     this.onResize = function () { self.width = root.clientWidth; self.flows.forEach(function (f) { f.flow.resize(); }); };
@@ -149,6 +277,7 @@
     layer.style.setProperty('--dur', sh.dur + 's');
     layer.appendChild(face.cloneNode(true));
     this.stage.appendChild(layer);
+    drawQr(layer);
     var flows = [], role = this.role;
     Array.prototype.forEach.call(layer.querySelectorAll('[data-flow]'), function (c) { flows.push({ layer: layer, flow: new Flow(c, role) }); });
     this.flows = this.flows.concat(flows);
@@ -322,6 +451,8 @@
       t0: +q.get('t0') || 0,
       groups: q.get('g') ? q.get('g').split(',') : null,
       projects: q.get('p') !== '0', steps: q.get('w') !== '0',
+      sectors: q.get('sec') === null ? null : q.get('sec') === '0' ? [] : q.get('sec').split(','),
+      knowledge: q.get('k') !== '0', stand: q.get('stand') || '',
       tempo: [1, 1.3].indexOf(+q.get('tempo')) >= 0 ? +q.get('tempo') : 1, lang: uiLang, preview: q.get('preview') === '1'
     };
   }
@@ -374,5 +505,5 @@
     return player;
   }
 
-  window.AtKiosk = { boot: boot, mount: mount, plan: plan, checkSession: checkSession };
+  window.AtKiosk = { boot: boot, mount: mount, plan: plan, checkSession: checkSession, qr: qrMatrix };
 })();
